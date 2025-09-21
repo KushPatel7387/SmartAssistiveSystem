@@ -12,11 +12,9 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,7 +33,7 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
 
-    @Override
+    @Overrid
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -58,10 +56,28 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        // ✅ Handle back press using OnBackPressedDispatcher (modern way)
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Exit App")
+                        .setMessage("Do you really want to exit Smart Assistive System?")
+                        .setIcon(R.mipmap.ic_launcher) // replace with custom app icon
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            finishAffinity(); // Exit app completely
+                        })
+                        .setNegativeButton("Stay", (dialog, which) -> {
+                            dialog.dismiss();
+                        })
+                        .show();
+            }
+        });
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(android.view.Menu menu) {
         // Inflate top-right menu if needed
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
@@ -72,21 +88,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    @Override
-    public void onBackPressed() {
-        // Intercept back press → show Exit confirmation
-        new AlertDialog.Builder(this)
-                .setTitle("Exit App")
-                .setMessage("Do you really want to exit Smart Assistive System?")
-                .setIcon(R.drawable.ic_menu_camera) // replace with custom app icon
-                .setPositiveButton("Yes", (DialogInterface dialog, int which) -> {
-                    finishAffinity(); // Exit app completely
-                })
-                .setNegativeButton("Stay", (DialogInterface dialog, int which) -> {
-                    dialog.dismiss();
-                })
-                .show();
     }
 }
