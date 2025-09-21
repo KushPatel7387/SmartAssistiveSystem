@@ -5,21 +5,27 @@
     android:id="@+id/mobile_navigation"
     app:startDestination="@+id/nav_home">
 
-    <fragment
-        android:id="@+id/nav_home"
-        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeFragment"
-        android:label="@string/menu_home"
-        tools:layout="@layout/fragment_home" />
+<fragment
+android:id="@+id/nav_home"
+android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeFragment"
+android:label="@string/menu_home"
+tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.gallery.HomeFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+<fragment
+android:id="@+id/nav_gallery"
+android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.gallery.GalleryFragment"
+android:label="@string/menu_sensors"
+tools:layout="@layout/fragment_gallery" />
 
-    <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
-</navigation>
+<fragment
+android:id="@+id/nav_slideshow"
+android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.slideshow.SlideshowFragment"
+android:label="@string/menu_alerts"
+tools:layout="@layout/fragment_slideshow" />
+
+<fragment
+android:id="@+id/nav_about"
+android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.about.AboutFragment"
+android:label="@string/menu_about"
+tools:layout="@layout/fragment_about" />
+    </navigation>
