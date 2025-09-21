@@ -14,13 +14,13 @@ It uses sensors with a Raspberry Pi to detect obstacles, light, color, and surro
 
 [//]: # (## 🚀 Features)
 
-[//]: # (- Obstacle detection)
+[//]: # ( Obstacle detection)
 
-[//]: # (- Light and color detection)
+[//]: # ( Light and color detection)
 
-[//]: # (- Environment awareness with spectrum sensors)
+[//]: # ( Environment awareness with spectrum sensors)
 
-[//]: # (- Real-time feedback &#40;voice/vibration&#41;)
+[//]: # ( Real-time feedback &#40;voice/vibration&#41;)
 
 ## 👥 Team – Group 5
 - Kush Patel

@@ -17,7 +17,7 @@
 
     <!-- Home -->
     <string name="home_title">Système d’assistance intelligent</string>
-    <string name="home_desc">Aide les personnes malvoyantes à se déplacer en toute sécurité grâce aux capteurs et à l'application mobile.</string>
+    <string name="home_desc">Aide les personnes malvoyantes à se déplacer en toute sécurité grâce aux capteurs et à l\'application mobile.</string>
 
     <!-- Alerts -->
     <string name="alerts_title">Préférences d’alerte</string>
