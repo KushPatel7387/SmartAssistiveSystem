@@ -23,7 +23,7 @@ It uses sensors with a Raspberry Pi to detect obstacles, light, color, and surro
 [//]: # ( Real-time feedback &#40;voice/vibration&#41;)
 
 ## 👥 Team – Group 5
-- Kush Patel
-- Daksh Rana
-- Krish Patel
-- Sarang Prajapati
+- Kush Patel - n0657387
+- Daksh Rana -n01664095
+- Krish Patel - n01666556
+- Sarang Prajapati -n01662036
