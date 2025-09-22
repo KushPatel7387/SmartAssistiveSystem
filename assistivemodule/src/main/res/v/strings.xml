@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Smart Assistive System -->
+    <!-- Équipe: Vision Assist Innovators -->
+    <!-- Membres: Sarang Prajapati (N01662036), Krish Patel (N01666556), Kush Patel (N01657387), Daksh Rana (N01664095) -->
+    <!-- Section: [Votre Section] -->
+
+    <string name="app_name">SmartAssistiveSystem</string>
+
+    <!-- Menu -->
+    <string name="menu_home">Accueil</string>
+    <string name="menu_sensors">Capteurs</string>
+    <string name="menu_alerts">Alertes</string>
+    <string name="menu_about">À propos</string>
+    <string name="menu_other">Plus</string>
+    <string name="menu_settings">Paramètres</string>
+
+    <!-- Home -->
+    <string name="home_title">Système d’assistance intelligent</string>
+    <string name="home_desc">Aide les personnes malvoyantes à se déplacer en toute sécurité grâce aux capteurs et à l\'application mobile.</string>
+
+    <!-- Alerts -->
+    <string name="alerts_title">Préférences d’alerte</string>
+</resources>
