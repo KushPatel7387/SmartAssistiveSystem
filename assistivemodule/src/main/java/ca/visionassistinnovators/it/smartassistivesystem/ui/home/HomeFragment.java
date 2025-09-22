@@ -1,13 +1,11 @@
-/*
- * Full Name: Kush Patel
- * Student ID: N01657387
- * Section: CENG 258
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Daksh Rana – N01664095
- */
-
+/**     Team: Vision Assist Innovators
+ * Members:
+ *  - Sarang Prajapati (N01662036)
+ *  - Krish Patel (N01666556)
+ *  - Kush Patel (N01657387)
+ *  - Daksh Rana (N01664095)
+ * Section: [CENG-323 OCA]
+ **/
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 

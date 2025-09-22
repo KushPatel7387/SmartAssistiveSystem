@@ -1,3 +1,11 @@
+/**     Team: Vision Assist Innovators
+        * Members:
+        *  - Sarang Prajapati (N01662036)
+        *  - Krish Patel (N01666556)
+        *  - Kush Patel (N01657387)
+        *  - Daksh Rana (N01664095)
+        * Section: [CENG-323 OCA]
+        **/
 package ca.visionassistinnovators.it.smartassistivesystem.ui.slideshow;
 
 import android.os.Bundle;
@@ -14,19 +22,6 @@ import androidx.lifecycle.ViewModelProvider;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.databinding.FragmentSlideshowBinding;
 
-/**
- * SlideshowFragment → Alerts & Settings Screen
- *
- * Displays alert preferences and latest warnings from sensors.
- *
- * Team: Vision Assist Innovators
- * Members:
- *  - Sarang Prajapati (N01662036)
- *  - Krish Patel (N01666556)
- *  - Kush Patel (N01657387)
- *  - Daksh Rana (N01664095)
- * Section: [Your Section Here]
- */
 public class SlideshowFragment extends Fragment {
 
     private FragmentSlideshowBinding binding;

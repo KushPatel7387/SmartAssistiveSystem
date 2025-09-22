@@ -1,15 +1,11 @@
-/**
- * GalleryViewModel
- * Manages live sensor data for the SensorsFragment.
- *
- * Team: Vision Assist Innovators
+/**     Team: Vision Assist Innovators
  * Members:
  *  - Sarang Prajapati (N01662036)
  *  - Krish Patel (N01666556)
  *  - Kush Patel (N01657387)
  *  - Daksh Rana (N01664095)
- * Section: [Your Section Here]
- */
+ * Section: [CENG-323 OCA]
+ **/
 package ca.visionassistinnovators.it.smartassistivesystem.ui.gallery;
 
 import androidx.lifecycle.LiveData;

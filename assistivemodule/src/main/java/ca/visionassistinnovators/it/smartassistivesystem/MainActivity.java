@@ -8,7 +8,7 @@
  *  - Krish Patel (N01666556)
  *  - Kush Patel (N01657387)
  *  - Daksh Rana (N01664095)
- * Section: [Your Section Here]
+ * Section: [CENG-323 OCA]
  */
 package ca.visionassistinnovators.it.smartassistivesystem;
 
