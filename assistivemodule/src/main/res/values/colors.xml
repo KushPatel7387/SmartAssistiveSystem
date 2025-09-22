@@ -1,9 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#6200EE</color>
-    <color name="colorPrimaryVariant">#3700B3</color>
-    <color name="colorSecondary">#03DAC6</color>
-    <color name="colorBackground">#FFFFFF</color>
-    <color name="colorTextPrimary">#000000</color>
-    <color name="colorTextSecondary">#666666</color>
+    <!-- Primary brand colors -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+
+    <!-- Basic colors -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
+    <!-- Splash screen background -->
+    <color name="splash_background">#FFFFFF</color>
 </resources>
