@@ -1,41 +1,32 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Base application theme (Night) -->
-    <style name="Theme.SmartAssistiveSystem" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <!-- Base application theme -->
+    <style name="Theme.SmartAssistiveSystem" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Disable action bar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+
+        <!-- Primary colors (darker for night) -->
         <item name="colorPrimary">@color/purple_200</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
         <item name="colorOnPrimary">@color/black</item>
 
-        <!-- Secondary brand color. -->
+        <!-- Secondary colors -->
         <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <!-- Status bar color. -->
+        <!-- Status bar -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
-    <!-- NoActionBar variant (Night) -->
-    <style name="Theme.SmartAssistiveSystem.NoActionBar">
-        <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">true</item>
-    </style>
+    <!-- NoActionBar variant -->
+    <style name="Theme.SmartAssistiveSystem.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar" />
 
-    <!-- Fullscreen variant (Night) -->
-    <style name="Theme.SmartAssistiveSystem.Fullscreen">
-        <item name="android:windowFullscreen">true</item>
-        <item name="android:windowContentOverlay">@null</item>
-    </style>
-
-    <!-- 🌙 Splash Theme (Night) -->
+    <!-- Splash Theme (Night) -->
     <style name="Theme.SmartAssistiveSystem.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/black</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item> <!-- Same splash icon -->
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
-
-
 
 </resources>

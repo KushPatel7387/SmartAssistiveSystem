@@ -2,7 +2,7 @@
 
     <!-- Base application theme -->
     <style name="Theme.SmartAssistiveSystem" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Disable default action bar -->
+        <!-- Disable action bar -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
 
@@ -15,17 +15,17 @@
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <!-- Customize status bar / navigation bar -->
+        <!-- Status bar -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
-    <!-- Explicit NoActionBar theme (optional for other screens) -->
+    <!-- NoActionBar variant -->
     <style name="Theme.SmartAssistiveSystem.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar" />
 
-    <!-- ✅ Splash Theme (Day) with different splash icon -->
+    <!-- Splash Theme (Day) -->
     <style name="Theme.SmartAssistiveSystem.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item> <!-- DIFFERENT ICON -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item> <!-- Different splash icon -->
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
 
