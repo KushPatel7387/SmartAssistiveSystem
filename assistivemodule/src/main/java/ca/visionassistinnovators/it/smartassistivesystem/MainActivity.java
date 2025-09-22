@@ -1,6 +1,6 @@
 /**
  * MainActivity
- * Hosts Navigation Drawer and manages fragments.
+ * Hosts Navigation Drawer, Splash Screen, Toolbar, and manages fragments.
  *
  * Team: Vision Assist Innovators
  * Members:
@@ -8,18 +8,22 @@
  *  - Krish Patel (N01666556)
  *  - Kush Patel (N01657387)
  *  - Daksh Rana (N01664095)
- * Section: [Your Section Here]
+ * Section: 3DTues
  */
+
 package ca.visionassistinnovators.it.smartassistivesystem;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.FrameLayout;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -28,41 +32,61 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.navigation.NavigationView;
 
-import ca.visionassistinnovators.it.smartassistivesystem.databinding.ActivityMainBinding;
-
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
-    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        long startTime = System.currentTimeMillis();
+
+        // ✅ Install SplashScreen API
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+
+        // ✅ Keep splash visible for 3 seconds
+        splashScreen.setKeepOnScreenCondition(() -> {
+            long elapsed = System.currentTimeMillis() - startTime;
+            return elapsed < 3000; // true = still show splash
+        });
+
+        // ✅ Animate splash icon (fade + zoom) when exiting splash
+        splashScreen.setOnExitAnimationListener(splashView -> {
+            splashView.getIconView().animate()
+                    .alpha(0f)
+                    .scaleX(1.3f)
+                    .scaleY(1.3f)
+                    .setDuration(1000) // 1 second exit animation
+                    .withEndAction(splashView::remove) // remove after animation
+                    .start();
+        });
+
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        // ✅ Set Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-        // Set Toolbar
-        setSupportActionBar(binding.appBarMain.toolbar);
+        // ✅ Setup Drawer + NavigationView
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
 
-        DrawerLayout drawer = binding.drawerLayout;
-        NavigationView navigationView = binding.navView;
-
-        // Define top-level destinations (fragments in navigation)
+        // ✅ Define top-level destinations
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_about)
                 .setOpenableLayout(drawer)
                 .build();
 
-        // Set up NavController with Drawer
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        // ✅ Setup NavController
+        NavController navController = Navigation.findNavController(
+                this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate top-right menu if needed
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -76,17 +100,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Intercept back press → show Exit confirmation
+        // ✅ Exit confirmation dialog with custom icon
         new AlertDialog.Builder(this)
                 .setTitle("Exit App")
                 .setMessage("Do you really want to exit Smart Assistive System?")
-                .setIcon(R.drawable.ic_menu_camera) // replace with custom app icon
-                .setPositiveButton("Yes", (DialogInterface dialog, int which) -> {
-                    finishAffinity(); // Exit app completely
-                })
-                .setNegativeButton("Stay", (DialogInterface dialog, int which) -> {
-                    dialog.dismiss();
-                })
+                .setIcon(R.drawable.ic_exit) // add ic_exit.png in res/drawable
+                .setPositiveButton("Yes", (dialog, which) -> finishAffinity())
+                .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 }

@@ -1,14 +1,13 @@
 /**
  * GalleryViewModel
- * Manages live sensor data for the SensorsFragment.
+ * Displays sensor readings (light, color, distance, spectrum).
  *
- * Team: Vision Assist Innovators
- * Members:
- *  - Sarang Prajapati (N01662036)
- *  - Krish Patel (N01666556)
- *  - Kush Patel (N01657387)
- *  - Daksh Rana (N01664095)
- * Section: [Your Section Here]
+ * Team Members:
+ * - Sarang Prajapati – N01662036
+ * - Krish Patel – N01666556
+ * - Kush Patel – N01657387
+ * - Daksh Rana – N01664095
+ * Section: 3DTues
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.gallery;
 
@@ -18,54 +17,18 @@ import androidx.lifecycle.ViewModel;
 
 public class GalleryViewModel extends ViewModel {
 
-    private final MutableLiveData<String> lightSensor;
-    private final MutableLiveData<String> colorSensor;
-    private final MutableLiveData<String> distanceSensor;
-    private final MutableLiveData<String> spectrumSensor;
+    private final MutableLiveData<String> mText;
 
     public GalleryViewModel() {
-        lightSensor = new MutableLiveData<>();
-        colorSensor = new MutableLiveData<>();
-        distanceSensor = new MutableLiveData<>();
-        spectrumSensor = new MutableLiveData<>();
-
-        // Default placeholders until real data comes from hardware
-        lightSensor.setValue("Light: Waiting for data...");
-        colorSensor.setValue("Color: Waiting for data...");
-        distanceSensor.setValue("Distance: Waiting for data...");
-        spectrumSensor.setValue("Spectrum: Waiting for data...");
+        mText = new MutableLiveData<>();
+        mText.setValue("Sensor Data:\n"
+                + "- Light Sensor (TSL2591)\n"
+                + "- Color Sensor (TCS34725)\n"
+                + "- Distance Sensor (VL53L1X)\n"
+                + "- Spectrum Sensor (AS7262)");
     }
 
-    public LiveData<String> getLightSensor() {
-        return lightSensor;
-    }
-
-    public LiveData<String> getColorSensor() {
-        return colorSensor;
-    }
-
-    public LiveData<String> getDistanceSensor() {
-        return distanceSensor;
-    }
-
-    public LiveData<String> getSpectrumSensor() {
-        return spectrumSensor;
-    }
-
-    // Methods to update sensor values (will be called when hardware sends data)
-    public void updateLightSensor(String value) {
-        lightSensor.setValue("Light: " + value);
-    }
-
-    public void updateColorSensor(String value) {
-        colorSensor.setValue("Color: " + value);
-    }
-
-    public void updateDistanceSensor(String value) {
-        distanceSensor.setValue("Distance: " + value);
-    }
-
-    public void updateSpectrumSensor(String value) {
-        spectrumSensor.setValue("Spectrum: " + value);
+    public LiveData<String> getText() {
+        return mText;
     }
 }

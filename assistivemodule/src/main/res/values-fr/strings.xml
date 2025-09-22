@@ -14,10 +14,20 @@
     <string name="menu_about">À propos</string>
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
+    <string name="team_members">
+ Membres de l’équipe:\n
+Sarang Prajapati – N01662036\n
+Krish Patel – N01666556\n
+Kush Patel – N01657387\n
+Daksh Rana – N01664095\n
+Section : 3DTues
+</string>
 
     <!-- Home -->
     <string name="home_title">Système d’assistance intelligent</string>
-    <string name="home_desc">Aide les personnes malvoyantes à se déplacer en toute sécurité grâce aux capteurs et à l'application mobile.</string>
+
+        <string name="home_desc">Ceci est l’écran d’accueil</string>
+
 
     <!-- Alerts -->
     <string name="alerts_title">Préférences d’alerte</string>
