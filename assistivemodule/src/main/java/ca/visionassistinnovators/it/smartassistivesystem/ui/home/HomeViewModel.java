@@ -13,9 +13,14 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 public class HomeViewModel extends ViewModel {
     private final MutableLiveData<String> mText;
+    private final MutableLiveData<String> mTitle;   // <--- new field
 
     public HomeViewModel() {
         mText = new MutableLiveData<>();
+        mTitle = new MutableLiveData<>();           // <--- initialize
+
+        mTitle.setValue("Smart Assistive System");  // <--- meaningful small change
+
         mText.setValue(
                 "Welcome to Smart Assistive System!\n\n" +
                         "This dashboard will give you:\n" +
@@ -29,5 +34,9 @@ public class HomeViewModel extends ViewModel {
 
     public LiveData<String> getText() {
         return mText;
+    }
+
+    public LiveData<String> getTitle() {            // <--- new getter
+        return mTitle;
     }
 }
