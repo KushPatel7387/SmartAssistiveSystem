@@ -1,5 +1,4 @@
 /**
- * MainActivity
  * Hosts Navigation Drawer, Splash Screen, Toolbar, and manages fragments.
  *
  * Team: Vision Assist Innovators
