@@ -62,13 +62,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 new AlertDialog.Builder(MainActivity.this)
-                        .setTitle("Exit App")
-                        .setMessage("Do you really want to exit Smart Assistive System?")
+                        .setTitle(R.string.exit_app)
+                        .setMessage(R.string.do_you_really_want_to_exit_smart_assistive_system)
                         .setIcon(R.mipmap.ic_launcher) // replace with custom app icon
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                        .setPositiveButton(R.string.yes, (dialog, which) -> {
                             finishAffinity(); // Exit app completely
                         })
-                        .setNegativeButton("Stay", (dialog, which) -> {
+                        .setNegativeButton(R.string.stay, (dialog, which) -> {
                             dialog.dismiss();
                         })
                         .show();

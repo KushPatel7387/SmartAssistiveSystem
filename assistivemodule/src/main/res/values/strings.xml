@@ -23,4 +23,8 @@
 
     <!-- Alerts -->
     <string name="alerts_title">Alert Preferences</string>
+    <string name="exit_app">Exit App</string>
+    <string name="do_you_really_want_to_exit_smart_assistive_system">Do you really want to exit Smart Assistive System?</string>
+    <string name="yes">Yes</string>
+    <string name="stay">Stay</string>
 </resources>
