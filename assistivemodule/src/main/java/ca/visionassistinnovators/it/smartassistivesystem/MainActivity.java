@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         long startTime = System.currentTimeMillis();
 
         // ✅ Install SplashScreen API
@@ -59,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
                     .start();
         });
 
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         // ✅ Set Toolbar
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         // ✅ Exit confirmation dialog with custom icon
+        super.onBackPressed();
         new AlertDialog.Builder(this)
                 .setTitle("Exit App")
                 .setMessage("Do you really want to exit Smart Assistive System?")
