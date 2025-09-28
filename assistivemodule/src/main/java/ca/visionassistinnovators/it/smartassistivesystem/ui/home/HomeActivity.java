@@ -23,20 +23,31 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // ✅ Drawer layout
+        setContentView(R.layout.activity_main); // ✅ uses your drawer layout
 
+        // ✅ Setup Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // ✅ Setup Drawer + NavigationView
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
+        // ✅ Define top-level destinations (updated to match your drawer items)
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_about, R.id.nav_settings)
+                R.id.nav_home,
+                R.id.nav_alerts,
+                R.id.nav_sensors,
+                R.id.nav_profile,
+                R.id.nav_about,
+                R.id.nav_settings // ✅ Settings added
+        )
                 .setOpenableLayout(drawer)
                 .build();
 
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        // ✅ Setup NavController
+        NavController navController = Navigation.findNavController(
+                this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
     }
@@ -48,7 +59,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onSupportNavigateUp() {
+        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+                || super.onSupportNavigateUp();
+    }
+
+    @Override
     public void onBackPressed() {
+        // ✅ Exit confirmation dialog
         new AlertDialog.Builder(this)
                 .setTitle("Exit App")
                 .setMessage("Do you really want to exit Smart Assistive System?")

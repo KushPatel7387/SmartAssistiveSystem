@@ -1,35 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="@string/menu_home" />
+            android:icon="@drawable/img_navigation"
+            android:title="Home" />
 
         <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_sensors" />
+            android:id="@+id/nav_alerts"
+            android:icon="@drawable/img_alert"
+            android:title="Alerts" />
 
         <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_alerts" />
+            android:id="@+id/nav_sensors"
+            android:icon="@drawable/img_sensor"
+            android:title="Sensors" />
 
-        <!-- ✅ Added Settings directly in main group -->
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/img_user"
+            android:title="Profile" />
+
+        <item
+            android:id="@+id/nav_about"
+            android:icon="@drawable/img_info"
+            android:title="About" />
+
+        <!-- ✅ Added Settings item -->
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
-            android:title="@string/menu_settings" />
+            android:title="Settings" />
     </group>
 
-    <item android:title="@string/menu_other">
-        <menu>
-            <item
-                android:id="@+id/nav_about"
-                android:icon="@drawable/ic_launcher_foreground"
-                android:title="@string/menu_about" />
-        </menu>
-    </item>
 </menu>

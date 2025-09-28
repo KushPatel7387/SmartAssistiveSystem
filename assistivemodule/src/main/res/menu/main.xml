@@ -1,9 +1,29 @@
-<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <!-- Always show with icon + text -->
     <item
         android:id="@+id/action_settings"
-        android:title="@string/menu_settings"
+        android:icon="@drawable/ic_settings"
+        android:title="Settings"
+        app:showAsAction="always" />
+
+    <!-- If room, only icon -->
+    <item
+        android:id="@+id/action_voice"
+        android:icon="@drawable/img_microphone"
+        android:title="Voice Assist"
+        app:showAsAction="ifRoom" />
+
+    <!-- Overflow menu items (no icon) -->
+    <item
+        android:id="@+id/action_help"
+        android:title="Help"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Logout"
+        app:showAsAction="never" />
+
 </menu>
