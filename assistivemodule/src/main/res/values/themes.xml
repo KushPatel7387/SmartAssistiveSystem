@@ -19,13 +19,13 @@
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 
-    <!-- NoActionBar variant -->
+    <!-- Explicit NoActionBar variant -->
     <style name="Theme.SmartAssistiveSystem.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar" />
 
     <!-- Splash Theme (Day) -->
     <style name="Theme.SmartAssistiveSystem.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/white</item>
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item> <!-- Different splash icon -->
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
 
