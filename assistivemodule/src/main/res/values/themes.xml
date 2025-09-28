@@ -17,6 +17,9 @@
 
         <!-- Status bar -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+        <!-- ✅ Force action menu items (like Settings) to show text -->
+        <item name="actionMenuTextAppearance">@style/ActionMenuTextStyle</item>
     </style>
 
     <!-- Explicit NoActionBar variant -->
@@ -27,6 +30,13 @@
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
+    </style>
+
+    <!-- ✅ Custom style for menu text -->
+    <style name="ActionMenuTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 </resources>
