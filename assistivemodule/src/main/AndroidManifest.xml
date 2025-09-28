@@ -13,7 +13,7 @@
         android:theme="@style/Theme.SmartAssistiveSystem"
         tools:targetApi="36">
 
-        <!-- ✅ Main Activity with Splash Theme -->
+        <!-- ✅ Splash Activity (first entry) -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -23,6 +23,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- ✅ Login Activity -->
+        <activity
+            android:name=".ui.login.LoginActivity"
+            android:exported="true"
+            android:label="Login" />
+
+        <!-- ✅ HomeActivity (Navigation Drawer + Fragments) -->
+        <activity
+            android:name=".ui.home.HomeActivity"
+            android:exported="true"
+            android:label="Home" />
 
     </application>
 
