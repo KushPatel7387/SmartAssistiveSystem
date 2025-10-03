@@ -13,4 +13,10 @@
 
     <!-- Splash screen background -->
     <color name="splash_background">#FFFFFF</color>
+    <color name="sys_light_surface">#B6DED7</color>
+    <color name="sys_light_onSurface">#1C1B1F</color>
+    <color name="sys_light_background">#F3F2F7</color>
+    <color name="sys_light_outlineVariant">#CAC4D0</color>
+    <color name="sys_light_onSurfaceVariant">#49454F</color>
+
 </resources>
