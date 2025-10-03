@@ -1,24 +1,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- ✅ Settings: Always show with icon + text -->
+    <!-- Settings: Always show with icon + text -->
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings"
-        app:showAsAction="always|withText" />
+        app:showAsAction="never" />
 
-    <!-- ✅ Microphone: Icon only -->
+    <!-- Voice: Always icon only -->
     <item
         android:id="@+id/action_voice"
         android:icon="@drawable/img_microphone"
         android:title="Voice"
-        app:showAsAction="always" />
+        app:showAsAction="always|withText" />
 
-    <!-- ✅ Overflow (text only, no icons) -->
+    <!-- Overflow (text only, no icons) -->
     <item
         android:id="@+id/action_help"
         android:title="Help"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_feedback"
+        android:title="Feedback"
         app:showAsAction="never" />
 
     <item
