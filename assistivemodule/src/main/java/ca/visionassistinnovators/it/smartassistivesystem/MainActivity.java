@@ -52,26 +52,27 @@ public class MainActivity extends AppCompatActivity {
 
         // ✅ Write a test value
         Map<String, Object> testData = new HashMap<>();
-        testData.put("message", "Hello from Android!");
-        testData.put("timestamp", System.currentTimeMillis());
+        testData.put(getString(R.string.message), getString(R.string.hello_from_android));
 
-        dbRef.child("test").setValue(testData);
+        testData.put(getString(R.string.timestamp), System.currentTimeMillis());
+
+        dbRef.child(getString(R.string.test)).setValue(testData);
 
         // ✅ Read back the data
-        dbRef.child("test").addValueEventListener(new ValueEventListener() {
+        dbRef.child(getString(R.string.test1)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    String message = snapshot.child("message").getValue(String.class);
-                    Long time = snapshot.child("timestamp").getValue(Long.class);
-                    System.out.println("✅ Message: " + message);
-                    System.out.println("🕒 Timestamp: " + time);
+                    String message = snapshot.child(getString(R.string.message2)).getValue(String.class);
+                    Long time = snapshot.child(getString(R.string.timestamp2)).getValue(Long.class);
+                    System.out.println(getString(R.string.message3) + message);
+                    System.out.println(getString(R.string.timestamp3) + time);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println("❌ Error: " + error.getMessage());
+                System.err.println(getString(R.string.error) + error.getMessage());
             }
         });
     }
