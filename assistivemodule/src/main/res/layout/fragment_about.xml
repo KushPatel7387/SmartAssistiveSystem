@@ -1,26 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:gravity="center_horizontal">
+    android:background="@color/teal_50">
 
-    <TextView
-        android:id="@+id/project_title"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_name"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:paddingBottom="16dp" />
+        android:orientation="vertical"
+        android:padding="24dp">
 
-    <TextView
-        android:id="@+id/team_members"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/team_members"
-        android:textSize="16sp"
-        android:gravity="center" />
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@mipmap/ic_launcher_round"
+            android:layout_gravity="center"
+            android:contentDescription="App Logo"/>
 
-</LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Smart Assistive System"
+            android:textStyle="bold"
+            android:textColor="@color/purple_700"
+            android:textSize="22sp"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Version 1.0"
+            android:textColor="@android:color/darker_gray"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="This application assists visually impaired users by detecting nearby obstacles, providing audio feedback, and monitoring environmental conditions using advanced sensors and AI algorithms."
+            android:textSize="16sp"
+            android:lineSpacingExtra="6dp"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="16dp"/>
+
+        <TextView
+            android:text="Developed by:"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/purple_700"
+            android:layout_marginBottom="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCourse: OCA Section"
+            android:textSize="15sp"
+            android:textColor="@android:color/black"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</ScrollView>
