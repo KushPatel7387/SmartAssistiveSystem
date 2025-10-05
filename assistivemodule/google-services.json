@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "251288488243",
+    "project_id": "smartassistivesystem-39072",
+    "storage_bucket": "smartassistivesystem-39072.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251288488243:android:dc3b07dad03ec77a6a9646",
+        "android_client_info": {
+          "package_name": "ca.visionassistinnovators.it.smartassistivesystem"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_Ejw7rs5e9dY8HmIo62x8oON6hZKd5bg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

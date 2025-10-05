@@ -49,4 +49,14 @@ Section: 3DTues
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="hello_from_android">Hello from Android!</string>
+    <string name="message">message</string>
+    <string name="timestamp">timestamp</string>
+    <string name="test">test</string>
+    <string name="test1">test1</string>
+    <string name="message2">message</string>
+    <string name="timestamp2">timestamp</string>
+    <string name="message3">"✅ Message: "</string>
+    <string name="timestamp3">"🕒 Timestamp: "</string>
+    <string name="error">"❌ Error: "</string>
 </resources>
