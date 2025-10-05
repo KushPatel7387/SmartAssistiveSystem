@@ -24,8 +24,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class GalleryFragment extends Fragment {
 
-    private GalleryViewModel galleryViewModel;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,7 +31,7 @@ public class GalleryFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_gallery, container, false);
 
-        galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
+        GalleryViewModel galleryViewModel = new ViewModelProvider(this).get(GalleryViewModel.class);
 
         final TextView textView = root.findViewById(R.id.text_light);
         galleryViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);

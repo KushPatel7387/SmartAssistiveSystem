@@ -66,8 +66,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle("Exit App")
-                        .setMessage("Do you really want to exit Smart Assistive System?")
+                        .setTitle(R.string.exit_app2)
+                        .setMessage(R.string.do_you_really_want_to_exit_smart_assistive_system2)
                         .setIcon(R.drawable.ic_exit)
                         .setPositiveButton("Yes", (dialog, which) -> finishAffinity())
                         .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
