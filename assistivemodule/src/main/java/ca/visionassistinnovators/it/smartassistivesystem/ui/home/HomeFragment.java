@@ -11,6 +11,7 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +78,8 @@ public class HomeFragment extends Fragment {
     }
 
     private void startImageSlideshow() {
-        handler = new Handler();
+        handler = new Handler(Looper.getMainLooper()); // ✅ Non-deprecated
+
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -115,6 +117,7 @@ public class HomeFragment extends Fragment {
             }
         }, 0);
     }
+
 
     @Override
     public void onDestroyView() {
