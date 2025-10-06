@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Smart Assistive System -->
-    <!-- Équipe : Vision Assist Innovators -->
-    <!-- Membres : Sarang Prajapati (N01662036), Krish Patel (N01666556), Kush Patel (N01657387), Daksh Rana (N01664095) -->
-    <!-- Section : [0CA] -->
+    <string name="app_name">SystèmeDAssistanceIntelligente</string>
 
-
-
-
+    <!-- Menu -->
     <string name="menu_home">Accueil</string>
     <string name="menu_sensors">Capteurs</string>
     <string name="menu_alerts">Alertes</string>
     <string name="menu_about">À propos</string>
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
+    <string name="team_members">
+ Membres de l’équipe :\n
+Sarang Prajapati – N01662036\n
+Krish Patel – N01666556\n
+Kush Patel – N01657387\n
+Daksh Rana – N01664095\n
+Section : 3DTues
+</string>
 
+    <!-- Accueil -->
+    <string name="home_title">Système d’assistance intelligente</string>
+    <string name="home_desc">Ceci est l’écran d’accueil</string>
 
-
-
-    <!-- Alerts -->
+    <!-- Alertes -->
     <string name="alerts_title">Préférences d’alerte</string>
     <string name="exit_app">Quitter l’application</string>
-
+    <string name="do_you_really_want_to_exit_smart_assistive_system">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
     <string name="yes">Oui</string>
     <string name="stay">Rester</string>
 
-    <!-- Preference Titles -->
+    <!-- Titres des préférences -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Synchronisation</string>
 
-    <!-- Messages Preferences -->
+    <!-- Préférences des messages -->
     <string name="signature_title">Votre signature</string>
     <string name="reply_title">Action de réponse par défaut</string>
 
-    <!-- Sync Preferences -->
+    <!-- Préférences de synchronisation -->
     <string name="sync_title">Synchroniser les e-mails périodiquement</string>
     <string name="attachment_title">Télécharger les pièces jointes entrantes</string>
     <string name="attachment_summary_on">Télécharger automatiquement les pièces jointes des e-mails entrants</string>
     <string name="attachment_summary_off">Télécharger les pièces jointes uniquement sur demande manuelle</string>
 
-    <string name="hello_from_android">Bonjour depuis Android !</string>
+    <string name="hello_from_android">Bonjour d’Android !</string>
     <string name="message">message</string>
     <string name="timestamp">horodatage</string>
     <string name="test">test</string>
@@ -51,5 +55,5 @@
     <string name="error">"❌ Erreur : "</string>
     <string name="https_smartassistivesystem_39072_default_rtdb_firebaseio_com">https://smartassistivesystem-39072-default-rtdb.firebaseio.com</string>
     <string name="exit_app2">Quitter l’application</string>
-
+    <string name="do_you_really_want_to_exit_smart_assistive_system2">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
 </resources>
