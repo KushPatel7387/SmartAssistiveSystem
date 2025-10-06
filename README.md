@@ -1,59 +1,83 @@
-# 🧠 SmartAssistiveSystem
+# 👁️ SmartAssistiveSystem
 ### Software Project – Group 5
 
 ## 📌 Overview
-**SmartAssistiveSystem** is a smart assistive device designed to help **visually impaired people navigate safely**.  
-It integrates multiple sensors with a **Raspberry Pi** to detect obstacles, light, color, and environmental conditions, providing **real-time voice or vibration feedback** for better awareness and mobility.
+SmartAssistiveSystem is an Android + IoT solution designed to help **visually impaired individuals** navigate safely.  
+It uses sensors with a **Raspberry Pi** to detect **obstacles, light, color, and surroundings**, providing **real-time feedback** through sound or vibration.
 
 ---
 
-## 🛠️ Hardware Components
-- **TSL2591** – Light sensor
-- **TCS34725** – Color sensor
-- **VL53L1X** – Distance/Obstacle sensor
-- **AS7262 / AS7341** – Spectrum sensors
-- **Raspberry Pi** – Central controller for data processing and feedback
+## 🛠️ Hardware
+- **TSL2591** – Light Sensor
+- **TCS34725** – Color Sensor
+- **VL53L1X** – Distance Sensor
+- **AS7262 / AS7341** – Spectrum Sensor
+- **Raspberry Pi / ESP32** – Main Controller
 
 ---
 
-## 🚀 Features
-
-### 🧱 Obstacle Detection
-Detects nearby objects using the **VL53L1X Time-of-Flight sensor** and warns the user through vibration or voice feedback.  
-Helps prevent collisions and ensures safe movement in real time.
-
-### 💡 Light & Color Detection
-Measures ambient light using the **TSL2591** and detects object colors via the **TCS34725**.  
-Provides voice alerts about light conditions and identified colors (e.g., “Red detected” or “Low light”).
-
-### 🌈 Environment Awareness (Spectrum Sensors)
-Uses **AS7262 / AS7341** to analyze light spectra and identify different surroundings or materials.  
-Improves environmental understanding, especially outdoors or in changing light conditions.
-
-### 🔊 Real-Time Feedback (Voice/Vibration)
-Delivers instant responses to sensor inputs through **text-to-speech audio** or **haptic vibration**.  
-Ensures users receive continuous and accessible feedback for confident navigation.
+## 💡 Key Features
+- Obstacle and distance detection
+- Light and color recognition
+- Real-time alerts via audio or vibration
+- GPS and emergency alert function
+- Firebase cloud integration
+- English & French language support
 
 ---
 
-## ⚙️ System Workflow
-**Sensors → Raspberry Pi → Data Processing → Voice/Vibration Feedback**
+## 🧩 System Integration
+All sensors connect to the controller via **I²C/SPI**, and data is sent to the Android app through **Bluetooth/Wi-Fi**.  
+The app displays live readings, triggers alerts, and syncs data to **Firebase** for caretaker monitoring.
 
-Each sensor continuously gathers data and sends it to the Raspberry Pi.  
-The system interprets the readings and alerts the user instantly — through sound cues or vibration patterns — to enhance environmental awareness.
+---
+
+## 🎯 Project Scope
+Develop a **Smart Assistive System** combining hardware sensors and a mobile app to improve navigation safety.  
+The project covers hardware integration, Android app development, and cloud connectivity.  
+It’s complete when all sensors work accurately, alerts function in real time, and the app runs smoothly.
+
+---
+
+## 📅 Timeline
+| Phase                          | Duration        | Focus                       |
+|--------------------------------|-----------------|-----------------------------|
+| 1. Kickoff & Requirements      | Sept 26 – Oct 2 | Project planning            |
+| 2. GitHub Setup & Architecture | Sept 29 – Oct 6 | Repo & design setup         |
+| 3. App UI & Navigation         | Oct 3 – Oct 12  | Splash, Drawer, Settings    |
+| 4. Sensor Integration          | Oct 10 – Oct 22 | AS7262, AS7341, TCS34725    |
+| 5. Integration & Testing       | Oct 18 – Nov 10 | Full system test            |
+| 6. Documentation & Review      | Nov 15 – Dec 15 | Final report & presentation |
 
 ---
 
 ## 👥 Team – Group 5
-- **Kush Patel** - n0657387
-- **Daksh Rana** - n01664095
-- **Krish Patel** - n01666556
-- **Sarang Prajapati** - n01662036
+| Name                 | ID        | Role                 |
+|----------------------|-----------|----------------------|
+| **Kush Patel**       | N01657387 | Android Development  |
+| **Daksh Rana**       | N01664095 | Database & Firebase  |
+| **Krish Patel**      | N01666556 | Architecture & Cloud |
+| **Sarang Prajapati** | N01662036 | Sensor Integration   |
 
 ---
 
-## 🧩 Summary
-SmartAssistiveSystem combines **IoT sensors, Raspberry Pi processing, and assistive feedback** to provide a reliable companion for visually impaired individuals.  
-It makes real-world navigation **smarter, safer, and more independent**.
+## 🔗 Links
+- **GitHub Repo:** [SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
+- **Invitation Link:** [GitHub Invite](https://github.com/KushPatel7387/SmartAssistiveSystem/invitations)
 
 ---
+
+## 📸 Screenshots
+| Section        | Description               |
+|----------------|---------------------------|
+| Splash Screen  | App startup (day/night)   |
+| Login Screen   | Authentication screen     |
+| Dashboard      | Live sensor data          |
+| Settings       | Options & emergency alert |
+| Firebase       | Cloud database view       |
+| Hardware Setup | Sensors + Raspberry Pi    |
+
+---
+
+© 2025 **SmartAssistiveSystem – Group 5**  
+*CENG-322 Software Project, Humber College*
