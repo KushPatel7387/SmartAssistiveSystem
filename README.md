@@ -68,16 +68,17 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 ---
 
 ## 📸 Screenshots
-| Section        | Description               |
-|----------------|---------------------------|
-| Splash Screen  | App startup (day/night)   |
-| Login Screen   | Authentication screen     |
-| Dashboard      | Live sensor data          |
-| Settings       | Options & emergency alert |
-| Firebase       | Cloud database view       |
-| Hardware Setup | Sensors + Raspberry Pi    |
+| Section                                                 | 
+|---------------------------------------------------------|
+| Splash Screen                                           |  
+| ![SPLASH SCREEN.jpg](../../Desktop/SPLASH%20SCREEN.jpg) |  
+| Login Screen ![LOGIN.jpg](../../Desktop/LOGIN.jpg)      | 
+| Home    ![HOME.jpg](../../Desktop/HOME.jpg)             | 
+| Settings   ![SETTING.jpg](../../Desktop/SETTING.jpg)    | 
+| About    ![ABOUT.jpg](../../Desktop/ABOUT.jpg)          | 
+| Sencer ![SENCER.jpg](../../Desktop/SENCER.jpg)          | 
 
----
+
 
 © 2025 **SmartAssistiveSystem – Group 5**  
 *CENG-322 Software Project, Humber College*
