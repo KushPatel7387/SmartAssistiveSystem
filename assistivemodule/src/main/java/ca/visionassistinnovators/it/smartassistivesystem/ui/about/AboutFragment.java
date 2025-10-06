@@ -1,6 +1,6 @@
 /**
  * Course Section: OCA
- * Team Members:
+ * Team Members
  * Sarang Prajapati – N01662036
  * Krish Patel – N01666556
  * Kush Patel – N01657387
