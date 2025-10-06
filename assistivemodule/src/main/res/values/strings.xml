@@ -59,4 +59,7 @@ Section: 3DTues
     <string name="message3">"✅ Message: "</string>
     <string name="timestamp3">"🕒 Timestamp: "</string>
     <string name="error">"❌ Error: "</string>
+    <string name="https_smartassistivesystem_39072_default_rtdb_firebaseio_com">https://smartassistivesystem-39072-default-rtdb.firebaseio.com</string>
+    <string name="exit_app2">Exit App</string>
+    <string name="do_you_really_want_to_exit_smart_assistive_system2">Do you really want to exit Smart Assistive System?</string>
 </resources>

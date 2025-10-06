@@ -32,12 +32,12 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // ✅ Install Splash Screen API
+        // Install Splash Screen API
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         super.onCreate(savedInstanceState);
 
-        // ✅ Delay 3 seconds → go to LoginActivity
+        //  Delay 3 seconds → go to LoginActivity
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
@@ -45,12 +45,12 @@ public class MainActivity extends AppCompatActivity {
         }, 3000);
 
 
-        // ✅ Connect directly to your test DB
+        //  Connect directly to your test DB
         DatabaseReference dbRef = FirebaseDatabase
-                .getInstance("https://smartassistivesystem-39072-default-rtdb.firebaseio.com")
+                .getInstance(getString(R.string.https_smartassistivesystem_39072_default_rtdb_firebaseio_com))
                 .getReference();
 
-        // ✅ Write a test value
+        //  Write a test value
         Map<String, Object> testData = new HashMap<>();
         testData.put(getString(R.string.message), getString(R.string.hello_from_android));
 
@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         dbRef.child(getString(R.string.test)).setValue(testData);
 
-        // ✅ Read back the data
+        //  Read back the data
         dbRef.child(getString(R.string.test1)).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
