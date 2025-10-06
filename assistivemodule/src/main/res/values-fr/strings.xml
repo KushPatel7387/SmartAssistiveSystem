@@ -5,7 +5,7 @@
     <!-- Membres : Sarang Prajapati (N01662036), Krish Patel (N01666556), Kush Patel (N01657387), Daksh Rana (N01664095) -->
     <!-- Section : [Votre section] -->
 
-    <string name="app_name">Système d'Assistance Intelligente</string>
+
 
     <!-- Menu -->
     <string name="menu_home">Accueil</string>
@@ -15,23 +15,13 @@
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
 
-    <string name="team_members">
- Membres de l'équipe:\n
-Sarang Prajapati – N01662036\n
-Krish Patel – N01666556\n
-Kush Patel – N01657387\n
-Daksh Rana – N01664095\n
-Section : 3DTues
-</string>
 
-    <!-- Home -->
-    <string name="home_title">Système d'Assistance Intelligente</string>
-    <string name="home_desc">Ceci est l'écran d'accueil</string>
+
 
     <!-- Alerts -->
     <string name="alerts_title">Préférences d’alerte</string>
     <string name="exit_app">Quitter l’application</string>
-    <string name="do_you_really_want_to_exit_smart_assistive_system">Voulez-vous vraiment quitter le Système d'Assistance Intelligente ?</string>
+
     <string name="yes">Oui</string>
     <string name="stay">Rester</string>
 
@@ -61,5 +51,5 @@ Section : 3DTues
     <string name="error">"❌ Erreur : "</string>
     <string name="https_smartassistivesystem_39072_default_rtdb_firebaseio_com">https://smartassistivesystem-39072-default-rtdb.firebaseio.com</string>
     <string name="exit_app2">Quitter l’application</string>
-    <string name="do_you_really_want_to_exit_smart_assistive_system2">Voulez-vous vraiment quitter le Système d'Assistance Intelligente ?</string>
+
 </resources>
