@@ -45,12 +45,12 @@ public class HomeFragment extends Fragment {
 
     // 🔹 Optional captions (one per image)
     private final String[] captions = {
-            "Smart Assistive System: Helping visually impaired users",
-            "Voice assistance activated",
-            "Sensor module detecting nearby obstacles",
-            "System providing safe navigation",
-            "Emergency alert mode active",
-            "All systems operating normally"
+            "Smart Assistive System: Helping visually impaired users", // bell
+            "Voice assistance activated",                               // gps
+            "Sensor module detecting nearby obstacles",                // record
+            "System providing safe navigation",                        // blind
+            "Emergency alert mode active",                              // sos
+            "All systems operating normally"                            // sound
     };
 
     @Nullable

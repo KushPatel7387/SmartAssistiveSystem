@@ -13,6 +13,19 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+        <!-- 🔹 Welcome Section -->
+        <TextView
+            android:id="@+id/text_home"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Welcome to Smart Assistive System"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/purple_700"
+            android:gravity="center"
+            android:padding="12dp" />
+
+
         <!-- 🔹 Auto-Image Slideshow -->
         <FrameLayout
             android:layout_width="match_parent"
@@ -24,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
+                android:scaleType="fitCenter"
                 android:contentDescription="Home slideshow" />
 
             <!-- Caption Overlay -->
@@ -42,17 +55,6 @@
                 android:text="Smart Assistive System in Action" />
         </FrameLayout>
 
-        <!-- 🔹 Welcome Section -->
-        <TextView
-            android:id="@+id/text_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Welcome to Smart Assistive System"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/purple_700"
-            android:gravity="center"
-            android:padding="12dp" />
 
         <!-- 🔹 Sensor Status Card -->
         <com.google.android.material.card.MaterialCardView
