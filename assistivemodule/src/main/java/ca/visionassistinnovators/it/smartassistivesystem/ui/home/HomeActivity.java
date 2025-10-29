@@ -1,16 +1,8 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
@@ -21,47 +13,75 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-
 import com.google.android.material.navigation.NavigationView;
-
+import com.google.android.material.tabs.TabLayout;
+import androidx.viewpager2.widget.ViewPager2;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class HomeActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
+    private NavController navController;
+    private TabLayout tabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main); // ✅ Uses drawer layout
+        setContentView(R.layout.activity_main);
 
-        // ✅ Setup Toolbar
+        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // ✅ Setup Drawer + NavigationView
+        // Drawer
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        // ✅ Define top-level destinations
+        // NavController
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
+
+        // AppBar + Drawer
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home,
-                R.id.nav_alerts,
-                R.id.nav_sensors,
-                R.id.nav_profile,
-                R.id.nav_about,
-                R.id.nav_settings // ✅ Settings included
-        )
+                R.id.nav_home, R.id.nav_alerts, R.id.nav_sensors,
+                R.id.nav_profile, R.id.nav_about, R.id.nav_settings)
                 .setOpenableLayout(drawer)
                 .build();
 
-        // ✅ Setup NavController
-        NavController navController = Navigation.findNavController(
-                this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // ✅ Replace deprecated onBackPressed()
+        // TABS
+        tabLayout = findViewById(R.id.tab_layout);
+        setupTabs();
+
+        // Sync Tab with Navigation
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) navController.navigate(R.id.nav_home);
+                else if (position == 1) navController.navigate(R.id.nav_magnifier);
+                else if (position == 2) navController.navigate(R.id.nav_sos);
+            }
+
+            @Override public void onTabUnselected(TabLayout.Tab tab) {}
+            @Override public void onTabReselected(TabLayout.Tab tab) {}
+        });
+
+        // Sync Navigation with Tab
+        navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
+            if (destination.getId() == R.id.nav_home) {
+                tabLayout.selectTab(tabLayout.getTabAt(0));
+            } else if (destination.getId() == R.id.nav_magnifier) {
+                tabLayout.selectTab(tabLayout.getTabAt(1));
+            } else if (destination.getId() == R.id.nav_sos) {
+                tabLayout.selectTab(tabLayout.getTabAt(2));
+            } else {
+                tabLayout.setVisibility(View.GONE);
+            }
+        });
+
+        // Back Press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
@@ -69,30 +89,21 @@ public class HomeActivity extends AppCompatActivity {
                         .setTitle(R.string.exit_app2)
                         .setMessage(R.string.do_you_really_want_to_exit_smart_assistive_system2)
                         .setIcon(R.drawable.ic_exit)
-                        .setPositiveButton("Yes", (dialog, which) -> finishAffinity())
-                        .setNegativeButton("Stay", (dialog, which) -> dialog.dismiss())
+                        .setPositiveButton("Yes", (d, w) -> finishAffinity())
+                        .setNegativeButton("Stay", (d, w) -> d.dismiss())
                         .show();
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-
-        // ✅ Always show Settings with icon + text
-        MenuItem settingsItem = menu.findItem(R.id.action_settings);
-        if (settingsItem != null) {
-            settingsItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-        }
-
-        return true;
+    private void setupTabs() {
+        tabLayout.addTab(tabLayout.newTab().setText("Home").setContentDescription("Home Dashboard"));
+        tabLayout.addTab(tabLayout.newTab().setText("Magnifier").setContentDescription("Screen Magnifier"));
+        tabLayout.addTab(tabLayout.newTab().setText("SOS").setContentDescription("Emergency Alert"));
     }
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
+        return NavigationUI.navigateUp(navController, mAppBarConfiguration) || super.onSupportNavigateUp();
     }
 }
