@@ -24,6 +24,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.tabs.TabLayout;
+
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class HomeFragment extends Fragment {
@@ -118,6 +120,15 @@ public class HomeFragment extends Fragment {
         }, 0);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        // FIX: Force show tabs when returning to Home
+        TabLayout tabLayout = requireActivity().findViewById(R.id.tab_layout);
+        if (tabLayout != null) {
+            tabLayout.setVisibility(View.VISIBLE);
+        }
+    }
 
     @Override
     public void onDestroyView() {
