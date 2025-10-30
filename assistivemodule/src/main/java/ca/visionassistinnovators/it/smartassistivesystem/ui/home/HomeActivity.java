@@ -8,6 +8,7 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -69,14 +70,22 @@ public class HomeActivity extends AppCompatActivity {
             @Override public void onTabReselected(TabLayout.Tab tab) {}
         });
 
-        // Sync Navigation with Tab
         navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
-            if (destination.getId() == R.id.nav_home) {
+            int id = destination.getId();
+
+            // 1. SYNC TABS
+            if (id == R.id.nav_home) {
                 tabLayout.selectTab(tabLayout.getTabAt(0));
-            } else if (destination.getId() == R.id.nav_magnifier) {
+            } else if (id == R.id.nav_magnifier) {
                 tabLayout.selectTab(tabLayout.getTabAt(1));
-            } else if (destination.getId() == R.id.nav_sos) {
+            } else if (id == R.id.nav_sos) {
                 tabLayout.selectTab(tabLayout.getTabAt(2));
+            }
+
+            // 2. SHOW/HIDE TABS
+            if (id == R.id.nav_home || id == R.id.nav_magnifier || id == R.id.nav_sos) {
+                tabLayout.setVisibility(View.VISIBLE);
+                drawer.closeDrawer(GravityCompat.START); // CLOSE DRAWER
             } else {
                 tabLayout.setVisibility(View.GONE);
             }
