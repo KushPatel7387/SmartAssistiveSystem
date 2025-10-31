@@ -1,34 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Settings: Always show with icon + text -->
+    <!-- Voice: show on toolbar -->
+    <item
+        android:id="@+id/action_voice"
+        android:icon="@drawable/img_microphone"
+        android:title="Voice"
+        app:showAsAction="always" />
+
+    <!-- Settings: overflow -->
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings"
         app:showAsAction="never" />
 
-    <!-- Voice: Always icon only -->
+    <!-- About moved here from drawer -->
     <item
-        android:id="@+id/action_voice"
-        android:icon="@drawable/img_microphone"
-        android:title="Voice"
-        app:showAsAction="always|withText" />
+        android:id="@+id/action_about"
+        android:title="About"
+        app:showAsAction="never" />
 
-    <!-- Overflow (text only, no icons) -->
+    <!-- Help stays in overflow -->
     <item
         android:id="@+id/action_help"
         android:title="Help"
         app:showAsAction="never" />
 
+    <!-- Feedback (optional) -->
     <item
         android:id="@+id/action_feedback"
         android:title="Feedback"
         app:showAsAction="never" />
 
-    <item
-        android:id="@+id/action_logout"
-        android:title="Logout"
-        app:showAsAction="never" />
-
+    <!-- no logout here -->
 </menu>
