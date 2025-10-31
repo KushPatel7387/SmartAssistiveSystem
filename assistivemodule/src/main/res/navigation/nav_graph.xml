@@ -59,4 +59,11 @@
         android:label="SOS"
         tools:layout="@layout/fragment_sos" />
 
+    <fragment
+        android:id="@+id/nav_feedback"
+        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.feedback.FeedbackFragment"
+        android:label="Feedback"
+        tools:layout="@layout/fragment_feedback" />
+
+
 </navigation>

@@ -58,7 +58,8 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_sos,
                 R.id.nav_alerts,
                 R.id.nav_sensors,
-                R.id.nav_profile
+                R.id.nav_profile,
+                R.id.nav_feedback
         )
                 .setOpenableLayout(drawerLayout)
                 .build();
@@ -124,7 +125,11 @@ public class HomeActivity extends AppCompatActivity {
         } else if (id == R.id.action_settings) {
             navController.navigate(R.id.nav_settings);
             return true;
-        } else if (id == R.id.action_help) {
+        } else if (id == R.id.action_feedback) {
+            navController.navigate(R.id.nav_feedback);
+            return true;
+        }
+        else if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
                     .setTitle("Help")
                     .setMessage("This is the help section for Smart Assistive System.")
