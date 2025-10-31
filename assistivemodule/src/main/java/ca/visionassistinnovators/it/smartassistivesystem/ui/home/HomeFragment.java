@@ -6,7 +6,6 @@
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
  */
-
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.os.Bundle;
@@ -24,8 +23,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.tabs.TabLayout;
-
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class HomeFragment extends Fragment {
@@ -36,7 +33,7 @@ public class HomeFragment extends Fragment {
     private Handler handler;
     private int currentImageIndex = 0;
 
-    // 🔹 6 Images (place your actual drawable names here)
+    // 6 Images
     private final int[] imageList = {
             R.drawable.bell,
             R.drawable.gps,
@@ -46,14 +43,14 @@ public class HomeFragment extends Fragment {
             R.drawable.sound
     };
 
-    // 🔹 Optional captions (one per image)
+    // captions
     private final String[] captions = {
-            "Smart Assistive System: Helping visually impaired users", // bell
-            "Voice assistance activated",                               // gps
-            "Sensor module detecting nearby obstacles",                // record
-            "System providing safe navigation",                        // blind
-            "Emergency alert mode active",                              // sos
-            "All systems operating normally"                            // sound
+            "Smart Assistive System: Helping visually impaired users",
+            "Voice assistance activated",
+            "Sensor module detecting nearby obstacles",
+            "System providing safe navigation",
+            "Emergency alert mode active",
+            "All systems operating normally"
     };
 
     @Nullable
@@ -61,31 +58,28 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        // ✅ Initialize slideshow components
         imgSlideshow = root.findViewById(R.id.imgSlideshow);
         tvCaption = root.findViewById(R.id.tv_caption);
 
-        // ✅ Initialize TextView from ViewModel
         final TextView textView = root.findViewById(R.id.text_home);
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-        // ✅ Start slideshow
         startImageSlideshow();
 
         return root;
     }
 
     private void startImageSlideshow() {
-        handler = new Handler(Looper.getMainLooper()); // ✅ Non-deprecated
+        handler = new Handler(Looper.getMainLooper());
 
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                // Fade animation
                 AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
                 fadeOut.setDuration(500);
                 fadeOut.setFillAfter(true);
@@ -101,7 +95,6 @@ public class HomeFragment extends Fragment {
 
                     @Override
                     public void onAnimationEnd(android.view.animation.Animation animation) {
-                        // Change image and caption
                         imgSlideshow.setImageResource(imageList[currentImageIndex]);
                         tvCaption.setText(captions[currentImageIndex]);
                         imgSlideshow.startAnimation(fadeIn);
@@ -111,29 +104,16 @@ public class HomeFragment extends Fragment {
                     public void onAnimationRepeat(android.view.animation.Animation animation) {}
                 });
 
-                // Move to next image
                 currentImageIndex = (currentImageIndex + 1) % imageList.length;
 
-                // Repeat every 3 seconds
                 handler.postDelayed(this, 3000);
             }
         }, 0);
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        // FIX: Force show tabs when returning to Home
-        TabLayout tabLayout = requireActivity().findViewById(R.id.tab_layout);
-        if (tabLayout != null) {
-            tabLayout.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Stop handler to avoid memory leaks
         if (handler != null) {
             handler.removeCallbacksAndMessages(null);
         }
