@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -60,6 +61,9 @@ public class LoginActivity extends AppCompatActivity {
             finish();
             return;
         }
+        TextView tvSignUp = findViewById(R.id.tv_sign_up);
+        tvSignUp.setOnClickListener(v ->
+                startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
         loginBtn.setOnClickListener(v -> doLogin());
     }
