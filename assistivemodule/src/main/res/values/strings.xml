@@ -69,4 +69,5 @@ Section: 3DTues
     <string name="or_sign_in_with">or sign in with</string>
     <string name="continue_with_google">Continue with Google</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
+    <string name="remember_me">Remember me</string>
 </resources>

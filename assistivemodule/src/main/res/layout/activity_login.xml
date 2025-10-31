@@ -160,7 +160,20 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_password" />
 
-            <!-- Forgot Password -->
+            <!-- ✅ Remember Me (same line as Forgot Password) -->
+            <CheckBox
+                android:id="@+id/cb_remember"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/remember_me"
+                android:textColor="@color/teal_200"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/btnLogin"
+                app:layout_constraintBottom_toBottomOf="@id/tv_forgot_password" />
+
+            <!-- Forgot Password (unchanged, aligned right) -->
             <TextView
                 android:id="@+id/tv_forgot_password"
                 android:layout_width="wrap_content"
