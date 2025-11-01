@@ -31,5 +31,6 @@
 
     <!-- Accent -->
     <color name="accent_pink">#FF4081</color>
+    <color name="colorPrimary">#2575FC</color>
 
 </resources>
