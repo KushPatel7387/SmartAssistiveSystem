@@ -17,17 +17,15 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.Task;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.*;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.*;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
@@ -35,9 +33,8 @@ import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText email, password;
-    private Button loginBtn;
+    private Button loginBtn, btnGoogle;
     private CheckBox cbRemember;
-    private Button btnGoogle;
 
     private static final String TEST_EMAIL = "aaa@bbb.com";
     private static final String TEST_PASSWORD = "Admin101!";
@@ -46,8 +43,25 @@ public class LoginActivity extends AppCompatActivity {
     private static final String KEY_REMEMBER = "remember_me";
     private static final String KEY_EMAIL = "saved_email";
 
-    private GoogleSignInClient mGoogleSignInClient;
-    private static final int RC_SIGN_IN = 100;
+    private GoogleSignInClient googleClient;
+    private FirebaseAuth mAuth;
+
+    // Modern activity result for Google Sign-In
+    private final ActivityResultLauncher<Intent> googleLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                if (result.getData() == null) return;
+                Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                try {
+                    GoogleSignInAccount acct = task.getResult(ApiException.class);
+                    if (acct != null) {
+                        firebaseAuthWithGoogle(acct.getIdToken());
+                    } else {
+                        Toast.makeText(this, "No Google account data", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (ApiException e) {
+                    Toast.makeText(this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,68 +74,40 @@ public class LoginActivity extends AppCompatActivity {
         cbRemember = findViewById(R.id.cb_remember);
         btnGoogle = findViewById(R.id.btnGoogle);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        // If already signed in with Firebase -> go home
+        if (mAuth.getCurrentUser() != null) {
+            goHome();
+            return;
+        }
+
+        // Remember-me just to prefill
         SharedPreferences sp = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         boolean remembered = sp.getBoolean(KEY_REMEMBER, false);
         if (remembered) {
             String savedEmail = sp.getString(KEY_EMAIL, "");
             email.setText(savedEmail);
             cbRemember.setChecked(true);
-            startActivity(new Intent(this, HomeActivity.class));
-            finish();
-            return;
         }
 
-        // 🔹 Google Sign-In Configuration
+        // Google Sign-In config: requires strings.xml -> default_web_client_id (from Firebase)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
+        googleClient = GoogleSignIn.getClient(this, gso);
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-
-        // 🔹 Handle “Continue with Google”
-        btnGoogle.setOnClickListener(v -> signInWithGoogle());
+        btnGoogle.setOnClickListener(v -> googleLauncher.launch(googleClient.getSignInIntent()));
 
         TextView tvSignUp = findViewById(R.id.tv_sign_up);
         tvSignUp.setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
-        loginBtn.setOnClickListener(v -> doLogin());
+        loginBtn.setOnClickListener(v -> doPasswordLogin());
     }
 
-    private void signInWithGoogle() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-            handleSignInResult(task);
-        }
-    }
-
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            String userEmail = account.getEmail();
-            String userName = account.getDisplayName();
-
-            Toast.makeText(this, "Welcome " + userName, Toast.LENGTH_SHORT).show();
-
-            // ✅ Go to home after successful login
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-
-        } catch (ApiException e) {
-            Toast.makeText(this, "Google Sign-In failed: " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private void doLogin() {
+    private void doPasswordLogin() {
         String uEmail = email.getText().toString().trim();
         String uPass = password.getText().toString().trim();
 
@@ -130,23 +116,59 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // Demo/local test creds
         if (uEmail.equalsIgnoreCase(TEST_EMAIL) && uPass.equals(TEST_PASSWORD)) {
-            SharedPreferences sp = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-
-            if (cbRemember.isChecked()) {
-                editor.putBoolean(KEY_REMEMBER, true);
-                editor.putString(KEY_EMAIL, uEmail);
-            } else {
-                editor.putBoolean(KEY_REMEMBER, false);
-                editor.remove(KEY_EMAIL);
-            }
-            editor.apply();
-
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Invalid credentials. Use aaa@bbb.com / Admin101!", Toast.LENGTH_LONG).show();
+            saveRemember(uEmail);
+            goHome();
+            return;
         }
+
+        // Real Firebase email/password login
+        mAuth.signInWithEmailAndPassword(uEmail, uPass)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        saveRemember(uEmail);
+                        goHome();
+                    } else {
+                        Toast.makeText(this,
+                                "Login failed: " + (task.getException() != null ? task.getException().getMessage() : "unknown"),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        if (idToken == null) {
+            Toast.makeText(this, "No token from Google", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        AuthCredential cred = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(cred)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        String gEmail = (mAuth.getCurrentUser() != null) ? mAuth.getCurrentUser().getEmail() : null;
+                        if (gEmail != null) saveRemember(gEmail);
+                        goHome();
+                    } else {
+                        Toast.makeText(this, "Google auth failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void saveRemember(String mail) {
+        SharedPreferences.Editor ed = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
+        if (cbRemember.isChecked()) {
+            ed.putBoolean(KEY_REMEMBER, true);
+            ed.putString(KEY_EMAIL, mail);
+        } else {
+            ed.putBoolean(KEY_REMEMBER, false);
+            ed.remove(KEY_EMAIL);
+        }
+        ed.apply();
+    }
+
+    private void goHome() {
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
     }
 }

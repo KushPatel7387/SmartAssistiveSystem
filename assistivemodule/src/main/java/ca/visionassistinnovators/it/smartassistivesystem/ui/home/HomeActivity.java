@@ -8,6 +8,7 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,10 +25,15 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -59,16 +65,15 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_alerts,
                 R.id.nav_sensors,
                 R.id.nav_profile,
-                R.id.nav_feedback
-        )
-                .setOpenableLayout(drawerLayout)
-                .build();
+                R.id.nav_feedback,
+                R.id.nav_settings
+        ).setOpenableLayout(drawerLayout).build();
 
         // Connect toolbar + drawer + navigation
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Drawer: handle logout separately
+        // Drawer: handle logout separately (sign out Google + Firebase)
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_logout) {
@@ -87,8 +92,7 @@ public class HomeActivity extends AppCompatActivity {
 
         // Back press confirm
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
+            @Override public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
                         .setTitle(R.string.exit_app_title)
                         .setMessage(R.string.exit_app_message)
@@ -104,31 +108,39 @@ public class HomeActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle(R.string.logout_title)
                 .setMessage(R.string.logout_message)
-                .setPositiveButton(R.string.logout_button, (dialog, which) -> finish())
+                .setPositiveButton(R.string.logout_button, (dialog, which) -> {
+                    // Firebase sign out
+                    FirebaseAuth.getInstance().signOut();
+                    // Google sign out (safe even if user didn’t use Google)
+                    GoogleSignInClient gsc = GoogleSignIn.getClient(
+                            this,
+                            new com.google.android.gms.auth.api.signin.GoogleSignInOptions
+                                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestEmail()
+                                    .build()
+                    );
+                    gsc.signOut();
+
+                    Intent i = new Intent(this, LoginActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                    finish();
+                })
                 .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    @Override public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+    @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
-        if (id == R.id.action_about) {
-            navController.navigate(R.id.nav_about);
-            return true;
-        } else if (id == R.id.action_settings) {
-            navController.navigate(R.id.nav_settings);
-            return true;
-        } else if (id == R.id.action_feedback) {
-            navController.navigate(R.id.nav_feedback);
-            return true;
-        } else if (id == R.id.action_help) {
+        if (id == R.id.action_about) { navController.navigate(R.id.nav_about); return true; }
+        else if (id == R.id.action_settings) { navController.navigate(R.id.nav_settings); return true; }
+        else if (id == R.id.action_feedback) { navController.navigate(R.id.nav_feedback); return true; }
+        else if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.help_title)
                     .setMessage(R.string.help_message)
@@ -136,12 +148,10 @@ public class HomeActivity extends AppCompatActivity {
                     .show();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
+    @Override public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

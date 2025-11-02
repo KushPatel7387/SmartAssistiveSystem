@@ -6,8 +6,7 @@ public class UserModel {
     public String email;
     public String role;
 
-    public UserModel() {
-    }
+    public UserModel() { } // required for Firebase
 
     public UserModel(String name, String phone, String email, String role) {
         this.name = name;

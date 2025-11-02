@@ -92,4 +92,6 @@ Section: 3DTues
     <string name="help_message">This is the help section for Smart Assistive System.</string>
     <string name="ok">OK</string>
 
+    <string name="default_web_client_id">251288488243-iaafukv3ad5ip6c50a63d1d250i8jr8u.apps.googleusercontent.com</string>
+
 </resources>

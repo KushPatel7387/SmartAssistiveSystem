@@ -2,6 +2,7 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.SignInMethodQueryResult;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -25,7 +27,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);   // we will make this next
+        setContentView(R.layout.activity_register);
 
         mAuth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase
@@ -46,42 +48,66 @@ public class RegisterActivity extends AppCompatActivity {
             String pass = etPassword.getText().toString().trim();
             String conf = etConfirm.getText().toString().trim();
 
-            if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) ||
-                    TextUtils.isEmpty(pass) || TextUtils.isEmpty(conf)) {
-                Toast.makeText(this, "All fields required", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (!pass.equals(conf)) {
-                Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
-                return;
-            }
+            if (!validate(name, email, pass, conf)) return;
 
-            checkAndRegister(name, phone, email, pass);
+            // Use FirebaseAuth to check if an account already exists for this email
+            mAuth.fetchSignInMethodsForEmail(email)
+                    .addOnSuccessListener((SignInMethodQueryResult res) -> {
+                        boolean exists = res.getSignInMethods() != null && !res.getSignInMethods().isEmpty();
+                        if (exists) {
+                            Toast.makeText(this, "User already registered", Toast.LENGTH_SHORT).show();
+                        } else {
+                            createAccountAndSaveProfile(name, phone, email, pass);
+                        }
+                    })
+                    .addOnFailureListener(e ->
+                            Toast.makeText(this, "Auth check error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
     }
 
-    private void checkAndRegister(String name, String phone, String email, String password) {
-        usersRef.orderByChild("email").equalTo(email)
-                .get()
-                .addOnSuccessListener(snapshot -> {
-                    if (snapshot.exists()) {
-                        Toast.makeText(this, "User already registered", Toast.LENGTH_SHORT).show();
-                    } else {
-                        mAuth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        String uid = mAuth.getCurrentUser().getUid();
-                                        UserModel user = new UserModel(name, phone, email, "regular");
-                                        usersRef.child(uid).setValue(user);
-                                        Toast.makeText(this, "Registered!", Toast.LENGTH_SHORT).show();
-                                        finish(); // go back to login
-                                    } else {
-                                        Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                                    }
-                                });
+    private boolean validate(String name, String email, String pass, String conf) {
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) ||
+                TextUtils.isEmpty(pass) || TextUtils.isEmpty(conf)) {
+            Toast.makeText(this, "All fields required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (pass.length() < 6) {
+            Toast.makeText(this, "Password must be ≥ 6 characters", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (!pass.equals(conf)) {
+            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
+    }
+
+    private void createAccountAndSaveProfile(String name, String phone, String email, String password) {
+        mAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Toast.makeText(this,
+                                "Auth error: " + (task.getException() != null ? task.getException().getMessage() : "unknown"),
+                                Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "DB error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                    String uid = (mAuth.getCurrentUser() != null) ? mAuth.getCurrentUser().getUid() : null;
+                    if (uid == null) {
+                        Toast.makeText(this, "No UID after registration", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    UserModel user = new UserModel(name, phone, email, "regular");
+                    usersRef.child(uid).setValue(user)
+                            .addOnSuccessListener(unused -> {
+                                Toast.makeText(this, "Registered!", Toast.LENGTH_SHORT).show();
+                                finish(); // back to login
+                            })
+                            .addOnFailureListener(e ->
+                                    Toast.makeText(this, "DB write error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                });
     }
 }

@@ -13,7 +13,28 @@
           "package_name": "ca.visionassistinnovators.it.smartassistivesystem"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "251288488243-7vevp1reqlucl7iul1m4grtvt1u5tf6i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.visionassistinnovators.it.smartassistivesystem",
+            "certificate_hash": "5bb1fbc88e15be678e209147ecddefe3040a60ab"
+          }
+        },
+        {
+          "client_id": "251288488243-pnt8obno7v0jumtfjl0k4anag1p2gem0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.visionassistinnovators.it.smartassistivesystem",
+            "certificate_hash": "b2de31dec8a807ff2e8a296f3162c9719884dbdb"
+          }
+        },
+        {
+          "client_id": "251288488243-iaafukv3ad5ip6c50a63d1d250i8jr8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyA_Ejw7rs5e9dY8HmIo62x8oON6hZKd5bg"
@@ -21,7 +42,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251288488243-iaafukv3ad5ip6c50a63d1d250i8jr8u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
