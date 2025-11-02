@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="32dp"
-    android:background="#F5F5F5"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".ui.home.MagnifierFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Screen Magnifier"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#000000" />
+    <!-- Camera Preview -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Double-tap to zoom\nPinch to adjust"
-        android:textSize="16sp"
-        android:layout_marginTop="16dp"
-        android:textColor="#666666" />
+    <!-- Flashlight Toggle -->
+    <ImageButton
+        android:id="@+id/btnFlashlight"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="40dp"
+        android:backgroundTint="@color/teal_700"
+        android:background="@drawable/rounded_button_bg"
+        android:contentDescription="@string/flashlight_toggle"
+        android:src="@drawable/ic_flash_on"
+        android:tint="@android:color/white"
+        app:backgroundTint="@color/teal_700" />
 
-</LinearLayout>
+</FrameLayout>
