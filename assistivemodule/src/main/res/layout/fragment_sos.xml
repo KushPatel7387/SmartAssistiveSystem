@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -7,14 +8,14 @@
     android:gravity="center"
     android:padding="24dp"
     android:background="#FFF5F5"
-    tools:context=".ui.sos.SOSFragment">
+    tools:context=".ui.home.SosFragment">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@drawable/ic_sos_alert"
-        android:contentDescription="@string/sos_icon"
-        app:tint="@android:color/holo_red_dark" />
+        app:tint="@android:color/holo_red_dark"
+        android:contentDescription="@string/sos_icon" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -32,6 +33,7 @@
         android:textColor="#444"
         android:layout_marginBottom="30dp" />
 
+    <!-- 🚑 Ambulance Button -->
     <Button
         android:id="@+id/btnCallAmbulance"
         android:layout_width="match_parent"
@@ -41,6 +43,7 @@
         android:textColor="@android:color/white"
         android:layout_marginBottom="16dp" />
 
+    <!-- 👨‍👩‍👧‍👦 Guardians Button -->
     <Button
         android:id="@+id/btnCallGuardian"
         android:layout_width="match_parent"
