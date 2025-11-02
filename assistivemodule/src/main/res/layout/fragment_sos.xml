@@ -1,32 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="32dp"
-    android:background="#FFF3F3"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:padding="24dp"
+    android:background="#FFF5F5"
+    tools:context=".ui.sos.SOSFragment">
 
     <ImageView
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:src="@drawable/img_alert"
-        android:contentDescription="Emergency Alert" />
+        android:src="@drawable/ic_sos_alert"
+        android:contentDescription="@string/sos_icon"
+        app:tint="@android:color/holo_red_dark" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="SOS Alert"
-        android:textSize="28sp"
+        android:text="@string/sos_alert"
+        android:textSize="24sp"
+        android:textColor="@android:color/holo_red_dark"
         android:textStyle="bold"
-        android:textColor="#D32F2F"
         android:layout_marginTop="16dp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hold button to send emergency signal"
-        android:textSize="16sp"
-        android:layout_marginTop="8dp" />
+        android:text="@string/sos_choose_option"
+        android:textColor="#444"
+        android:layout_marginBottom="30dp" />
+
+    <Button
+        android:id="@+id/btnCallAmbulance"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/call_ambulance"
+        android:backgroundTint="#009688"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp" />
+
+    <Button
+        android:id="@+id/btnCallGuardian"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/call_guardians"
+        android:backgroundTint="#6200EE"
+        android:textColor="@android:color/white" />
 
 </LinearLayout>

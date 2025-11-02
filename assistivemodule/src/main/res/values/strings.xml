@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">SmartAssistiveSystem</string>
+    <string name="sos_icon">SOS Icon</string>
+    <string name="sos_alert">SOS Alert</string>
+    <string name="sos_choose_option">Choose an emergency option</string>
+    <string name="call_ambulance">🚑 Call Ambulance</string>
+    <string name="call_guardians">👨‍👩‍👧‍👦 Call Guardians</string>
+
 
     <!-- Menu -->
     <string name="menu_home">Home</string>
