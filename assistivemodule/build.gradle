@@ -49,6 +49,7 @@ dependencies {
 
     // ✅ Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:21.1.0'
+    implementation 'com.google.firebase:firebase-database'
 
     // ✅ Firebase
     implementation libs.firebase.database
