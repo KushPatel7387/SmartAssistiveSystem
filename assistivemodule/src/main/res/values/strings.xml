@@ -78,4 +78,18 @@ Section: 3DTues
     <string name="continue_with_google">Continue with Google</string>
     <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign Up</string>
     <string name="remember_me">Remember me</string>
+    <!-- HomeActivity strings -->
+    <string name="exit_app_title">Exit App</string>
+    <string name="exit_app_message">Do you really want to exit Smart Assistive System?</string>
+
+
+    <string name="logout_title">Logout</string>
+    <string name="logout_message">Are you sure you want to logout?</string>
+    <string name="logout_button">Logout</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="help_title">Help</string>
+    <string name="help_message">This is the help section for Smart Assistive System.</string>
+    <string name="ok">OK</string>
+
 </resources>

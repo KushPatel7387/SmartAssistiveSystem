@@ -40,18 +40,18 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // toolbar
+        // Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // drawer
+        // Drawer setup
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        // nav controller
+        // Nav controller
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        // top-level
+        // Top-level destinations
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_magnifier,
@@ -64,11 +64,11 @@ public class HomeActivity extends AppCompatActivity {
                 .setOpenableLayout(drawerLayout)
                 .build();
 
-        // connect toolbar + drawer + nav
+        // Connect toolbar + drawer + navigation
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // drawer: handle logout separately
+        // Drawer: handle logout separately
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
             if (id == R.id.nav_logout) {
@@ -81,20 +81,20 @@ public class HomeActivity extends AppCompatActivity {
             return handled;
         });
 
-        // bottom nav
+        // Bottom navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        // back press confirm
+        // Back press confirm
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle(R.string.exit_app2)
-                        .setMessage(R.string.do_you_really_want_to_exit_smart_assistive_system2)
+                        .setTitle(R.string.exit_app_title)
+                        .setMessage(R.string.exit_app_message)
                         .setIcon(R.drawable.ic_exit)
-                        .setPositiveButton("Yes", (d, w) -> finishAffinity())
-                        .setNegativeButton("Stay", (d, w) -> d.dismiss())
+                        .setPositiveButton(R.string.yes, (d, w) -> finishAffinity())
+                        .setNegativeButton(R.string.stay, (d, w) -> d.dismiss())
                         .show();
             }
         });
@@ -102,10 +102,10 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showLogoutDialog() {
         new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Logout", (dialog, which) -> finish())
-                .setNegativeButton("Cancel", null)
+                .setTitle(R.string.logout_title)
+                .setMessage(R.string.logout_message)
+                .setPositiveButton(R.string.logout_button, (dialog, which) -> finish())
+                .setNegativeButton(R.string.cancel, null)
                 .show();
     }
 
@@ -128,12 +128,11 @@ public class HomeActivity extends AppCompatActivity {
         } else if (id == R.id.action_feedback) {
             navController.navigate(R.id.nav_feedback);
             return true;
-        }
-        else if (id == R.id.action_help) {
+        } else if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
-                    .setTitle("Help")
-                    .setMessage("This is the help section for Smart Assistive System.")
-                    .setPositiveButton("OK", null)
+                    .setTitle(R.string.help_title)
+                    .setMessage(R.string.help_message)
+                    .setPositiveButton(R.string.ok, null)
                     .show();
             return true;
         }
