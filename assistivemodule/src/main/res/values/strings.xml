@@ -4,8 +4,8 @@
     <string name="sos_icon">SOS Icon</string>
     <string name="sos_alert">SOS Alert</string>
     <string name="sos_choose_option">Choose an emergency option</string>
-    <string name="call_ambulance">🚑 Call Ambulance</string>
-    <string name="call_guardians">👨‍👩‍👧‍👦 Call Guardians</string>
+    <string name="call_ambulance">Call Ambulance</string>
+    <string name="call_guardians"> Call Guardians</string>
     <string name="flashlight_toggle">Toggle Flashlight</string>
 
 

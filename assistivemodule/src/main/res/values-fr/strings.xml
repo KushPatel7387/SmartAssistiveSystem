@@ -9,6 +9,14 @@
     <string name="menu_about">À propos</string>
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
+        <string name="sos_icon">Icône SOS</string>
+        <string name="sos_alert">Alerte SOS</string>
+        <string name="sos_choose_option">Choisissez une option</string>
+        <string name="call_ambulance">Appeler une ambulance</string>
+        <string name="call_guardians">Appeler les gardiens</string>
+        <string name="flashlight_toggle">Basculer la lampe de poche</string>
+
+
     <string name="team_members">
  Membres de l’équipe :\n
 Sarang Prajapati – N01662036\n
