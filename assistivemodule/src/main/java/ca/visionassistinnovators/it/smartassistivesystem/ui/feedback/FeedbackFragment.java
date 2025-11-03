@@ -72,7 +72,7 @@ public class FeedbackFragment extends Fragment {
         String deviceModel = Build.MANUFACTURER + " " + Build.MODEL;
 
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email)) {
-            Toast.makeText(getContext(), "Please enter your name and email.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.please_enter_your_name_and_email, Toast.LENGTH_SHORT).show();
             return;
         }
 
