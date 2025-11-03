@@ -1,120 +1,73 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class HomeFragment extends Fragment {
 
-    private ImageView imgSlideshow;
     private TextView tvCaption;
-    private Handler handler;
-    private int currentImageIndex = 0;
+    private ImageView imgSlideshow;
+    private final Handler handler = new Handler();
+    private int index = 0;
 
-    // 6 Images
-    private final int[] imageList = {
-            R.drawable.bell,
-            R.drawable.gps,
-            R.drawable.record,
-            R.drawable.blind,
-            R.drawable.sos,
-            R.drawable.sound
-    };
-
-    // captions
-    private final String[] captions = {
-            getString(R.string.smart_assistive_system_helping_visually_impaired_users),
-            getString(R.string.voice_assistance_activated),
-            getString(R.string.sensor_module_detecting_nearby_obstacles),
-            getString(R.string.system_providing_safe_navigation),
-            getString(R.string.emergency_alert_mode_active),
-            getString(R.string.all_systems_operating_normally)
-    };
+    public HomeFragment() { /* required empty constructor */ }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
-
-        imgSlideshow = root.findViewById(R.id.imgSlideshow);
-        tvCaption = root.findViewById(R.id.tv_caption);
-
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
-
-        startImageSlideshow();
-
-        return root;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
-    private void startImageSlideshow() {
-        handler = new Handler(Looper.getMainLooper());
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        imgSlideshow = view.findViewById(R.id.imgSlideshow);
+        tvCaption = view.findViewById(R.id.tv_caption);
+        startSlideShow();
+    }
 
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                AlphaAnimation fadeOut = new AlphaAnimation(1f, 0f);
-                fadeOut.setDuration(500);
-                fadeOut.setFillAfter(true);
+    private void startSlideShow() {
+        // Build arrays AFTER fragment is attached
+        final int[] images = {
+                R.drawable.img_sensor,
+                R.drawable.img_alert,
+                R.drawable.img_microphone
+        };
+        final String[] captions = {
+                getString(R.string.smart_assistive_system_in_action),
+                getString(R.string.sensors_active),
+                getString(R.string.voice_assistance)
+        };
 
-                AlphaAnimation fadeIn = new AlphaAnimation(0f, 1f);
-                fadeIn.setDuration(800);
-                fadeIn.setFillAfter(true);
-
-                imgSlideshow.startAnimation(fadeOut);
-                fadeOut.setAnimationListener(new android.view.animation.Animation.AnimationListener() {
-                    @Override
-                    public void onAnimationStart(android.view.animation.Animation animation) {}
-
-                    @Override
-                    public void onAnimationEnd(android.view.animation.Animation animation) {
-                        imgSlideshow.setImageResource(imageList[currentImageIndex]);
-                        tvCaption.setText(captions[currentImageIndex]);
-                        imgSlideshow.startAnimation(fadeIn);
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(android.view.animation.Animation animation) {}
-                });
-
-                currentImageIndex = (currentImageIndex + 1) % imageList.length;
-
-                handler.postDelayed(this, 3000);
+        handler.post(new Runnable() {
+            @Override public void run() {
+                if (getView() == null) return;               // fragment not visible
+                imgSlideshow.setImageResource(images[index % images.length]);
+                tvCaption.setText(captions[index % captions.length]);
+                index++;
+                handler.postDelayed(this, 3500);
             }
-        }, 0);
+        });
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        }
+        handler.removeCallbacksAndMessages(null); // prevent leaks
+        imgSlideshow = null;
+        tvCaption = null;
     }
 }
