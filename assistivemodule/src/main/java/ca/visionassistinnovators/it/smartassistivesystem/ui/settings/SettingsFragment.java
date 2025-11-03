@@ -68,7 +68,7 @@ public class SettingsFragment extends Fragment {
                 isGranted -> {
                     if (isGranted) {
                         Snackbar.make(requireView(),
-                                "✅ Permission Granted — location features enabled!",
+                                R.string.permission_granted_location_features_enabled,
                                 Snackbar.LENGTH_LONG).show();
                     } else {
                         Snackbar.make(requireView(),

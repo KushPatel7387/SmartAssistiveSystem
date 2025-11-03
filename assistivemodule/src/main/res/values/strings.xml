@@ -109,5 +109,6 @@ Section: 3DTues
     <string name="alerts">Alerts</string>
     <string name="no_new_alerts">No new alerts.</string>
     <string name="home_slideshow">Home slideshow</string>
+    <string name="permission_granted_location_features_enabled">✅ Permission Granted — location features enabled!</string>
 
 </resources>
