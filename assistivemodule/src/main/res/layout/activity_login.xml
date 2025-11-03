@@ -173,7 +173,7 @@
 
                 <CheckBox
                     android:id="@+id/cb_remember"
-                    android:layout_width="wrap_content"
+                    android:layout_width="151dp"
                     android:layout_height="wrap_content"
                     android:text="@string/remember_me"
                     android:textColor="@color/teal_200"
@@ -181,13 +181,13 @@
 
                 <TextView
                     android:id="@+id/tv_forgot_password"
-                    android:layout_width="wrap_content"
+                    android:layout_width="139dp"
                     android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="true"
                     android:text="@string/forgot_password"
                     android:textColor="@color/teal_200"
-                    android:textSize="14sp"
-                    android:clickable="true"
-                    android:focusable="true" />
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <!-- Divider -->
