@@ -27,39 +27,60 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
-
 public class MainActivity extends AppCompatActivity {
+
+    private static final long MAX_SPLASH_TIME = 1000; // 2 sec max
+    private boolean isWriteDone = false;
+    private boolean isReadDone = false;
+    private boolean isTimeout = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        // Install Splash Screen API
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
-
         super.onCreate(savedInstanceState);
 
-        //  Delay 3 seconds → go to LoginActivity
+        // Keep splash until BOTH write & read done OR timeout
+        splashScreen.setKeepOnScreenCondition(() ->
+                !(isWriteDone && isReadDone) && !isTimeout
+        );
+
+        // Start both operations
+        doFirebaseTestWrite();
+        doFirebaseTestRead();
+
+        // Safety timeout
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(intent);
-            finish();
-        }, 3000);
+            isTimeout = true;
+            goToLogin();
+        }, MAX_SPLASH_TIME);
+    }
 
-
-        //  Connect directly to your test DB
+    private void doFirebaseTestWrite() {
         DatabaseReference dbRef = FirebaseDatabase
                 .getInstance(getString(R.string.https_smartassistivesystem_39072_default_rtdb_firebaseio_com))
                 .getReference();
 
-        //  Write a test value
         Map<String, Object> testData = new HashMap<>();
         testData.put(getString(R.string.message), getString(R.string.hello_from_android));
-
         testData.put(getString(R.string.timestamp), System.currentTimeMillis());
 
-        dbRef.child(getString(R.string.test)).setValue(testData);
+        dbRef.child(getString(R.string.test)).setValue(testData)
+                .addOnSuccessListener(aVoid -> {
+                    isWriteDone = true;
+                    checkAndProceed();
+                })
+                .addOnFailureListener(e -> {
+                    isWriteDone = true; // Don't block user
+                    checkAndProceed();
+                });
+    }
 
-        //  Read back the data
-        dbRef.child(getString(R.string.test1)).addValueEventListener(new ValueEventListener() {
+    private void doFirebaseTestRead() {
+        DatabaseReference dbRef = FirebaseDatabase
+                .getInstance(getString(R.string.https_smartassistivesystem_39072_default_rtdb_firebaseio_com))
+                .getReference();
+
+        ValueEventListener listener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
@@ -68,12 +89,34 @@ public class MainActivity extends AppCompatActivity {
                     System.out.println(getString(R.string.message3) + message);
                     System.out.println(getString(R.string.timestamp3) + time);
                 }
+                isReadDone = true;
+                checkAndProceed();
+
+                // Remove listener after first read
+                dbRef.child(getString(R.string.test1)).removeEventListener(this);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 System.err.println(getString(R.string.error) + error.getMessage());
+                isReadDone = true;
+                checkAndProceed();
+                dbRef.child(getString(R.string.test1)).removeEventListener(this);
             }
-        });
+        };
+
+        dbRef.child(getString(R.string.test1)).addValueEventListener(listener);
+    }
+
+    private void checkAndProceed() {
+        if ((isWriteDone && isReadDone) || isTimeout) {
+            goToLogin();
+        }
+    }
+
+    private void goToLogin() {
+        if (isFinishing()) return;
+        startActivity(new Intent(this, LoginActivity.class));
+        finish();
     }
 }
