@@ -13,30 +13,20 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- 🟢 App Title -->
+        <!-- 🔹 Welcome Section -->
         <TextView
             android:id="@+id/text_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Smart Assistive System Dashboard"
-            android:textSize="22sp"
+            android:text="Welcome to Smart Assistive System"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/purple_700"
             android:gravity="center"
-            android:padding="8dp" />
+            android:padding="12dp" />
 
-        <!-- 🟢 Role / Connection Status -->
-        <TextView
-            android:id="@+id/tv_user_role"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Mode: Caretaker | Connected to: User Device"
-            android:textColor="@color/dark_gray"
-            android:textSize="14sp"
-            android:gravity="center"
-            android:layout_marginBottom="8dp" />
 
-        <!-- 🧍‍♂️ Illustration -->
+        <!-- 🔹 Auto-Image Slideshow -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="220dp"
@@ -46,31 +36,33 @@
                 android:id="@+id/imgSlideshow"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/img_visually_impaired"
+                android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:contentDescription="Assistive navigation illustration" />
+                android:contentDescription="Home slideshow" />
 
+            <!-- Caption Overlay -->
             <TextView
                 android:id="@+id/tv_caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="#66000000"
                 android:padding="8dp"
-                android:text="Safe navigation with real-time assistance"
+                android:background="#66000000"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:gravity="center" />
+                android:gravity="center"
+                android:text="Smart Assistive System in Action" />
         </FrameLayout>
 
-        <!-- 🟣 Sensor Status -->
+
+        <!-- 🔹 Sensor Status Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
+            app:cardElevation="6dp"
             app:strokeColor="@color/purple_200"
             app:strokeWidth="1dp">
 
@@ -95,7 +87,6 @@
                     android:paddingStart="12dp">
 
                     <TextView
-                        android:id="@+id/tv_sensor_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Sensors Active"
@@ -107,68 +98,19 @@
                         android:id="@+id/tv_sensor_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All proximity and obstacle sensors are online."
+                        android:text="All systems functioning normally."
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 🗺 GPS Tracking Card -->
+        <!-- 🔹 Voice Control Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
-            app:strokeColor="@color/purple_200"
-            app:strokeWidth="1dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ic_location"
-                    android:contentDescription="Location Icon" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:paddingStart="12dp">
-
-                    <TextView
-                        android:id="@+id/tv_location_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Location Tracking"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/tv_location_status"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Caretaker can monitor live location safely."
-                        android:textColor="@color/darker_gray" />
-                </LinearLayout>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- 🎙 Voice Assistance Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
+            app:cardElevation="6dp"
             app:strokeColor="@color/purple_200"
             app:strokeWidth="1dp">
 
@@ -183,7 +125,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/img_microphone"
-                    android:contentDescription="Voice Assistance Icon" />
+                    android:contentDescription="Voice Icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -204,19 +146,19 @@
                         android:id="@+id/tv_voice_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tap the mic icon to speak or get directions."
+                        android:text="Tap mic icon to start listening."
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- 🚨 SOS / Alerts -->
+        <!-- 🔹 Alerts Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="8dp"
+            app:cardElevation="6dp"
             app:strokeColor="@color/purple_200"
             app:strokeWidth="1dp">
 
@@ -230,8 +172,8 @@
                 <ImageView
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/ic_sos_alert"
-                    android:contentDescription="SOS Icon" />
+                    android:src="@drawable/img_alert"
+                    android:contentDescription="Alert Icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -243,7 +185,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Emergency and Alerts"
+                        android:text="Alerts"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/black" />
@@ -252,7 +194,7 @@
                         android:id="@+id/tv_alert_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No new alerts. System is stable."
+                        android:text="No new alerts."
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>

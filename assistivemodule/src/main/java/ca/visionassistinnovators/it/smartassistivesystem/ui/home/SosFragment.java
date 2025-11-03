@@ -19,19 +19,32 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class SosFragment extends Fragment {
 
-    private static final int REQUEST_CALL_PERMISSION = 1;
     private static final String AMBULANCE_NUMBER = "911"; // Emergency number (Canada)
     private static final String GUARDIAN_NUMBER = "12345678"; // Replace with real number
 
     private Button btnAmbulance, btnGuardian;
+    private String pendingNumberToCall;
+
+    // ✅ Modern permission launcher
+    private final ActivityResultLauncher<String> callPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Toast.makeText(requireContext(), "✅ Permission granted. Calling...", Toast.LENGTH_SHORT).show();
+                    makePhoneCall(pendingNumberToCall);
+                } else {
+                    Toast.makeText(requireContext(), "❌ Permission denied for phone calls.", Toast.LENGTH_SHORT).show();
+                }
+            });
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,44 +56,35 @@ public class SosFragment extends Fragment {
         // 🚑 Ambulance button
         btnAmbulance.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "🚑 Calling Ambulance...", Toast.LENGTH_SHORT).show();
-            makePhoneCall(AMBULANCE_NUMBER);
+            requestCallPermissionAndCall(AMBULANCE_NUMBER);
         });
 
-        // 👨‍👩‍👧‍👦 Guardians button
+        // 👨‍👩‍👧‍👦 Guardian button
         btnGuardian.setOnClickListener(v -> {
             Toast.makeText(requireContext(), "📞 Calling Guardian...", Toast.LENGTH_SHORT).show();
-            makePhoneCall(GUARDIAN_NUMBER);
+            requestCallPermissionAndCall(GUARDIAN_NUMBER);
         });
 
         return root;
     }
 
-    private void makePhoneCall(String phoneNumber) {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.CALL_PHONE},
-                    REQUEST_CALL_PERMISSION);
+    private void requestCallPermissionAndCall(String phoneNumber) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CALL_PHONE)
+                == PackageManager.PERMISSION_GRANTED) {
+            makePhoneCall(phoneNumber);
         } else {
-            try {
-                Intent intent = new Intent(Intent.ACTION_CALL);
-                intent.setData(Uri.parse("tel:" + phoneNumber));
-                startActivity(intent);
-            } catch (Exception e) {
-                Toast.makeText(requireContext(), "⚠️ Unable to make call: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
+            pendingNumberToCall = phoneNumber;
+            callPermissionLauncher.launch(Manifest.permission.CALL_PHONE);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_CALL_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(requireContext(), "✅ Permission granted. Tap again to call.", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(requireContext(), "❌ Permission denied for phone calls.", Toast.LENGTH_SHORT).show();
-            }
+    private void makePhoneCall(String phoneNumber) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_CALL);
+            intent.setData(Uri.parse("tel:" + phoneNumber));
+            startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(requireContext(), "⚠️ Unable to make call: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }
