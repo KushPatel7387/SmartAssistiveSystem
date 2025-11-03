@@ -11,6 +11,9 @@
     <!-- Basic colors -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
+    <color name="dark_gray">#555555</color>
+   
+
 
     <!-- Splash screen background -->
     <color name="splash_background">#FFFFFF</color>

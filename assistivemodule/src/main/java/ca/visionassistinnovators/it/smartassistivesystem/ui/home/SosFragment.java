@@ -29,7 +29,7 @@ public class SosFragment extends Fragment {
 
     private static final int REQUEST_CALL_PERMISSION = 1;
     private static final String AMBULANCE_NUMBER = "911"; // Emergency number (Canada)
-    private static final String GUARDIAN_NUMBER = "1234567890"; // Replace with real number
+    private static final String GUARDIAN_NUMBER = "12345678"; // Replace with real number
 
     private Button btnAmbulance, btnGuardian;
 
