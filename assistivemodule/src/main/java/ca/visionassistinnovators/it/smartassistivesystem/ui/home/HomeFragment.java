@@ -44,12 +44,12 @@ public class HomeFragment extends Fragment {
 
     // captions
     private final String[] captions = {
-            "Smart Assistive System: Helping visually impaired users",
-            "Voice assistance activated",
-            "Sensor module detecting nearby obstacles",
-            "System providing safe navigation",
-            "Emergency alert mode active",
-            "All systems operating normally"
+            getString(R.string.smart_assistive_system_helping_visually_impaired_users),
+            getString(R.string.voice_assistance_activated),
+            getString(R.string.sensor_module_detecting_nearby_obstacles),
+            getString(R.string.system_providing_safe_navigation),
+            getString(R.string.emergency_alert_mode_active),
+            getString(R.string.all_systems_operating_normally)
     };
 
     @Nullable
