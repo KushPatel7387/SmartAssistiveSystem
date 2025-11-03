@@ -111,5 +111,13 @@ Section: 3DTues
     <string name="home_slideshow">Home slideshow</string>
     <string name="permission_granted_location_features_enabled">✅ Permission Granted — location features enabled!</string>
     <string name="please_enter_your_name_and_email">Please enter your name and email.</string>
+    <string name="name">name</string>
+    <string name="phone">phone</string>
+    <string name="comment">comment</string>
+    <string name="rating">rating</string>
+    <string name="Email">email</string>
+    <string name="devicemodel">deviceModel</string>
+    <string name="Timestamp">timestamp</string>
+    <string name="feedback_submitted_successfully">✅ Feedback submitted successfully!</string>
 
 </resources>

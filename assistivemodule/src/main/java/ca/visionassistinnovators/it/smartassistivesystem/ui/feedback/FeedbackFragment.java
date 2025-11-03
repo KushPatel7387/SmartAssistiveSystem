@@ -78,18 +78,18 @@ public class FeedbackFragment extends Fragment {
 
         // Create data map
         Map<String, Object> feedbackData = new HashMap<>();
-        feedbackData.put("name", name);
-        feedbackData.put("phone", phone);
-        feedbackData.put("email", email);
-        feedbackData.put("comment", comment);
-        feedbackData.put("rating", rating);
-        feedbackData.put("deviceModel", deviceModel);
-        feedbackData.put("timestamp", System.currentTimeMillis());
+        feedbackData.put(getString(R.string.name), name);
+        feedbackData.put(getString(R.string.phone), phone);
+        feedbackData.put(getString(R.string.Email), email);
+        feedbackData.put(getString(R.string.comment), comment);
+        feedbackData.put(getString(R.string.rating), rating);
+        feedbackData.put(getString(R.string.devicemodel), deviceModel);
+        feedbackData.put(getString(R.string.Timestamp), System.currentTimeMillis());
 
         // Push data to Firebase Realtime DB
         dbRef.push().setValue(feedbackData)
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "✅ Feedback submitted successfully!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.feedback_submitted_successfully, Toast.LENGTH_SHORT).show();
                     clearFields();
                 })
                 .addOnFailureListener(e ->
