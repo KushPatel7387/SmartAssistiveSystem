@@ -64,4 +64,47 @@ Section : 3DTues
     <string name="https_smartassistivesystem_39072_default_rtdb_firebaseio_com">https://smartassistivesystem-39072-default-rtdb.firebaseio.com</string>
     <string name="exit_app2">Quitter l’application</string>
     <string name="do_you_really_want_to_exit_smart_assistive_system2">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
+
+    <string name="hello_blank_fragment">Bonjour fragment vide</string>
+    <string name="smartassistivesystem">Système d’assistance intelligente</string>
+    <string name="login">Connexion</string>
+    <string name="email">E-mail</string>
+    <string name="enter_your_email">Entrez votre e-mail</string>
+    <string name="password">Mot de passe</string>
+    <string name="enter_your_password">Entrez votre mot de passe</string>
+    <string name="forgot_password">Mot de passe oublié ?</string>
+    <string name="or_sign_in_with">ou connectez-vous avec</string>
+    <string name="continue_with_google">Continuer avec Google</string>
+    <string name="don_t_have_an_account_sign_up">Vous n’avez pas de compte ? Inscrivez-vous</string>
+    <string name="remember_me">Se souvenir de moi</string>
+
+    <!-- HomeActivity strings -->
+    <string name="exit_app_title">Quitter l’application</string>
+    <string name="exit_app_message">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
+
+    <string name="logout_title">Déconnexion</string>
+    <string name="logout_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
+    <string name="logout_button">Déconnexion</string>
+    <string name="cancel">Annuler</string>
+
+    <string name="help_title">Aide</string>
+    <string name="help_message">Ceci est la section d’aide du Système d’assistance intelligente.</string>
+    <string name="ok">OK</string>
+    <string name="customer_feedback">Commentaires des clients</string>
+    <string name="light">Lumière : --</string>
+    <string name="color">Couleur : --</string>
+    <string name="distance">Distance : --</string>
+    <string name="spectrum">Spectre : --</string>
+    <string name="welcome_to_smart_assistive_system">Bienvenue dans le Système d’assistance intelligente</string>
+    <string name="smart_assistive_system_in_action">Système d’assistance intelligente en action</string>
+    <string name="sensors_active">Capteurs actifs</string>
+    <string name="all_systems_functioning_normally">Tous les systèmes fonctionnent normalement.</string>
+    <string name="voice_icon">Icône vocale</string>
+    <string name="voice_assistance">Assistance vocale</string>
+    <string name="tap_mic_icon_to_start_listening">Touchez l’icône du micro pour commencer à écouter.</string>
+    <string name="alert_icon">Icône d’alerte</string>
+    <string name="alerts">Alertes</string>
+    <string name="no_new_alerts">Aucune nouvelle alerte.</string>
+    <string name="home_slideshow">Diaporama d’accueil</string>
+
 </resources>
