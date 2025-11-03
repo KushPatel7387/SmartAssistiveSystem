@@ -22,7 +22,6 @@ public class AboutFragment extends Fragment {
     public AboutFragment() {
         // Required empty constructor
     }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
