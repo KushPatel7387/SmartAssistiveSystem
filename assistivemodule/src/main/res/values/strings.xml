@@ -119,5 +119,11 @@ Section: 3DTues
     <string name="devicemodel">deviceModel</string>
     <string name="Timestamp">timestamp</string>
     <string name="feedback_submitted_successfully">✅ Feedback submitted successfully!</string>
+    <string name="smart_assistive_system_helping_visually_impaired_users">Smart Assistive System: Helping visually impaired users</string>
+    <string name="voice_assistance_activated">Voice assistance activated</string>
+    <string name="sensor_module_detecting_nearby_obstacles">Sensor module detecting nearby obstacles</string>
+    <string name="system_providing_safe_navigation">System providing safe navigation</string>
+    <string name="emergency_alert_mode_active">Emergency alert mode active</string>
+    <string name="all_systems_operating_normally">All systems operating normally</string>
 
 </resources>
