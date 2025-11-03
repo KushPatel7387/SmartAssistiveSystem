@@ -19,13 +19,14 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
-import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -37,11 +38,13 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class MagnifierFragment extends Fragment {
 
-    private static final int CAMERA_PERMISSION_REQUEST = 101;
     private PreviewView previewView;
     private Camera camera;
     private ImageButton btnFlashlight;
     private boolean flashOn = false;
+
+    // Modern permission launcher
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -51,17 +54,29 @@ public class MagnifierFragment extends Fragment {
         previewView = root.findViewById(R.id.previewView);
         btnFlashlight = root.findViewById(R.id.btnFlashlight);
 
+        // ✅ Register permission callback
+        cameraPermissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) {
+                        startCamera();
+                    } else {
+                        Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+        // ✅ Request or start camera
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
-            ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.CAMERA},
-                    CAMERA_PERMISSION_REQUEST);
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
         }
 
+        // Flashlight toggle
         btnFlashlight.setOnClickListener(v -> toggleFlash());
 
+        // Zoom gesture
         setupZoomGesture();
 
         return root;
@@ -117,19 +132,6 @@ public class MagnifierFragment extends Fragment {
                     Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(requireContext(), "Flash not supported", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == CAMERA_PERMISSION_REQUEST &&
-                grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            startCamera();
-        } else {
-            Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
         }
     }
 }
