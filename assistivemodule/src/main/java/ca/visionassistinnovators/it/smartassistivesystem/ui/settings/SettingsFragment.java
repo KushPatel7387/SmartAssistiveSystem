@@ -89,7 +89,7 @@ public class SettingsFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            Snackbar.make(view, "✅ Location permission already granted", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(view, R.string.location_permission_already, Snackbar.LENGTH_LONG).show();
 
         } else {
             // Directly launch permission dialog

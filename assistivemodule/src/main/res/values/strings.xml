@@ -125,5 +125,6 @@ Section: 3DTues
     <string name="system_providing_safe_navigation">System providing safe navigation</string>
     <string name="emergency_alert_mode_active">Emergency alert mode active</string>
     <string name="all_systems_operating_normally">All systems operating normally</string>
+    <string name="location_permission_already">✅ Location permission already granted</string>
 
 </resources>
