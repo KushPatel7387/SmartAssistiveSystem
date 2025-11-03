@@ -32,7 +32,6 @@ public class SosFragment extends Fragment {
     private static final String AMBULANCE_NUMBER = "911"; // Emergency number (Canada)
     private static final String GUARDIAN_NUMBER = "12345678"; // Replace with real number
 
-    private Button btnAmbulance, btnGuardian;
     private String pendingNumberToCall;
 
     // ✅ Modern permission launcher
@@ -50,8 +49,8 @@ public class SosFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_sos, container, false);
 
-        btnAmbulance = root.findViewById(R.id.btnCallAmbulance);
-        btnGuardian = root.findViewById(R.id.btnCallGuardian);
+        Button btnAmbulance = root.findViewById(R.id.btnCallAmbulance);
+        Button btnGuardian = root.findViewById(R.id.btnCallGuardian);
 
         // 🚑 Ambulance button
         btnAmbulance.setOnClickListener(v -> {
