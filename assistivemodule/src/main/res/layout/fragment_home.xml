@@ -18,7 +18,7 @@
             android:id="@+id/text_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Welcome to Smart Assistive System"
+            android:text="@string/welcome_to_smart_assistive_system"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/purple_700"
@@ -38,7 +38,7 @@
                 android:layout_height="match_parent"
                 android:adjustViewBounds="true"
                 android:scaleType="fitCenter"
-                android:contentDescription="Home slideshow" />
+                android:contentDescription="@string/home_slideshow" />
 
             <!-- Caption Overlay -->
             <TextView
@@ -52,7 +52,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:text="Smart Assistive System in Action" />
+                android:text="@string/smart_assistive_system_in_action" />
         </FrameLayout>
 
 
@@ -89,7 +89,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Sensors Active"
+                        android:text="@string/sensors_active"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/black" />
@@ -98,7 +98,7 @@
                         android:id="@+id/tv_sensor_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="All systems functioning normally."
+                        android:text="@string/all_systems_functioning_normally"
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>
@@ -125,7 +125,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/img_microphone"
-                    android:contentDescription="Voice Icon" />
+                    android:contentDescription="@string/voice_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -137,7 +137,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Voice Assistance"
+                        android:text="@string/voice_assistance"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/black" />
@@ -146,7 +146,7 @@
                         android:id="@+id/tv_voice_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tap mic icon to start listening."
+                        android:text="@string/tap_mic_icon_to_start_listening"
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>
@@ -173,7 +173,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:src="@drawable/img_alert"
-                    android:contentDescription="Alert Icon" />
+                    android:contentDescription="@string/alert_icon" />
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -185,7 +185,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Alerts"
+                        android:text="@string/alerts"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         android:textColor="@color/black" />
@@ -194,7 +194,7 @@
                         android:id="@+id/tv_alert_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="No new alerts."
+                        android:text="@string/no_new_alerts"
                         android:textColor="@color/darker_gray" />
                 </LinearLayout>
             </LinearLayout>

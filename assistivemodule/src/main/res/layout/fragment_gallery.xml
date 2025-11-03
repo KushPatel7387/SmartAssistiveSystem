@@ -14,7 +14,7 @@
             android:id="@+id/text_light"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Light: --"
+            android:text="@string/light"
             android:textSize="18sp"
             android:padding="8dp" />
 
@@ -22,7 +22,7 @@
             android:id="@+id/text_color"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Color: --"
+            android:text="@string/color"
             android:textSize="18sp"
             android:padding="8dp" />
 
@@ -30,7 +30,7 @@
             android:id="@+id/text_distance"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Distance: --"
+            android:text="@string/distance"
             android:textSize="18sp"
             android:padding="8dp" />
 
@@ -38,7 +38,7 @@
             android:id="@+id/text_spectrum"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Spectrum: --"
+            android:text="@string/spectrum"
             android:textSize="18sp"
             android:padding="8dp" />
 

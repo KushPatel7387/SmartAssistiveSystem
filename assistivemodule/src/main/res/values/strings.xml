@@ -93,5 +93,21 @@ Section: 3DTues
     <string name="ok">OK</string>
 
     <string name="default_web_client_id">251288488243-iaafukv3ad5ip6c50a63d1d250i8jr8u.apps.googleusercontent.com</string>
+    <string name="customer_feedback">Customer Feedback</string>
+    <string name="light">Light: --</string>
+    <string name="color">Color: --</string>
+    <string name="distance">Distance: --</string>
+    <string name="spectrum">Spectrum: --</string>
+    <string name="welcome_to_smart_assistive_system">Welcome to Smart Assistive System</string>
+    <string name="smart_assistive_system_in_action">Smart Assistive System in Action</string>
+    <string name="sensors_active">Sensors Active</string>
+    <string name="all_systems_functioning_normally">All systems functioning normally.</string>
+    <string name="voice_icon">Voice Icon</string>
+    <string name="voice_assistance">Voice Assistance</string>
+    <string name="tap_mic_icon_to_start_listening">Tap mic icon to start listening.</string>
+    <string name="alert_icon">Alert Icon</string>
+    <string name="alerts">Alerts</string>
+    <string name="no_new_alerts">No new alerts.</string>
+    <string name="home_slideshow">Home slideshow</string>
 
 </resources>
