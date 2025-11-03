@@ -40,11 +40,7 @@ public class MagnifierFragment extends Fragment {
 
     private PreviewView previewView;
     private Camera camera;
-    private ImageButton btnFlashlight;
     private boolean flashOn = false;
-
-    // Modern permission launcher
-    private ActivityResultLauncher<String> cameraPermissionLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -52,10 +48,11 @@ public class MagnifierFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_magnifier, container, false);
 
         previewView = root.findViewById(R.id.previewView);
-        btnFlashlight = root.findViewById(R.id.btnFlashlight);
+        ImageButton btnFlashlight = root.findViewById(R.id.btnFlashlight);
 
         // ✅ Register permission callback
-        cameraPermissionLauncher = registerForActivityResult(
+        // Modern permission launcher
+        ActivityResultLauncher<String> cameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {

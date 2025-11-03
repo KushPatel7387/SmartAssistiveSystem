@@ -27,7 +27,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class HomeFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
     private ImageView imgSlideshow;
     private TextView tvCaption;
     private Handler handler;
@@ -61,7 +60,7 @@ public class HomeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        HomeViewModel homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
         imgSlideshow = root.findViewById(R.id.imgSlideshow);
         tvCaption = root.findViewById(R.id.tv_caption);

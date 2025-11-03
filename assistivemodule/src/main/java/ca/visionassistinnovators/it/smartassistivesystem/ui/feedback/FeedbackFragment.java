@@ -35,7 +35,6 @@ public class FeedbackFragment extends Fragment {
 
     private EditText etName, etPhone, etEmail, etComment;
     private RatingBar ratingBar;
-    private Button btnSubmit;
     private DatabaseReference dbRef;
 
     @Nullable
@@ -54,7 +53,7 @@ public class FeedbackFragment extends Fragment {
         etEmail = root.findViewById(R.id.et_email);
         etComment = root.findViewById(R.id.et_comment);
         ratingBar = root.findViewById(R.id.ratingBar);
-        btnSubmit = root.findViewById(R.id.btn_submit_feedback);
+        Button btnSubmit = root.findViewById(R.id.btn_submit_feedback);
 
         // Set button click listener
         btnSubmit.setOnClickListener(v -> saveFeedback());

@@ -38,7 +38,7 @@ public class SettingsFragment extends Fragment {
     private SwitchCompat switchLockPortrait;
     private Button btnRequestLocation;
 
-    // ✅ Modern permission launcher (works instantly)
+    // Modern permission launcher (works instantly)
     private ActivityResultLauncher<String> permissionLauncher;
 
     @Nullable
@@ -51,7 +51,7 @@ public class SettingsFragment extends Fragment {
         switchLockPortrait = root.findViewById(R.id.switch_lock_portrait);
         btnRequestLocation = root.findViewById(R.id.btn_request_location);
 
-        // ✅ Lock/unlock portrait orientation
+        //  Lock/unlock portrait orientation
         switchLockPortrait.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -62,7 +62,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        // ✅ Register permission launcher
+        // Register permission launcher
         permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
