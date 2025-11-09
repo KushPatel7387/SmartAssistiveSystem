@@ -65,18 +65,7 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 - **GitHub Repo:** [SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
 - **Invitation Link:** [GitHub Invite](https://github.com/KushPatel7387/SmartAssistiveSystem/invitations)
 
----
-
-## 📸 Screenshots
-| Section                                                 | 
-|---------------------------------------------------------|
-| Splash Screen                                           |  
-| ![SPLASH SCREEN.jpg](../../Desktop/SPLASH%20SCREEN.jpg) |  
-| Login Screen ![LOGIN.jpg](../../Desktop/LOGIN.jpg)      | 
-| Home    ![HOME.jpg](../../Desktop/HOME.jpg)             | 
-| Settings   ![SETTING.jpg](../../Desktop/SETTING.jpg)    | 
-| About    ![ABOUT.jpg](../../Desktop/ABOUT.jpg)          | 
-| Sencer ![SENCER.jpg](../../Desktop/SENCER.jpg)          | 
+## Currenlty working on Deliverable 4
 
 
 
