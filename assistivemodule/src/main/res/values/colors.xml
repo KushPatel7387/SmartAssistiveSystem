@@ -4,7 +4,6 @@
     <color name="purple_200">#BB86FC</color>
     <color name="purple_500">#6200EE</color>
     <color name="purple_700">#3700B3</color>
-    <color name ="Name_gradient">#8DAF2B</color>
     <color name="teal_200">#03DAC5</color>
     <color name="teal_700">#018786</color>
 
@@ -35,5 +34,7 @@
     <!-- Accent -->
     <color name="accent_pink">#FF4081</color>
     <color name="colorPrimary">#2575FC</color>
+
+    <color name="name_gradient">#1E88E5</color>
 
 </resources>
