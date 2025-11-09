@@ -6,107 +6,104 @@
  * Krish Patel – N01666556
  * Kush Patel – N01657387
  */
-
 package ca.visionassistinnovators.it.smartassistivesystem.ui.sensors;
 
-import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import com.google.firebase.database.ValueEventListener;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
-public class SensorFragment extends Fragment implements SensorEventListener {
+public class SensorFragment extends Fragment {
 
-    private SensorManager sensorManager;
-    private Sensor lightSensor;
-    private TextView lightValueText;
+    private TextView tvLightValue, tvCloudValue, tvUpdatedAt;
+    private ProgressBar progress;
+
     private DatabaseReference sensorRef;
+    private ValueEventListener listener;
 
+    public SensorFragment() { /* empty */ }
+
+    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_sensors, container, false);
 
-        lightValueText = root.findViewById(R.id.txtLightValue);
+        tvLightValue = root.findViewById(R.id.txtLightValue);      // show a friendly label
+        tvCloudValue = root.findViewById(R.id.txtFromFirebase);    // “Cloud Value: …”
+        tvUpdatedAt  = root.findViewById(R.id.txtUpdatedAt);       // add this TextView in layout if missing
+        progress     = root.findViewById(R.id.progress);           // add a small ProgressBar in layout if missing
 
-        // ✅ Initialize the Sensor Manager and Light Sensor
-        sensorManager = (SensorManager) requireActivity().getSystemService(Context.SENSOR_SERVICE);
-        lightSensor = sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
-        if (lightSensor == null) {
-            Toast.makeText(requireContext(), "Light sensor not available on this device", Toast.LENGTH_SHORT).show();
-        }
-
-        // ✅ Firebase reference (SensorData → LightSensor)
-        sensorRef = FirebaseDatabase.getInstance()
+        // Point to your RTDB path: SensorData/LightSensor { latest: <float>, timestamp: <string> }
+        sensorRef = FirebaseDatabase
+                .getInstance("https://smartassistivesystem-39072-default-rtdb.firebaseio.com/")
                 .getReference("SensorData")
                 .child("LightSensor");
 
-        // ✅ Listen for value changes from Firebase
-        sensorRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+        // Initial UI
+        if (progress != null) progress.setVisibility(View.VISIBLE);
+        tvLightValue.setText("Light Level (from cloud)");
+        tvCloudValue.setText("Cloud Value: —");
+        if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: —");
+
+        // Realtime listener — READ ONLY
+        listener = new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull com.google.firebase.database.DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    Object value = snapshot.child("latest").getValue();
-                    TextView cloudText = root.findViewById(R.id.txtFromFirebase);
-                    cloudText.setText("Cloud Value: " + value + " lx");
+            public void onDataChange(@NonNull DataSnapshot snap) {
+                if (!isAdded()) return;
+                if (progress != null) progress.setVisibility(View.GONE);
+
+                if (snap.exists()) {
+                    Object latest = snap.child("latest").getValue();
+                    Object ts     = snap.child("timestamp").getValue();
+
+                    String latestText = (latest == null) ? "—" : String.valueOf(latest);
+                    String timeText   = (ts == null) ? "—" : String.valueOf(ts);
+
+                    tvCloudValue.setText("Cloud Value: " + latestText + " lx");
+                    if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: " + timeText);
+                } else {
+                    tvCloudValue.setText("Cloud Value: —");
+                    if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: —");
+                    Toast.makeText(requireContext(), "No sensor data found in DB", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull com.google.firebase.database.DatabaseError error) {
-                Toast.makeText(requireContext(), "Failed to read from DB", Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (!isAdded()) return;
+                if (progress != null) progress.setVisibility(View.GONE);
+                Toast.makeText(requireContext(),
+                        "DB read error: " + error.getMessage(),
+                        Toast.LENGTH_LONG).show();
             }
-        });
+        };
 
+        sensorRef.addValueEventListener(listener);
         return root;
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (lightSensor != null) {
-            sensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (sensorRef != null && listener != null) {
+            sensorRef.removeEventListener(listener);
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        sensorManager.unregisterListener(this);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        float lux = event.values[0];
-        lightValueText.setText("Light Level: " + lux + " lx");
-
-        // ✅ Push sensor data to Firebase with timestamp
-        String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
-        sensorRef.child("latest").setValue(lux);
-        sensorRef.child("timestamp").setValue(timestamp);
-    }
-
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Not used
     }
 }
