@@ -126,5 +126,83 @@ Section: 3DTues
     <string name="emergency_alert_mode_active">Emergency alert mode active</string>
     <string name="all_systems_operating_normally">All systems operating normally</string>
     <string name="location_permission_already">✅ Location permission already granted</string>
+    <string name="failed">"❌ Failed: "</string>
+    <string name="sensors_data_light_color_distance_spectrum">Sensors Data:\nLight, Color, Distance, Spectrum</string>
+    <string name="home_welcome_message">Welcome to Smart Assistive System Dashboard</string>
+
+    <string name="camera_permission_denied">Camera permission denied</string>
+    <string name="camera_permission_rationale">Camera access is required for the magnifier</string>
+    <string name="camera_start_error">Could not start the camera</string>
+    <string name="flash_on">Flashlight ON</string>
+    <string name="flash_off">Flashlight OFF</string>
+    <string name="flash_not_supported">Flash not supported on this device</string>
+    <string name="cd_camera_preview">Camera preview</string>
+
+    <string name="ambulance_number">911</string>
+    <string name="guardian_number_default">12345678</string>
+    <string name="pref_key_guardian_number">pref_guardian_number</string>
+
+    <!-- UI text -->
+    <string name="calling_ambulance">Calling ambulance…</string>
+    <string name="calling_guardian">Calling guardian…</string>
+    <string name="call_perm_rationale">Phone call permission is required to place SOS calls.</string>
+    <string name="call_perm_granted">Permission granted. Placing call…</string>
+    <string name="call_perm_denied">Permission denied for phone calls.</string>
+    <string name="unable_to_call">Unable to make call: %1$s</string>
+
+    <!-- (If your layout needs contentDescriptions) -->
+    <string name="cd_call_ambulance">Call ambulance</string>
+    <string name="cd_call_guardian">Call guardian</string>
+
+    <string name="firebase_db_url">https://smartassistivesystem-39072-default-rtdb.firebaseio.com/</string>
+
+    <!-- Login -->
+    <string name="err_enter_email_password">Enter email and password</string>
+    <string name="err_login_failed_fmt">Login failed: %1$s</string>
+    <string name="err_unknown">unknown</string>
+    <string name="err_no_google_account">No Google account data</string>
+    <string name="err_google_signin_failed">Google sign-in failed: %1$s</string>
+    <string name="err_no_google_token">No token from Google</string>
+    <string name="err_google_auth_failed">Google authentication failed</string>
+
+    <!-- Register -->
+    <string name="user_already_registered">User already registered</string>
+    <string name="auth_check_error_fmt">Auth check error: %1$s</string>
+    <string name="all_fields_required">All fields required</string>
+    <string name="invalid_email_format">Invalid email format</string>
+    <string name="password_min_length">Password must be ≥ 6 characters</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="auth_error_fmt">Auth error: %1$s</string>
+    <string name="no_uid_after_registration">No UID after registration</string>
+    <string name="registered_success">Registered!</string>
+    <string name="db_write_error_fmt">DB write error: %1$s</string>
+
+    <!-- Firebase URLs & paths -->
+    <string name="rtdb_path_sensor_data">SensorData</string>
+    <string name="rtdb_node_light_sensor">LightSensor</string>
+    <string name="rtdb_field_latest">latest</string>
+    <string name="rtdb_field_timestamp">timestamp</string>
+
+    <!-- Sensors UI -->
+    <string name="light_level_title">Light Level (from cloud)</string>
+    <string name="cloud_value_fmt">Cloud Value: %1$s lx</string>
+    <string name="updated_fmt">Updated: %1$s</string>
+    <string name="no_sensor_data">No sensor data found in DB</string>
+    <string name="db_read_error_fmt">DB read error: %1$s</string>
+
+    <!-- Settings / Permissions -->
+    <string name="screen_locked_portrait">Screen locked to portrait</string>
+    <string name="auto_rotation_enabled">Auto-rotation enabled</string>
+    <string name="permission_denied_location">Permission denied — some features may not work</string>
+    <string name="open_settings">Settings</string>
+
+    <!-- Slideshow/Alerts -->
+    <string name="alerts_voice_warnings_title">Alerts &amp; Voice Warnings Screen</string>
+
+    <string name="rtdb_node_test">test</string>
+    <string name="rtdb_field_message">message</string>
+    <string name="log_message_prefix">Message: </string>
+    <string name="log_timestamp_prefix">Timestamp: </string>
+    <string name="log_error_prefix">Error: </string>
 
 </resources>

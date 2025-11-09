@@ -39,14 +39,14 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase
-                .getInstance("https://smartassistivesystem-39072-default-rtdb.firebaseio.com/")
+                .getInstance(getString(R.string.firebase_db_url))
                 .getReference("users");
 
-        etName = findViewById(R.id.et_name);
-        etPhone = findViewById(R.id.et_phone);
-        etEmail = findViewById(R.id.et_email);
+        etName     = findViewById(R.id.et_name);
+        etPhone    = findViewById(R.id.et_phone);
+        etEmail    = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
-        etConfirm = findViewById(R.id.et_confirm);
+        etConfirm  = findViewById(R.id.et_confirm);
         Button btnRegister = findViewById(R.id.btn_register);
 
         btnRegister.setOnClickListener(v -> {
@@ -58,37 +58,36 @@ public class RegisterActivity extends AppCompatActivity {
 
             if (!validate(name, email, pass, conf)) return;
 
-            // Use FirebaseAuth to check if an account already exists for this email
             mAuth.fetchSignInMethodsForEmail(email)
                     .addOnSuccessListener((SignInMethodQueryResult res) -> {
                         boolean exists = res.getSignInMethods() != null && !res.getSignInMethods().isEmpty();
                         if (exists) {
-                            Toast.makeText(this, "User already registered", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, R.string.user_already_registered, Toast.LENGTH_SHORT).show();
                         } else {
                             createAccountAndSaveProfile(name, phone, email, pass);
                         }
                     })
                     .addOnFailureListener(e ->
-                            Toast.makeText(this, "Auth check error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                            Toast.makeText(this, getString(R.string.auth_check_error_fmt, e.getMessage()), Toast.LENGTH_SHORT).show());
         });
     }
 
     private boolean validate(String name, String email, String pass, String conf) {
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) ||
                 TextUtils.isEmpty(pass) || TextUtils.isEmpty(conf)) {
-            Toast.makeText(this, "All fields required", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.all_fields_required, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.invalid_email_format, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (pass.length() < 6) {
-            Toast.makeText(this, "Password must be ≥ 6 characters", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.password_min_length, Toast.LENGTH_SHORT).show();
             return false;
         }
         if (!pass.equals(conf)) {
-            Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.passwords_do_not_match, Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -98,24 +97,23 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(this,
-                                "Auth error: " + (task.getException() != null ? task.getException().getMessage() : "unknown"),
-                                Toast.LENGTH_SHORT).show();
+                        String msg = (task.getException() != null) ? task.getException().getMessage() : getString(R.string.err_unknown);
+                        Toast.makeText(this, getString(R.string.auth_error_fmt, msg), Toast.LENGTH_SHORT).show();
                         return;
                     }
                     String uid = (mAuth.getCurrentUser() != null) ? mAuth.getCurrentUser().getUid() : null;
                     if (uid == null) {
-                        Toast.makeText(this, "No UID after registration", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.no_uid_after_registration, Toast.LENGTH_SHORT).show();
                         return;
                     }
                     UserModel user = new UserModel(name, phone, email, "regular");
                     usersRef.child(uid).setValue(user)
                             .addOnSuccessListener(unused -> {
-                                Toast.makeText(this, "Registered!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, R.string.registered_success, Toast.LENGTH_SHORT).show();
                                 finish(); // back to login
                             })
                             .addOnFailureListener(e ->
-                                    Toast.makeText(this, "DB write error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                                    Toast.makeText(this, getString(R.string.db_write_error_fmt, e.getMessage()), Toast.LENGTH_SHORT).show());
                 });
     }
 }

@@ -45,22 +45,22 @@ public class SensorFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_sensors, container, false);
 
-        tvLightValue = root.findViewById(R.id.txtLightValue);      // show a friendly label
-        tvCloudValue = root.findViewById(R.id.txtFromFirebase);    // “Cloud Value: …”
-        tvUpdatedAt  = root.findViewById(R.id.txtUpdatedAt);       // add this TextView in layout if missing
-        progress     = root.findViewById(R.id.progress);           // add a small ProgressBar in layout if missing
+        tvLightValue = root.findViewById(R.id.txtLightValue);
+        tvCloudValue = root.findViewById(R.id.txtFromFirebase);
+        tvUpdatedAt  = root.findViewById(R.id.txtUpdatedAt);
+        progress     = root.findViewById(R.id.progress);
 
-        // Point to your RTDB path: SensorData/LightSensor { latest: <float>, timestamp: <string> }
+        // DB path from strings.xml (no hardcoding)
         sensorRef = FirebaseDatabase
-                .getInstance("https://smartassistivesystem-39072-default-rtdb.firebaseio.com/")
-                .getReference("SensorData")
-                .child("LightSensor");
+                .getInstance(getString(R.string.firebase_db_url))
+                .getReference(getString(R.string.rtdb_path_sensor_data))
+                .child(getString(R.string.rtdb_node_light_sensor));
 
-        // Initial UI
+        // Initial UI (from strings)
         if (progress != null) progress.setVisibility(View.VISIBLE);
-        tvLightValue.setText("Light Level (from cloud)");
-        tvCloudValue.setText("Cloud Value: —");
-        if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: —");
+        tvLightValue.setText(R.string.light_level_title);
+        tvCloudValue.setText(getString(R.string.cloud_value_fmt, "—"));
+        if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, "—"));
 
         // Realtime listener — READ ONLY
         listener = new ValueEventListener() {
@@ -70,18 +70,18 @@ public class SensorFragment extends Fragment {
                 if (progress != null) progress.setVisibility(View.GONE);
 
                 if (snap.exists()) {
-                    Object latest = snap.child("latest").getValue();
-                    Object ts     = snap.child("timestamp").getValue();
+                    Object latest = snap.child(getString(R.string.rtdb_field_latest)).getValue();
+                    Object ts     = snap.child(getString(R.string.rtdb_field_timestamp)).getValue();
 
                     String latestText = (latest == null) ? "—" : String.valueOf(latest);
                     String timeText   = (ts == null) ? "—" : String.valueOf(ts);
 
-                    tvCloudValue.setText("Cloud Value: " + latestText + " lx");
-                    if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: " + timeText);
+                    tvCloudValue.setText(getString(R.string.cloud_value_fmt, latestText));
+                    if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, timeText));
                 } else {
-                    tvCloudValue.setText("Cloud Value: —");
-                    if (tvUpdatedAt != null) tvUpdatedAt.setText("Updated: —");
-                    Toast.makeText(requireContext(), "No sensor data found in DB", Toast.LENGTH_SHORT).show();
+                    tvCloudValue.setText(getString(R.string.cloud_value_fmt, "—"));
+                    if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, "—"));
+                    Toast.makeText(requireContext(), R.string.no_sensor_data, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -90,7 +90,7 @@ public class SensorFragment extends Fragment {
                 if (!isAdded()) return;
                 if (progress != null) progress.setVisibility(View.GONE);
                 Toast.makeText(requireContext(),
-                        "DB read error: " + error.getMessage(),
+                        getString(R.string.db_read_error_fmt, error.getMessage()),
                         Toast.LENGTH_LONG).show();
             }
         };

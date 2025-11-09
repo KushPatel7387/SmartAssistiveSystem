@@ -8,16 +8,27 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.gallery;
 
+import android.app.Application;
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class GalleryViewModel extends ViewModel {
+import ca.visionassistinnovators.it.smartassistivesystem.R;
+
+// 1. Extend AndroidViewModel instead of ViewModel
+public class GalleryViewModel extends AndroidViewModel {
+
     private final MutableLiveData<String> mText;
 
-    public GalleryViewModel() {
+    // 2. Add a constructor that takes an Application object
+    public GalleryViewModel(@NonNull Application application) {
+        super(application);
         mText = new MutableLiveData<>();
-        mText.setValue("Sensors Data:\nLight, Color, Distance, Spectrum");
+
+        // 3. Use the application context to get the string resource
+        String data = application.getString(R.string.sensors_data_light_color_distance_spectrum);
+        mText.setValue(data);
     }
 
     public LiveData<String> getText() {

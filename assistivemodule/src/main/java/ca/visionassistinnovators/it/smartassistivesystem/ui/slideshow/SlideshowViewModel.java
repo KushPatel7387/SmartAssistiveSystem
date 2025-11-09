@@ -6,18 +6,24 @@
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
  */
+
 package ca.visionassistinnovators.it.smartassistivesystem.ui.slideshow;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-public class SlideshowViewModel extends ViewModel {
-    private final MutableLiveData<String> mText;
+import ca.visionassistinnovators.it.smartassistivesystem.R;
 
-    public SlideshowViewModel() {
-        mText = new MutableLiveData<>();
-        mText.setValue("Alerts & Voice Warnings Screen");
+public class SlideshowViewModel extends AndroidViewModel {
+    private final MutableLiveData<String> mText = new MutableLiveData<>();
+
+    public SlideshowViewModel(@NonNull Application application) {
+        super(application);
+        mText.setValue(application.getString(R.string.alerts_voice_warnings_title));
     }
 
     public LiveData<String> getText() {

@@ -36,17 +36,13 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginBtn, btnGoogle;
     private CheckBox cbRemember;
 
-    private static final String TEST_EMAIL = "aaa@bbb.com";
-    private static final String TEST_PASSWORD = "Admin101!";
-
-    private static final String PREF_NAME = "sas_prefs";
+    private static final String PREF_NAME    = "sas_prefs";
     private static final String KEY_REMEMBER = "remember_me";
-    private static final String KEY_EMAIL = "saved_email";
+    private static final String KEY_EMAIL    = "saved_email";
 
     private GoogleSignInClient googleClient;
     private FirebaseAuth mAuth;
 
-    // Modern activity result for Google Sign-In
     private final ActivityResultLauncher<Intent> googleLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getData() == null) return;
@@ -56,10 +52,10 @@ public class LoginActivity extends AppCompatActivity {
                     if (acct != null) {
                         firebaseAuthWithGoogle(acct.getIdToken());
                     } else {
-                        Toast.makeText(this, "No Google account data", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.err_no_google_account, Toast.LENGTH_SHORT).show();
                     }
                 } catch (ApiException e) {
-                    Toast.makeText(this, "Google sign-in failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, getString(R.string.err_google_signin_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -68,30 +64,28 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        email = findViewById(R.id.editTextEmail);
-        password = findViewById(R.id.editTextPassword);
-        loginBtn = findViewById(R.id.btnLogin);
+        email      = findViewById(R.id.editTextEmail);
+        password   = findViewById(R.id.editTextPassword);
+        loginBtn   = findViewById(R.id.btnLogin);
         cbRemember = findViewById(R.id.cb_remember);
-        btnGoogle = findViewById(R.id.btnGoogle);
+        btnGoogle  = findViewById(R.id.btnGoogle);
 
         mAuth = FirebaseAuth.getInstance();
 
-        // If already signed in with Firebase -> go home
+        // Auto-navigate if already signed in
         if (mAuth.getCurrentUser() != null) {
             goHome();
             return;
         }
 
-        // Remember-me just to prefill
+        // Prefill remembered email
         SharedPreferences sp = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        boolean remembered = sp.getBoolean(KEY_REMEMBER, false);
-        if (remembered) {
-            String savedEmail = sp.getString(KEY_EMAIL, "");
-            email.setText(savedEmail);
+        if (sp.getBoolean(KEY_REMEMBER, false)) {
+            email.setText(sp.getString(KEY_EMAIL, ""));
             cbRemember.setChecked(true);
         }
 
-        // Google Sign-In config: requires strings.xml -> default_web_client_id (from Firebase)
+        // Google Sign-In (default_web_client_id is generated from google-services.json)
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -109,37 +103,31 @@ public class LoginActivity extends AppCompatActivity {
 
     private void doPasswordLogin() {
         String uEmail = email.getText().toString().trim();
-        String uPass = password.getText().toString().trim();
+        String uPass  = password.getText().toString().trim();
 
         if (uEmail.isEmpty() || uPass.isEmpty()) {
-            Toast.makeText(this, "Enter email and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.err_enter_email_password, Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Demo/local test creds
-        if (uEmail.equalsIgnoreCase(TEST_EMAIL) && uPass.equals(TEST_PASSWORD)) {
-            saveRemember(uEmail);
-            goHome();
-            return;
-        }
-
-        // Real Firebase email/password login
+        // Firebase email/password login (no hardcoded backdoor)
         mAuth.signInWithEmailAndPassword(uEmail, uPass)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         saveRemember(uEmail);
                         goHome();
                     } else {
-                        Toast.makeText(this,
-                                "Login failed: " + (task.getException() != null ? task.getException().getMessage() : "unknown"),
-                                Toast.LENGTH_LONG).show();
+                        String msg = (task.getException() != null)
+                                ? task.getException().getMessage()
+                                : getString(R.string.err_unknown);
+                        Toast.makeText(this, getString(R.string.err_login_failed_fmt, msg), Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
     private void firebaseAuthWithGoogle(String idToken) {
         if (idToken == null) {
-            Toast.makeText(this, "No token from Google", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.err_no_google_token, Toast.LENGTH_SHORT).show();
             return;
         }
         AuthCredential cred = GoogleAuthProvider.getCredential(idToken, null);
@@ -150,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (gEmail != null) saveRemember(gEmail);
                         goHome();
                     } else {
-                        Toast.makeText(this, "Google auth failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, R.string.err_google_auth_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

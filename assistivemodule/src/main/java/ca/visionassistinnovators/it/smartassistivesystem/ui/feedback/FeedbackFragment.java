@@ -93,7 +93,7 @@ public class FeedbackFragment extends Fragment {
                     clearFields();
                 })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "❌ Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(getContext(), getString(R.string.failed) + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void clearFields() {

@@ -1,11 +1,3 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Daksh Rana – N01664095
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.Manifest;
@@ -13,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.Preview;
+import androidx.camera.core.ZoomState;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
@@ -38,42 +32,44 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class MagnifierFragment extends Fragment {
 
+    private static final String TAG = "MagnifierFragment";
+
     private PreviewView previewView;
+    private ImageButton btnFlashlight;
     private Camera camera;
     private boolean flashOn = false;
+
+    private ActivityResultLauncher<String> cameraPermissionLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_magnifier, container, false);
 
-        previewView = root.findViewById(R.id.previewView);
-        ImageButton btnFlashlight = root.findViewById(R.id.btnFlashlight);
+        previewView   = root.findViewById(R.id.previewView);
+        btnFlashlight = root.findViewById(R.id.btnFlashlight);
 
-        // ✅ Register permission callback
-        // Modern permission launcher
-        ActivityResultLauncher<String> cameraPermissionLauncher = registerForActivityResult(
+        cameraPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (isGranted) {
                         startCamera();
                     } else {
-                        Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.camera_permission_denied, Toast.LENGTH_SHORT).show();
                     }
                 });
 
-        // ✅ Request or start camera
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA)
                 == PackageManager.PERMISSION_GRANTED) {
             startCamera();
         } else {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                Toast.makeText(requireContext(), R.string.camera_permission_rationale, Toast.LENGTH_SHORT).show();
+            }
             cameraPermissionLauncher.launch(Manifest.permission.CAMERA);
         }
 
-        // Flashlight toggle
         btnFlashlight.setOnClickListener(v -> toggleFlash());
-
-        // Zoom gesture
         setupZoomGesture();
 
         return root;
@@ -92,43 +88,59 @@ public class MagnifierFragment extends Fragment {
                 preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
                 cameraProvider.unbindAll();
-                camera = cameraProvider.bindToLifecycle(this, cameraSelector, preview);
+                // Use viewLifecycleOwner in Fragments
+                camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview);
+
+                // Hide flashlight if device lacks flash
+                if (camera.getCameraInfo() != null && camera.getCameraInfo().hasFlashUnit()) {
+                    btnFlashlight.setVisibility(View.VISIBLE);
+                } else {
+                    btnFlashlight.setVisibility(View.GONE);
+                }
 
             } catch (ExecutionException | InterruptedException e) {
-                Log.e("Magnifier", "Error starting camera: " + e.getMessage());
+                Log.e(TAG, "Error starting camera: " + e.getMessage(), e);
+                Toast.makeText(requireContext(), R.string.camera_start_error, Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
     private void setupZoomGesture() {
-        ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(
+        final ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(
                 requireContext(),
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                     @Override
                     public boolean onScale(ScaleGestureDetector detector) {
-                        if (camera != null) {
-                            float scale = camera.getCameraInfo().getZoomState().getValue().getZoomRatio() * detector.getScaleFactor();
-                            camera.getCameraControl().setZoomRatio(scale);
-                        }
+                        if (camera == null || camera.getCameraInfo() == null) return false;
+                        ZoomState zs = camera.getCameraInfo().getZoomState().getValue();
+                        if (zs == null) return false;
+
+                        float current = zs.getZoomRatio();
+                        float next = current * detector.getScaleFactor();
+                        float clamped = Math.max(zs.getMinZoomRatio(), Math.min(next, zs.getMaxZoomRatio()));
+                        camera.getCameraControl().setZoomRatio(clamped);
                         return true;
                     }
                 });
 
         previewView.setOnTouchListener((v, event) -> {
             scaleGestureDetector.onTouchEvent(event);
-            return true;
+            // Consume move/pinch; let taps fall through if needed later
+            return event.getPointerCount() > 1 || event.getAction() == MotionEvent.ACTION_MOVE;
         });
     }
 
     private void toggleFlash() {
-        if (camera != null && camera.getCameraInfo().hasFlashUnit()) {
+        if (camera != null && camera.getCameraInfo() != null && camera.getCameraInfo().hasFlashUnit()) {
             flashOn = !flashOn;
             camera.getCameraControl().enableTorch(flashOn);
-            Toast.makeText(requireContext(),
-                    flashOn ? "Flashlight ON" : "Flashlight OFF",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    requireContext(),
+                    flashOn ? R.string.flash_on : R.string.flash_off,
+                    Toast.LENGTH_SHORT
+            ).show();
         } else {
-            Toast.makeText(requireContext(), "Flash not supported", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), R.string.flash_not_supported, Toast.LENGTH_SHORT).show();
         }
     }
 }

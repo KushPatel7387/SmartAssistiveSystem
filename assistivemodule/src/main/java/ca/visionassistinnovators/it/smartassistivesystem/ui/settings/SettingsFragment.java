@@ -38,7 +38,6 @@ public class SettingsFragment extends Fragment {
     private SwitchCompat switchLockPortrait;
     private Button btnRequestLocation;
 
-    // Modern permission launcher (works instantly)
     private ActivityResultLauncher<String> permissionLauncher;
 
     @Nullable
@@ -51,14 +50,14 @@ public class SettingsFragment extends Fragment {
         switchLockPortrait = root.findViewById(R.id.switch_lock_portrait);
         btnRequestLocation = root.findViewById(R.id.btn_request_location);
 
-        //  Lock/unlock portrait orientation
+        // Lock/unlock portrait orientation
         switchLockPortrait.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                Toast.makeText(getContext(), "Screen locked to portrait", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.screen_locked_portrait, Toast.LENGTH_SHORT).show();
             } else {
                 requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                Toast.makeText(getContext(), "Auto-rotation enabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.auto_rotation_enabled, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -66,33 +65,29 @@ public class SettingsFragment extends Fragment {
         permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
+                    if (!isAdded()) return;
                     if (isGranted) {
-                        Snackbar.make(requireView(),
-                                R.string.permission_granted_location_features_enabled,
-                                Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(root, R.string.permission_granted_location_features_enabled, Snackbar.LENGTH_LONG).show();
                     } else {
-                        Snackbar.make(requireView(),
-                                        "❌ Permission Denied — some features may not work",
-                                        Snackbar.LENGTH_LONG)
-                                .setAction("Settings", v -> openAppSettings())
+                        Snackbar.make(root, R.string.permission_denied_location, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.open_settings, v -> openAppSettings())
                                 .show();
                     }
                 });
 
-        // ✅ Button click → triggers runtime permission check
-        btnRequestLocation.setOnClickListener(v -> checkLocationPermission(v));
+        // Request location on click
+        btnRequestLocation.setOnClickListener(v -> checkLocationPermission(root));
 
         return root;
     }
 
-    private void checkLocationPermission(View view) {
+    private void checkLocationPermission(View anchor) {
         if (ContextCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            Snackbar.make(view, R.string.location_permission_already, Snackbar.LENGTH_LONG).show();
+            Snackbar.make(anchor, R.string.location_permission_already, Snackbar.LENGTH_LONG).show();
 
         } else {
-            // Directly launch permission dialog
             permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
         }
     }

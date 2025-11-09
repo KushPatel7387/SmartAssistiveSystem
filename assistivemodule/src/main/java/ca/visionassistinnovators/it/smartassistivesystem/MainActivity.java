@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,85 +28,79 @@ import java.util.HashMap;
 import java.util.Map;
 
 import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
+
 public class MainActivity extends AppCompatActivity {
 
-    private static final long MAX_SPLASH_TIME = 1000; // 2 sec max
-    private boolean isWriteDone = false;
-    private boolean isReadDone = false;
-    private boolean isTimeout = false;
+    private static final String TAG = "MainActivity";
+    private static final long MAX_SPLASH_TIME = 2000L; // 2 sec max
+
+    private volatile boolean isWriteDone = false;
+    private volatile boolean isReadDone  = false;
+    private volatile boolean isTimeout   = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
+        final SplashScreen splash = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
 
-        // Keep splash until BOTH write & read done OR timeout
-        splashScreen.setKeepOnScreenCondition(() ->
-                !(isWriteDone && isReadDone) && !isTimeout
-        );
+        splash.setKeepOnScreenCondition(() -> !(isWriteDone && isReadDone) && !isTimeout);
 
-        // Start both operations
         doFirebaseTestWrite();
         doFirebaseTestRead();
 
-        // Safety timeout
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             isTimeout = true;
-            goToLogin();
+            checkAndProceed();
         }, MAX_SPLASH_TIME);
     }
 
     private void doFirebaseTestWrite() {
-        DatabaseReference dbRef = FirebaseDatabase
-                .getInstance(getString(R.string.https_smartassistivesystem_39072_default_rtdb_firebaseio_com))
+        DatabaseReference root = FirebaseDatabase
+                .getInstance(getString(R.string.firebase_db_url))
                 .getReference();
 
         Map<String, Object> testData = new HashMap<>();
-        testData.put(getString(R.string.message), getString(R.string.hello_from_android));
-        testData.put(getString(R.string.timestamp), System.currentTimeMillis());
+        testData.put(getString(R.string.rtdb_field_message), getString(R.string.hello_from_android));
+        testData.put(getString(R.string.rtdb_field_timestamp), System.currentTimeMillis());
 
-        dbRef.child(getString(R.string.test)).setValue(testData)
-                .addOnSuccessListener(aVoid -> {
+        root.child(getString(R.string.rtdb_node_test))
+                .setValue(testData)
+                .addOnSuccessListener(unused -> {
                     isWriteDone = true;
                     checkAndProceed();
                 })
                 .addOnFailureListener(e -> {
-                    isWriteDone = true; // Don't block user
+                    Log.w(TAG, "Write failed: " + e.getMessage());
+                    isWriteDone = true; // don’t block
                     checkAndProceed();
                 });
     }
 
     private void doFirebaseTestRead() {
-        DatabaseReference dbRef = FirebaseDatabase
-                .getInstance(getString(R.string.https_smartassistivesystem_39072_default_rtdb_firebaseio_com))
-                .getReference();
+        DatabaseReference node = FirebaseDatabase
+                .getInstance(getString(R.string.firebase_db_url))
+                .getReference()
+                .child(getString(R.string.rtdb_node_test));
 
-        ValueEventListener listener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String message = snapshot.child(getString(R.string.message2)).getValue(String.class);
-                    Long time = snapshot.child(getString(R.string.timestamp2)).getValue(Long.class);
-                    System.out.println(getString(R.string.message3) + message);
-                    System.out.println(getString(R.string.timestamp3) + time);
+        node.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override public void onDataChange(@NonNull DataSnapshot snap) {
+                if (snap.exists()) {
+                    String msg = snap.child(getString(R.string.rtdb_field_message)).getValue(String.class);
+                    Long ts    = snap.child(getString(R.string.rtdb_field_timestamp)).getValue(Long.class);
+                    Log.d(TAG, getString(R.string.log_message_prefix) + msg);
+                    Log.d(TAG, getString(R.string.log_timestamp_prefix) + ts);
+                } else {
+                    Log.d(TAG, "Test node empty");
                 }
                 isReadDone = true;
                 checkAndProceed();
-
-                // Remove listener after first read
-                dbRef.child(getString(R.string.test1)).removeEventListener(this);
             }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                System.err.println(getString(R.string.error) + error.getMessage());
+            @Override public void onCancelled(@NonNull DatabaseError error) {
+                Log.e(TAG, getString(R.string.log_error_prefix) + error.getMessage());
                 isReadDone = true;
                 checkAndProceed();
-                dbRef.child(getString(R.string.test1)).removeEventListener(this);
             }
-        };
-
-        dbRef.child(getString(R.string.test1)).addValueEventListener(listener);
+        });
     }
 
     private void checkAndProceed() {
