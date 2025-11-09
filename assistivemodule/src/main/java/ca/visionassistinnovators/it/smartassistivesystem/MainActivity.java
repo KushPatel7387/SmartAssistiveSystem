@@ -40,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        final SplashScreen splash = SplashScreen.installSplashScreen(this);
         super.onCreate(savedInstanceState);
+
+        final SplashScreen splash = SplashScreen.installSplashScreen(this);
 
         splash.setKeepOnScreenCondition(() -> !(isWriteDone && isReadDone) && !isTimeout);
 

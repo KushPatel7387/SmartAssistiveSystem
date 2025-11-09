@@ -8,9 +8,7 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -29,16 +27,14 @@ import com.google.firebase.auth.*;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.util.Prefs;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.util.LoginPrefsFacade;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText email, password;
     private Button loginBtn, btnGoogle;
     private CheckBox cbRemember;
-
-    private static final String PREF_NAME    = "sas_prefs";
-    private static final String KEY_REMEMBER = "remember_me";
-    private static final String KEY_EMAIL    = "saved_email";
 
     private GoogleSignInClient googleClient;
     private FirebaseAuth mAuth;
@@ -72,20 +68,19 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        // Auto-navigate if already signed in
+        // Already signed in -> go home
         if (mAuth.getCurrentUser() != null) {
             goHome();
             return;
         }
 
-        // Prefill remembered email
-        SharedPreferences sp = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        if (sp.getBoolean(KEY_REMEMBER, false)) {
-            email.setText(sp.getString(KEY_EMAIL, ""));
+        // Prefill remembered email (READ-ONLY here)
+        if (Prefs.getBoolean(this, Prefs.KEY_REMEMBER, false)) {
+            email.setText(Prefs.getString(this, Prefs.KEY_EMAIL, ""));
             cbRemember.setChecked(true);
         }
 
-        // Google Sign-In (default_web_client_id is generated from google-services.json)
+        // Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -110,11 +105,12 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase email/password login (no hardcoded backdoor)
+        // Firebase email/password login
         mAuth.signInWithEmailAndPassword(uEmail, uPass)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        saveRemember(uEmail);
+                        // WRITE via facade (not here)
+                        LoginPrefsFacade.saveRememberEmail(this, cbRemember.isChecked(), uEmail);
                         goHome();
                     } else {
                         String msg = (task.getException() != null)
@@ -135,24 +131,15 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
                         String gEmail = (mAuth.getCurrentUser() != null) ? mAuth.getCurrentUser().getEmail() : null;
-                        if (gEmail != null) saveRemember(gEmail);
+                        if (gEmail != null) {
+                            // WRITE via facade (not here)
+                            LoginPrefsFacade.saveRememberEmail(this, cbRemember.isChecked(), gEmail);
+                        }
                         goHome();
                     } else {
                         Toast.makeText(this, R.string.err_google_auth_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void saveRemember(String mail) {
-        SharedPreferences.Editor ed = getSharedPreferences(PREF_NAME, MODE_PRIVATE).edit();
-        if (cbRemember.isChecked()) {
-            ed.putBoolean(KEY_REMEMBER, true);
-            ed.putString(KEY_EMAIL, mail);
-        } else {
-            ed.putBoolean(KEY_REMEMBER, false);
-            ed.remove(KEY_EMAIL);
-        }
-        ed.apply();
     }
 
     private void goHome() {
