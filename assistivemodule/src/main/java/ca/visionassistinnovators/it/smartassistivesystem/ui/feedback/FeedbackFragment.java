@@ -1,16 +1,6 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.feedback;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,19 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.FeedbackManager;
 
 public class FeedbackFragment extends Fragment {
 
     private EditText etName, etPhone, etEmail, etComment;
     private RatingBar ratingBar;
-    private DatabaseReference dbRef;
+    private FeedbackManager feedbackManager;
 
     @Nullable
     @Override
@@ -44,10 +29,8 @@ public class FeedbackFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_feedback, container, false);
 
-        // Initialize Firebase database reference
-        dbRef = FirebaseDatabase.getInstance().getReference("Feedback");
+        feedbackManager = new FeedbackManager();
 
-        // Link UI components
         etName = root.findViewById(R.id.et_name);
         etPhone = root.findViewById(R.id.et_phone);
         etEmail = root.findViewById(R.id.et_email);
@@ -55,45 +38,35 @@ public class FeedbackFragment extends Fragment {
         ratingBar = root.findViewById(R.id.ratingBar);
         Button btnSubmit = root.findViewById(R.id.btn_submit_feedback);
 
-        // Set button click listener
-        btnSubmit.setOnClickListener(v -> saveFeedback());
+        btnSubmit.setOnClickListener(v -> submitFeedback());
 
         return root;
     }
 
-    private void saveFeedback() {
+    private void submitFeedback() {
         String name = etName.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String comment = etComment.getText().toString().trim();
         float rating = ratingBar.getRating();
 
-        // Get device model (hidden)
-        String deviceModel = Build.MANUFACTURER + " " + Build.MODEL;
+        feedbackManager.submitFeedback(name, phone, email, comment, rating, new FeedbackManager.FeedbackCallback() {
+            @Override
+            public void onSuccess() {
+                Toast.makeText(getContext(), R.string.feedback_submitted_successfully, Toast.LENGTH_SHORT).show();
+                clearFields();
+            }
 
-        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email)) {
-            Toast.makeText(getContext(), R.string.please_enter_your_name_and_email, Toast.LENGTH_SHORT).show();
-            return;
-        }
+            @Override
+            public void onFailure(String error) {
+                Toast.makeText(getContext(), getString(R.string.failed) + error, Toast.LENGTH_SHORT).show();
+            }
 
-        // Create data map
-        Map<String, Object> feedbackData = new HashMap<>();
-        feedbackData.put(getString(R.string.name), name);
-        feedbackData.put(getString(R.string.phone), phone);
-        feedbackData.put(getString(R.string.Email), email);
-        feedbackData.put(getString(R.string.comment), comment);
-        feedbackData.put(getString(R.string.rating), rating);
-        feedbackData.put(getString(R.string.devicemodel), deviceModel);
-        feedbackData.put(getString(R.string.Timestamp), System.currentTimeMillis());
-
-        // Push data to Firebase Realtime DB
-        dbRef.push().setValue(feedbackData)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), R.string.feedback_submitted_successfully, Toast.LENGTH_SHORT).show();
-                    clearFields();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), getString(R.string.failed) + e.getMessage(), Toast.LENGTH_SHORT).show());
+            @Override
+            public void onValidationError(String message) {
+                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void clearFields() {
