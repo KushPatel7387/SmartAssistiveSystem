@@ -27,7 +27,7 @@
 
     <!-- Splash Theme (Day) -->
     <style name="Theme.SmartAssistiveSystem.Splash" parent="Theme.SplashScreen">
-        <item name="windowSplashScreenBackground">@color/white</item>
+        <item name="windowSplashScreenBackground">#F4F4F4</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
