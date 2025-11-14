@@ -2,6 +2,8 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.*;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -30,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private final LoginValidator loginValidator = new LoginValidator();
     private final EmailLoginManager emailLoginManager = new EmailLoginManager();
     private final GoogleLoginManager googleLoginManager = new GoogleLoginManager();
+    private com.google.android.material.textfield.TextInputLayout tilEmail, tilPassword;
 
     private final ActivityResultLauncher<Intent> googleLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -82,6 +85,21 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn   = findViewById(R.id.btnLogin);
         cbRemember = findViewById(R.id.cb_remember);
         btnGoogle  = findViewById(R.id.btnGoogle);
+        tilEmail    = findViewById(R.id.til_email);
+        tilPassword = findViewById(R.id.til_password);
+
+        // Clear error when user starts typing
+        email.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tilEmail.setError(null);
+            }
+        });
+
+        password.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tilPassword.setError(null);
+            }
+        });
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             goHome();
@@ -117,6 +135,27 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        LoginValidator.ValidationResult result = loginValidator.validate(uEmail, uPass);
+        if (!result.isValid()) {
+            String msg = result.getMessage();
+
+            if (result.isEmailError()) {
+                tilEmail.setError(msg);
+                tilPassword.setError(null);
+            } else {
+                tilPassword.setError(msg);
+                tilEmail.setError(null);
+            }
+
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        // All good → clear errors
+        tilEmail.setError(null);
+        tilPassword.setError(null);
+
+        // Proceed with Firebase
         emailLoginManager.login(uEmail, uPass, new EmailLoginManager.LoginCallback() {
             @Override
             public void onSuccess(String email) {
@@ -136,5 +175,11 @@ public class LoginActivity extends AppCompatActivity {
     private void goHome() {
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+    }
+
+    // TEXT WATCHER TO CLEAR ERRORS
+    private abstract static class SimpleTextWatcher implements TextWatcher {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override public void afterTextChanged(Editable s) {}
     }
 }
