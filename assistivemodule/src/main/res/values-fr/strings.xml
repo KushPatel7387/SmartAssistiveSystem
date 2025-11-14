@@ -106,5 +106,101 @@ Section : 3DTues
     <string name="alerts">Alertes</string>
     <string name="no_new_alerts">Aucune nouvelle alerte.</string>
     <string name="home_slideshow">Diaporama d’accueil</string>
+    <string name="permission_granted_location_features_enabled">Permission accordée — fonctionnalités de localisation activées !</string>
+    <string name="please_enter_your_name_and_email">Veuillez saisir votre nom et votre e-mail.</string>
+    <string name="name">nom</string>
+    <string name="phone">téléphone</string>
+    <string name="comment">commentaire</string>
+    <string name="rating">évaluation</string>
+    <string name="Email">e-mail</string>
+    <string name="devicemodel">modèle de l’appareil</string>
+    <string name="Timestamp">horodatage</string>
+    <string name="feedback_submitted_successfully">Commentaire envoyé avec succès !</string>
+    <string name="smart_assistive_system_helping_visually_impaired_users">Système d’assistance intelligent : aide aux personnes malvoyantes</string>
+    <string name="voice_assistance_activated">Assistance vocale activée</string>
+    <string name="sensor_module_detecting_nearby_obstacles">Module de capteurs détectant les obstacles proches</string>
+    <string name="system_providing_safe_navigation">Système assurant une navigation sécurisée</string>
+    <string name="emergency_alert_mode_active">Mode alerte d’urgence activé</string>
+    <string name="all_systems_operating_normally">Tous les systèmes fonctionnent normalement</string>
+    <string name="location_permission_already">Permission de localisation déjà accordée</string>
+    <string name="failed">Échec : </string>
+    <string name="sensors_data_light_color_distance_spectrum">Données des capteurs :\nLumière, Couleur, Distance, Spectre</string>
+    <string name="home_welcome_message">Bienvenue sur le tableau de bord du Système d’assistance intelligent</string>
 
-</resources>
+    <string name="camera_permission_denied">Permission d’accès à la caméra refusée</string>
+    <string name="camera_permission_rationale">L’accès à la caméra est requis pour la loupe</string>
+    <string name="camera_start_error">Impossible de démarrer la caméra</string>
+    <string name="flash_on">Lampe torche activée</string>
+    <string name="flash_off">Lampe torche désactivée</string>
+    <string name="flash_not_supported">Lampe torche non prise en charge sur cet appareil</string>
+    <string name="cd_camera_preview">Aperçu de la caméra</string>
+
+    <string name="ambulance_number">911</string>
+    <string name="guardian_number_default">12345678</string>
+    <string name="pref_key_guardian_number">pref_guardian_number</string>
+
+    <!-- UI text -->
+    <string name="calling_ambulance">Appel des secours en cours…</string>
+    <string name="calling_guardian">Appel du tuteur en cours…</string>
+    <string name="call_perm_rationale">La permission d’appel est requise pour passer des appels SOS.</string>
+    <string name="call_perm_granted">Permission accordée. Appel en cours…</string>
+    <string name="call_perm_denied">Permission d’appel refusée.</string>
+    <string name="unable_to_call">Impossible d’appeler : %1$s</string>
+
+    <!-- (If your layout needs contentDescriptions) -->
+    <string name="cd_call_ambulance">Appeler les secours</string>
+    <string name="cd_call_guardian">Appeler le tuteur</string>
+
+    <string name="firebase_db_url">https://smartassistivesystem-39072-default-rtdb.firebaseio.com/</string>
+
+    <!-- Login -->
+    <string name="err_enter_email_password">Saisissez votre e-mail et mot de passe</string>
+    <string name="err_login_failed_fmt">Échec de connexion : %1$s</string>
+    <string name="err_unknown">inconnu</string>
+    <string name="err_no_google_account">Aucune donnée de compte Google</string>
+    <string name="err_google_signin_failed">Connexion Google échouée : %1$s</string>
+    <string name="err_no_google_token">Aucun jeton Google reçu</string>
+    <string name="err_google_auth_failed">Authentification Google échouée</string>
+
+    <!-- Register -->
+    <string name="user_already_registered">Utilisateur déjà inscrit</string>
+    <string name="auth_check_error_fmt">Erreur de vérification d’authentification : %1$s</string>
+    <string name="all_fields_required">Tous les champs sont requis</string>
+    <string name="invalid_email_format">Format d’e-mail invalide</string>
+    <string name="password_min_length">Le mot de passe doit comporter au moins 6 caractères</string>
+    <string name="passwords_do_not_match">Les mots de passe ne correspondent pas</string>
+    <string name="auth_error_fmt">Erreur d’authentification : %1$s</string>
+    <string name="no_uid_after_registration">Aucun UID après inscription</string>
+    <string name="registered_success">Inscription réussie !</string>
+    <string name="db_write_error_fmt">Erreur d’écriture en base : %1$s</string>
+
+    <!-- Firebase URLs & paths -->
+    <string name="rtdb_path_sensor_data">DonneesCapteurs</string>
+    <string name="rtdb_node_light_sensor">CapteurLumiere</string>
+    <string name="rtdb_field_latest">dernier</string>
+    <string name="rtdb_field_timestamp">horodatage</string>
+
+    <!-- Sensors UI -->
+    <string name="light_level_title">Niveau de lumière (depuis le cloud)</string>
+    <string name="cloud_value_fmt">Valeur cloud : %1$s lx</string>
+    <string name="updated_fmt">Mis à jour : %1$s</string>
+    <string name="no_sensor_data">Aucune donnée de capteur trouvée dans la base</string>
+    <string name="db_read_error_fmt">Erreur de lecture en base : %1$s</string>
+
+    <!-- Settings / Permissions -->
+    <string name="screen_locked_portrait">Écran verrouillé en mode portrait</string>
+    <string name="auto_rotation_enabled">Rotation automatique activée</string>
+    <string name="permission_denied_location">Permission refusée — certaines fonctionnalités peuvent ne pas fonctionner</string>
+    <string name="open_settings">Paramètres</string>
+
+    <!-- Slideshow/Alerts -->
+    <string name="alerts_voice_warnings_title">Écran des alertes et avertissements vocaux</string>
+
+    <string name="rtdb_node_test">test</string>
+    <string name="rtdb_field_message">message</string>
+    <string name="log_message_prefix">Message : </string>
+    <string name="log_timestamp_prefix">Horodatage : </string>
+    <string name="log_error_prefix">Erreur : </string>
+    <string name="app_logo_description">Logo du Système d’assistance intelligent</string>
+    <string name="app_description">Cette application aide les personnes malvoyantes en détectant les obstacles proches, en fournissant un retour audio et en surveillant les conditions environnementales à l’aide de capteurs avancés et d’algorithmes d’IA.</string>
+    <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCours : Section OCA</string></resources>
