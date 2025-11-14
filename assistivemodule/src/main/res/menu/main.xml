@@ -2,37 +2,32 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- Voice: show on toolbar -->
+    <!-- Always visible: MUST show image + text -->
     <item
         android:id="@+id/action_voice"
-        android:icon="@drawable/img_microphone"
         android:title="Voice"
-        app:showAsAction="always" />
+        android:icon="@drawable/img_microphone"
+        app:showAsAction="withText|always" />
 
-    <!-- Settings: overflow -->
+    <!-- Overflow items: MUST NOT have icons -->
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
         android:title="Settings"
         app:showAsAction="never" />
 
-    <!-- About moved here from drawer -->
     <item
         android:id="@+id/action_about"
         android:title="About"
         app:showAsAction="never" />
 
-    <!-- Help stays in overflow -->
     <item
         android:id="@+id/action_help"
         android:title="Help"
         app:showAsAction="never" />
 
-    <!-- Feedback (optional) -->
     <item
         android:id="@+id/action_feedback"
         android:title="Feedback"
         app:showAsAction="never" />
 
-    <!-- no logout here -->
 </menu>
