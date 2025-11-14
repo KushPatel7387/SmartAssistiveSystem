@@ -138,7 +138,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_about) { navController.navigate(R.id.nav_about); return true; }
-        else if (id == R.id.action_settings) { navController.navigate(R.id.nav_settings); return true; }
         else if (id == R.id.action_feedback) { navController.navigate(R.id.nav_feedback); return true; }
         else if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
