@@ -174,8 +174,6 @@ Section: 3DTues
     <string name="passwords_do_not_match">Passwords do not match</string>
     <string name="auth_error_fmt">Auth error: %1$s</string>
     <string name="no_uid_after_registration">No UID after registration</string>
-    <string name="registered_success">Registered!</string>
-    <string name="db_write_error_fmt">DB write error: %1$s</string>
 
     <!-- Firebase URLs & paths -->
     <string name="rtdb_path_sensor_data">SensorData</string>
@@ -195,6 +193,18 @@ Section: 3DTues
     <string name="auto_rotation_enabled">Auto-rotation enabled</string>
     <string name="permission_denied_location">Permission denied — some features may not work</string>
     <string name="open_settings">Settings</string>
+
+    <string name="create_account">Create Account</string>
+    <string name="full_name">Full Name</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="register">Register</string>
+    <string name="already_have_account_login">Already have an account? Login</string>
+
+    <!-- Validation / Toast messages -->
+    <string name="registered_success">Registration successful</string>
+    <string name="db_write_error_fmt">Database write error: %1$s</string>
+
 
     <!-- Slideshow/Alerts -->
     <string name="alerts_voice_warnings_title">Alerts &amp; Voice Warnings Screen</string>

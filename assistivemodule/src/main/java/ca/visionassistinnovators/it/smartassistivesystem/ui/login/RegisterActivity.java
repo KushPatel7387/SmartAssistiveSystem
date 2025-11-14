@@ -8,11 +8,13 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -47,8 +49,18 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail    = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         etConfirm  = findViewById(R.id.et_confirm);
-        Button btnRegister = findViewById(R.id.btn_register);
 
+        Button btnRegister  = findViewById(R.id.btn_register);
+        TextView tvGoToLogin = findViewById(R.id.tvGoToLogin);
+
+        // ➤ GO TO LOGIN SCREEN
+        tvGoToLogin.setOnClickListener(v -> {
+            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        });
+
+        // ➤ REGISTER ACTION
         btnRegister.setOnClickListener(v -> {
             String name = etName.getText().toString().trim();
             String phone = etPhone.getText().toString().trim();
@@ -101,16 +113,18 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(this, getString(R.string.auth_error_fmt, msg), Toast.LENGTH_SHORT).show();
                         return;
                     }
-                    String uid = (mAuth.getCurrentUser() != null) ? mAuth.getCurrentUser().getUid() : null;
+
+                    String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
                     if (uid == null) {
                         Toast.makeText(this, R.string.no_uid_after_registration, Toast.LENGTH_SHORT).show();
                         return;
                     }
+
                     UserModel user = new UserModel(name, phone, email, "regular");
                     usersRef.child(uid).setValue(user)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this, R.string.registered_success, Toast.LENGTH_SHORT).show();
-                                finish(); // back to login
+                                finish();
                             })
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, getString(R.string.db_write_error_fmt, e.getMessage()), Toast.LENGTH_SHORT).show());
