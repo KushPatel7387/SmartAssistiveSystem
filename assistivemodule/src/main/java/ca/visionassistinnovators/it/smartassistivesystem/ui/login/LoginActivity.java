@@ -2,6 +2,8 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.*;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -86,7 +88,18 @@ public class LoginActivity extends AppCompatActivity {
         tilEmail    = findViewById(R.id.til_email);
         tilPassword = findViewById(R.id.til_password);
 
+        // Clear error when user starts typing
+        email.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tilEmail.setError(null);
+            }
+        });
 
+        password.addTextChangedListener(new SimpleTextWatcher() {
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
+                tilPassword.setError(null);
+            }
+        });
 
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
             goHome();
@@ -164,4 +177,9 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    // TEXT WATCHER TO CLEAR ERRORS
+    private abstract static class SimpleTextWatcher implements TextWatcher {
+        @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        @Override public void afterTextChanged(Editable s) {}
+    }
 }
