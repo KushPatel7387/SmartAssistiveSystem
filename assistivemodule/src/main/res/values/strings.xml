@@ -200,6 +200,8 @@ Section: 3DTues
     <string name="confirm_password">Confirm Password</string>
     <string name="register">Register</string>
     <string name="already_have_account_login">Already have an account? Login</string>
+    <string name="feedback">Feedback</string>
+
 
     <!-- Validation / Toast messages -->
     <string name="registered_success">Registration successful</string>

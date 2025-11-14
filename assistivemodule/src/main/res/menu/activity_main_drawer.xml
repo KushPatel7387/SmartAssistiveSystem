@@ -19,6 +19,12 @@
             android:title="Sensors" />
 
         <item
+            android:id="@+id/nav_feedback"
+            android:title="@string/feedback"
+            android:icon="@drawable/ic_feedback" />
+
+
+        <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/img_user"
             android:title="Profile" />
