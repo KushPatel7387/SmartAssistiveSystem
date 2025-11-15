@@ -18,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.util.LoginPrefsFacade;
-import ca.visionassistinnovators.it.smartassistivesystem.ui.util.Prefs;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.*;
 
 public class LoginActivity extends AppCompatActivity {
@@ -28,6 +27,9 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox cbRemember;
 
     private GoogleSignInClient googleClient;
+
+    private FirebaseAuth firebaseAuth;
+    private LoginBusinessLogic loginBusinessLogic;
 
     private final LoginValidator loginValidator = new LoginValidator();
     private final EmailLoginManager emailLoginManager = new EmailLoginManager();
@@ -48,13 +50,22 @@ public class LoginActivity extends AppCompatActivity {
                                 acct.getIdToken(),
                                 new GoogleLoginManager.GoogleCallback() {
                                     @Override
-                                    public void onSuccess(String email) {
-                                        if (email != null) {
-                                            LoginPrefsFacade.saveRememberEmail(
-                                                    LoginActivity.this,
-                                                    cbRemember.isChecked(),
-                                                    email
-                                            );
+                                    public void onSuccess(String emailFromCallback) {
+                                        if (emailFromCallback != null) {
+                                            // Business logic: remember-me handling
+                                            if (loginBusinessLogic != null) {
+                                                loginBusinessLogic.handleRememberMe(
+                                                        cbRemember.isChecked(),
+                                                        emailFromCallback
+                                                );
+                                            } else {
+                                                // Fallback: direct facade if somehow null
+                                                LoginPrefsFacade.saveRememberEmail(
+                                                        LoginActivity.this,
+                                                        cbRemember.isChecked(),
+                                                        emailFromCallback
+                                                );
+                                            }
                                         }
                                         goHome();
                                     }
@@ -88,6 +99,10 @@ public class LoginActivity extends AppCompatActivity {
         tilEmail    = findViewById(R.id.til_email);
         tilPassword = findViewById(R.id.til_password);
 
+        // Firebase + business logic
+        firebaseAuth = FirebaseAuth.getInstance();
+        loginBusinessLogic = new LoginBusinessLogic(this, firebaseAuth);
+
         // Clear error when user starts typing
         email.addTextChangedListener(new SimpleTextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -101,15 +116,29 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+        // ─────────────────────────────────────────────
+        // Auto-login / remember-me logic (business)
+        // ─────────────────────────────────────────────
+
+        if (loginBusinessLogic.shouldAutoLogin()) {
             goHome();
+            finish();
             return;
         }
 
-        if (Prefs.getBoolean(this, Prefs.KEY_REMEMBER, false)) {
-            email.setText(Prefs.getString(this, Prefs.KEY_EMAIL, ""));
+        // If remember-me is OFF but Firebase still has a user, sign out:
+        loginBusinessLogic.ensureSessionMatchesRememberPreference();
+
+        // Restore remembered email + checkbox state
+        String rememberedEmail = loginBusinessLogic.getRememberedEmail();
+        if (!rememberedEmail.isEmpty()) {
+            email.setText(rememberedEmail);
             cbRemember.setChecked(true);
         }
+
+        // ─────────────────────────────────────────────
+        // Google Sign-In setup
+        // ─────────────────────────────────────────────
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
@@ -120,9 +149,11 @@ public class LoginActivity extends AppCompatActivity {
 
         btnGoogle.setOnClickListener(v -> googleLauncher.launch(googleClient.getSignInIntent()));
 
+        // Go to Register screen
         findViewById(R.id.tv_sign_up).setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
+        // Email/password login
         loginBtn.setOnClickListener(v -> doPasswordLogin());
     }
 
@@ -130,6 +161,7 @@ public class LoginActivity extends AppCompatActivity {
         String uEmail = email.getText().toString().trim();
         String uPass  = password.getText().toString().trim();
 
+        // Empty check (business rule already extracted to validator)
         if (loginValidator.isEmailOrPasswordEmpty(uEmail, uPass)) {
             Toast.makeText(this, R.string.err_enter_email_password, Toast.LENGTH_SHORT).show();
             return;
@@ -155,11 +187,17 @@ public class LoginActivity extends AppCompatActivity {
         tilEmail.setError(null);
         tilPassword.setError(null);
 
-        // Proceed with Firebase
+        // Proceed with Firebase (wrapped in EmailLoginManager)
         emailLoginManager.login(uEmail, uPass, new EmailLoginManager.LoginCallback() {
             @Override
-            public void onSuccess(String email) {
-                LoginPrefsFacade.saveRememberEmail(LoginActivity.this, cbRemember.isChecked(), email);
+            public void onSuccess(String emailFromCallback) {
+                // Business logic: remember-me
+                if (loginBusinessLogic != null) {
+                    loginBusinessLogic.handleRememberMe(cbRemember.isChecked(), emailFromCallback);
+                } else {
+                    // Fallback to previous behavior if something goes wrong
+                    LoginPrefsFacade.saveRememberEmail(LoginActivity.this, cbRemember.isChecked(), emailFromCallback);
+                }
                 goHome();
             }
 
