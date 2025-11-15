@@ -1,6 +1,6 @@
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
-import android.os.Build;
+import android.content.Context;
 import android.text.TextUtils;
 
 import com.google.firebase.database.DatabaseReference;
@@ -9,12 +9,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Handles feedback-related logic: validation, data preparation, and saving to Firebase.
- */
-public class FeedbackManager {
+import ca.visionassistinnovators.it.smartassistivesystem.R;
 
-    private final DatabaseReference dbRef;
+public class FeedbackManager {
 
     public interface FeedbackCallback {
         void onSuccess();
@@ -22,39 +19,78 @@ public class FeedbackManager {
         void onValidationError(String message);
     }
 
+    // Node name EXACTLY as in your DB: "Feedback"
+    private static final String FEEDBACK_NODE = "Feedback";
+
     public FeedbackManager() {
-        dbRef = FirebaseDatabase.getInstance().getReference("Feedback");
+        // no-op
     }
 
-    public void submitFeedback(String name,
+    public void submitFeedback(Context context,
+                               String name,
                                String phone,
                                String email,
                                String comment,
                                float rating,
                                FeedbackCallback callback) {
 
-        // Validation
+        // ─────────────────────────────────────────
+        // 1. Business validation (NOT in Fragment)
+        // ─────────────────────────────────────────
         if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email)) {
-            callback.onValidationError("Please enter your name and email.");
+            if (callback != null) {
+                callback.onValidationError(
+                        context.getString(R.string.please_enter_your_name_and_email)
+                );
+            }
             return;
         }
 
-        // Device model
-        String deviceModel = Build.MANUFACTURER + " " + Build.MODEL;
+        if (TextUtils.isEmpty(comment)) {
+            if (callback != null) {
+                callback.onValidationError(
+                        context.getString(R.string.please_enter_your_message)
+                );
+            }
+            return;
+        }
 
-        // Prepare data
-        Map<String, Object> feedbackData = new HashMap<>();
-        feedbackData.put("name", name);
-        feedbackData.put("phone", phone);
-        feedbackData.put("email", email);
-        feedbackData.put("comment", comment);
-        feedbackData.put("rating", rating);
-        feedbackData.put("deviceModel", deviceModel);
-        feedbackData.put("timestamp", System.currentTimeMillis());
+        // ─────────────────────────────────────────
+        // 2. Build data object
+        // ─────────────────────────────────────────
+        long timestamp = System.currentTimeMillis();
 
-        // Write to Firebase
-        dbRef.push().setValue(feedbackData)
-                .addOnSuccessListener(aVoid -> callback.onSuccess())
-                .addOnFailureListener(e -> callback.onFailure(e.getMessage()));
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", name);
+        data.put("phone", phone);
+        data.put("email", email);
+        data.put("comment", comment);
+        data.put("rating", rating);
+        data.put("timestamp", timestamp);
+
+        // ─────────────────────────────────────────
+        // 3. Use SAME DB URL style as RegisterActivity
+        //    and SAME node name: "Feedback"
+        // ─────────────────────────────────────────
+        FirebaseDatabase db = FirebaseDatabase.getInstance(
+                context.getString(R.string.firebase_db_url)
+        );
+        DatabaseReference feedbackRef = db.getReference(FEEDBACK_NODE);
+
+        feedbackRef.push()
+                .setValue(data)
+                .addOnSuccessListener(unused -> {
+                    if (callback != null) {
+                        callback.onSuccess();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    if (callback != null) {
+                        String msg = (e != null && e.getMessage() != null)
+                                ? e.getMessage()
+                                : "Unknown error";
+                        callback.onFailure(msg);
+                    }
+                });
     }
 }

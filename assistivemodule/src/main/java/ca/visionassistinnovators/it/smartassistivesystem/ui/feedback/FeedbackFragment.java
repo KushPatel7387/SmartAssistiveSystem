@@ -31,9 +31,9 @@ public class FeedbackFragment extends Fragment {
 
         feedbackManager = new FeedbackManager();
 
-        etName = root.findViewById(R.id.et_name);
-        etPhone = root.findViewById(R.id.et_phone);
-        etEmail = root.findViewById(R.id.et_email);
+        etName    = root.findViewById(R.id.et_name);
+        etPhone   = root.findViewById(R.id.et_phone);
+        etEmail   = root.findViewById(R.id.et_email);
         etComment = root.findViewById(R.id.et_comment);
         ratingBar = root.findViewById(R.id.ratingBar);
         Button btnSubmit = root.findViewById(R.id.btn_submit_feedback);
@@ -44,29 +44,46 @@ public class FeedbackFragment extends Fragment {
     }
 
     private void submitFeedback() {
-        String name = etName.getText().toString().trim();
-        String phone = etPhone.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
+        String name    = etName.getText().toString().trim();
+        String phone   = etPhone.getText().toString().trim();
+        String email   = etEmail.getText().toString().trim();
         String comment = etComment.getText().toString().trim();
-        float rating = ratingBar.getRating();
+        float rating   = ratingBar.getRating();
 
-        feedbackManager.submitFeedback(name, phone, email, comment, rating, new FeedbackManager.FeedbackCallback() {
-            @Override
-            public void onSuccess() {
-                Toast.makeText(getContext(), R.string.feedback_submitted_successfully, Toast.LENGTH_SHORT).show();
-                clearFields();
-            }
+        feedbackManager.submitFeedback(
+                requireContext(),
+                name,
+                phone,
+                email,
+                comment,
+                rating,
+                new FeedbackManager.FeedbackCallback() {
+                    @Override
+                    public void onSuccess() {
+                        Toast.makeText(
+                                getContext(),
+                                R.string.feedback_submitted_successfully,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                        clearFields();
+                    }
 
-            @Override
-            public void onFailure(String error) {
-                Toast.makeText(getContext(), getString(R.string.failed) + error, Toast.LENGTH_SHORT).show();
-            }
+                    @Override
+                    public void onFailure(String error) {
+                        Toast.makeText(
+                                getContext(),
+                                getString(R.string.failed) + error,
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
 
-            @Override
-            public void onValidationError(String message) {
-                Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-            }
-        });
+                    @Override
+                    public void onValidationError(String message) {
+                        // All validation messages come from business layer
+                        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
     private void clearFields() {

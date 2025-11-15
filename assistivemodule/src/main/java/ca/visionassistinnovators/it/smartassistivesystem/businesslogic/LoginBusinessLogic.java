@@ -36,8 +36,7 @@ public class LoginBusinessLogic {
         if (!isRememberMeEnabled()) {
             return "";
         }
-        String email = Prefs.getString(appContext, Prefs.KEY_EMAIL, "");
-        return email != null ? email : "";
+        return Prefs.getString(appContext, Prefs.KEY_EMAIL, "");
     }
 
     /**
