@@ -220,5 +220,10 @@ Section: 3DTues
     <string name="app_description">This application assists visually impaired users by detecting nearby obstacles, providing audio feedback, and monitoring environmental conditions using advanced sensors and AI algorithms.</string>
     <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCourse: OCA Section</string>
     <string name="please_enter_your_message">Please enter your feedback message.</string>
+    <string name="err_first_and_last_name_required">Please enter your first and last name.</string>
+    <string name="err_phone_10_digits">Please enter a valid 10-digit phone number.</string>
+    <string name="hint_first_name">First name</string>
+    <string name="hint_last_name">Last name</string>
+    <string name="err_not_logged_in_for_feedback">You must be signed in to send feedback.</string>
 
 </resources>

@@ -13,12 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.FeedbackManager;
 
 public class FeedbackFragment extends Fragment {
 
-    private EditText etName, etPhone, etEmail, etComment;
+    private EditText etFirstName, etLastName, etPhone, etEmail, etComment;
     private RatingBar ratingBar;
     private FeedbackManager feedbackManager;
 
@@ -31,12 +34,22 @@ public class FeedbackFragment extends Fragment {
 
         feedbackManager = new FeedbackManager();
 
-        etName    = root.findViewById(R.id.et_name);
-        etPhone   = root.findViewById(R.id.et_phone);
-        etEmail   = root.findViewById(R.id.et_email);
-        etComment = root.findViewById(R.id.et_comment);
-        ratingBar = root.findViewById(R.id.ratingBar);
+        etFirstName = root.findViewById(R.id.et_first_name);
+        etLastName  = root.findViewById(R.id.et_last_name);
+        etPhone     = root.findViewById(R.id.et_phone);
+        etEmail     = root.findViewById(R.id.et_email);
+        etComment   = root.findViewById(R.id.et_comment);
+        ratingBar   = root.findViewById(R.id.ratingBar);
         Button btnSubmit = root.findViewById(R.id.btn_submit_feedback);
+
+        // Auto-fill email from logged-in Firebase user and lock it
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null && currentUser.getEmail() != null) {
+            etEmail.setText(currentUser.getEmail());
+            etEmail.setEnabled(false);
+            etEmail.setFocusable(false);
+            etEmail.setFocusableInTouchMode(false);
+        }
 
         btnSubmit.setOnClickListener(v -> submitFeedback());
 
@@ -44,15 +57,25 @@ public class FeedbackFragment extends Fragment {
     }
 
     private void submitFeedback() {
-        String name    = etName.getText().toString().trim();
-        String phone   = etPhone.getText().toString().trim();
-        String email   = etEmail.getText().toString().trim();
-        String comment = etComment.getText().toString().trim();
-        float rating   = ratingBar.getRating();
+        String firstName = etFirstName.getText().toString().trim();
+        String lastName  = etLastName.getText().toString().trim();
+        String phone     = etPhone.getText().toString().trim();
+        String comment   = etComment.getText().toString().trim();
+        float rating     = ratingBar.getRating();
+
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null || currentUser.getEmail() == null) {
+            Toast.makeText(getContext(),
+                    R.string.err_not_logged_in_for_feedback,
+                    Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String email = currentUser.getEmail();
 
         feedbackManager.submitFeedback(
                 requireContext(),
-                name,
+                firstName,
+                lastName,
                 phone,
                 email,
                 comment,
@@ -79,7 +102,6 @@ public class FeedbackFragment extends Fragment {
 
                     @Override
                     public void onValidationError(String message) {
-                        // All validation messages come from business layer
                         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -87,10 +109,11 @@ public class FeedbackFragment extends Fragment {
     }
 
     private void clearFields() {
-        etName.setText("");
+        etFirstName.setText("");
+        etLastName.setText("");
         etPhone.setText("");
-        etEmail.setText("");
         etComment.setText("");
         ratingBar.setRating(0);
+        // Email stays – tied to logged-in user
     }
 }
