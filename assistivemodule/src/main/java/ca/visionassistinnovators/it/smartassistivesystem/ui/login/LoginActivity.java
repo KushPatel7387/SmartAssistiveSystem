@@ -4,21 +4,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.auth.api.signin.*;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.EmailLoginManager;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GoogleLoginManager;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginBusinessLogic;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginValidator;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.util.LoginPrefsFacade;
-import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.*;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -67,6 +79,10 @@ public class LoginActivity extends AppCompatActivity {
                                                 );
                                             }
                                         }
+
+                                        // Load phone from Firebase "users" node → SharedPreferences
+                                        syncUserProfileToPrefs();
+
                                         goHome();
                                     }
 
@@ -82,7 +98,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
 
                 } catch (ApiException e) {
-                    Toast.makeText(this, getString(R.string.err_google_signin_failed, e.getMessage()), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this,
+                            getString(R.string.err_google_signin_failed, e.getMessage()),
+                            Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -198,6 +216,10 @@ public class LoginActivity extends AppCompatActivity {
                     // Fallback to previous behavior if something goes wrong
                     LoginPrefsFacade.saveRememberEmail(LoginActivity.this, cbRemember.isChecked(), emailFromCallback);
                 }
+
+                // Load phone from Firebase "users" node → SharedPreferences
+                syncUserProfileToPrefs();
+
                 goHome();
             }
 
@@ -213,6 +235,40 @@ public class LoginActivity extends AppCompatActivity {
     private void goHome() {
         startActivity(new Intent(this, HomeActivity.class));
         finish();
+    }
+
+    /**
+     * After a successful login (email or Google), fetch the user profile from
+     * Realtime Database: /users/{uid} and save "phone" into SharedPreferences.
+     *
+     * Handles both String and numeric (Long) phone types in Firebase.
+     */
+    private void syncUserProfileToPrefs() {
+        if (firebaseAuth == null) return;
+
+        FirebaseUser current = firebaseAuth.getCurrentUser();
+        if (current == null) return;
+
+        String uid = current.getUid();
+
+        DatabaseReference userRef = FirebaseDatabase
+                .getInstance(getString(R.string.firebase_db_url))
+                .getReference("users")
+                .child(uid);
+
+        userRef.get().addOnSuccessListener(snapshot -> {
+            if (!snapshot.exists()) return;
+
+            // phone can be stored as String OR Long in Firebase, so read as Object
+            Object phoneObj = snapshot.child("phone").getValue();
+            if (phoneObj != null) {
+                String phoneStr = String.valueOf(phoneObj);  // works for Long & String
+                // save to SharedPreferences via facade
+                LoginPrefsFacade.saveUserPhone(LoginActivity.this, phoneStr);
+            }
+        }).addOnFailureListener(e -> {
+            // silently ignore; app still works without phone cached
+        });
     }
 
     // TEXT WATCHER TO CLEAR ERRORS

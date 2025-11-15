@@ -233,4 +233,8 @@ Section: 3DTues
     <string name="password_strength_strong">Strong password</string>
     <string name="err_password_complexity">Password must include at least 1 uppercase letter, 1 lowercase letter, and 1 special character.</string>
 
+    <string name="feedback_subtitle">We value your feedback to improve the Smart Assistive System.</string>
+    <string name="rate_our_service">Rate our service</string>
+    <string name="submit">Submit</string>
+
 </resources>

@@ -25,6 +25,11 @@ public final class LoginPrefsFacade {
         PrefsWriter.saveGuardian(c, phone);
     }
 
+    // NEW: save logged-in user phone (from Firebase "users" node)
+    public static void saveUserPhone(Context c, String phone) {
+        PrefsWriter.saveUserPhone(c, phone);
+    }
+
     public static void clearAll(Context c) {
         PrefsWriter.clearAll(c);
     }

@@ -26,6 +26,11 @@ final class PrefsWriter {
         Prefs.putString(c, Prefs.KEY_GUARDIAN, safe(phone));
     }
 
+    // NEW: store logged-in user phone
+    static void saveUserPhone(Context c, String phone) {
+        Prefs.putString(c, Prefs.KEY_USER_PHONE, safe(phone));
+    }
+
     static void clearAll(Context c) {
         Prefs.clear(c);
     }

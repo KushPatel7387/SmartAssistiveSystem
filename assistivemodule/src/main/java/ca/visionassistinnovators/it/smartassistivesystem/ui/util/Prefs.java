@@ -1,4 +1,3 @@
-
 /**
  * Course Section: OCA
  * Team Members
@@ -6,7 +5,8 @@
  * Krish Patel – N01666556
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
- */package ca.visionassistinnovators.it.smartassistivesystem.ui.util;
+ */
+package ca.visionassistinnovators.it.smartassistivesystem.ui.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -21,9 +21,11 @@ public final class Prefs {
 
     private static final String PREF = "sas_prefs";
 
-    public static final String KEY_REMEMBER = "remember_me";
-    public static final String KEY_EMAIL    = "saved_email";
-    public static final String KEY_GUARDIAN = "pref_guardian_number";
+    public static final String KEY_REMEMBER    = "remember_me";
+    public static final String KEY_EMAIL       = "saved_email";
+    public static final String KEY_GUARDIAN    = "pref_guardian_number";
+    // NEW: logged-in user phone (for feedback, profile, etc.)
+    public static final String KEY_USER_PHONE  = "user_phone";
 
     private static SharedPreferences sp(Context c) {
         return c.getSharedPreferences(PREF, Context.MODE_PRIVATE);
