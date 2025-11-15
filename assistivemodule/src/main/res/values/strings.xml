@@ -225,5 +225,12 @@ Section: 3DTues
     <string name="hint_first_name">First name</string>
     <string name="hint_last_name">Last name</string>
     <string name="err_not_logged_in_for_feedback">You must be signed in to send feedback.</string>
+    <string name="err_invalid_name_characters">Name can contain only letters, spaces, apostrophes, or hyphens.</string>
+
+    <string name="password_too_short">Password too short (minimum 8 characters).</string>
+    <string name="password_strength_weak">Weak password</string>
+    <string name="password_strength_medium">Medium strength password</string>
+    <string name="password_strength_strong">Strong password</string>
+    <string name="err_password_complexity">Password must include at least 1 uppercase letter, 1 lowercase letter, and 1 special character.</string>
 
 </resources>

@@ -22,6 +22,8 @@ public class FeedbackManager {
     // EXACT node name from your DB
     private static final String FEEDBACK_NODE = "Feedback";
 
+    private final NameValidator nameValidator = new NameValidator();
+
     public FeedbackManager() {
         // no-op
     }
@@ -35,7 +37,7 @@ public class FeedbackManager {
                                float rating,
                                FeedbackCallback callback) {
 
-        // 1) Validate first/last name
+        // Names required
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -45,7 +47,17 @@ public class FeedbackManager {
             return;
         }
 
-        // 2) Validate + normalize phone (digits only, must be 10)
+        // Same rules as registration
+        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
+            if (callback != null) {
+                callback.onValidationError(
+                        context.getString(R.string.err_invalid_name_characters)
+                );
+            }
+            return;
+        }
+
+        // Phone rule same style (10 digits)
         String normalizedPhone = normalizePhone(phone);
         if (normalizedPhone == null) {
             if (callback != null) {
@@ -56,7 +68,6 @@ public class FeedbackManager {
             return;
         }
 
-        // 3) Validate comment
         if (TextUtils.isEmpty(comment)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -66,9 +77,8 @@ public class FeedbackManager {
             return;
         }
 
-        // 4) Build formatted full name (auto-capitalized)
-        String fullName = formatName(firstName) + " " + formatName(lastName);
-
+        // Auto-capitalized full name shared with registration style
+        String fullName = nameValidator.buildFullName(firstName, lastName);
         long timestamp = System.currentTimeMillis();
 
         Map<String, Object> data = new HashMap<>();
@@ -101,27 +111,9 @@ public class FeedbackManager {
                 });
     }
 
-    // ─────────────────────────────────────────
-    // Helpers: name & phone formatting
-    // ─────────────────────────────────────────
-
-    private String formatName(String raw) {
-        if (raw == null) return "";
-        raw = raw.trim().toLowerCase();
-        if (raw.isEmpty()) return "";
-
-        // first letter upper, rest lower
-        return Character.toUpperCase(raw.charAt(0)) +
-                (raw.length() > 1 ? raw.substring(1) : "");
-    }
-
-    /**
-     * Keep only digits, require exactly 10.
-     * Returns normalized phone or null if invalid.
-     */
     private String normalizePhone(String phone) {
         if (phone == null) return null;
-        String digits = phone.replaceAll("\\D", ""); // strip non-digits
+        String digits = phone.replaceAll("\\D", "");
         if (digits.length() != 10) {
             return null;
         }
