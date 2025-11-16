@@ -64,18 +64,6 @@
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge" />
 
                 <!-- ✅ Runtime Permission Button -->
-                <Button
-                    android:id="@+id/btn_request_location"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginHorizontal="16dp"
-                    android:text="Grant Location Permission"
-                    android:textAllCaps="false"
-                    android:textStyle="bold"
-                    android:backgroundTint="@color/teal_200"
-                    android:textColor="@android:color/white"
-                    android:elevation="4dp" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

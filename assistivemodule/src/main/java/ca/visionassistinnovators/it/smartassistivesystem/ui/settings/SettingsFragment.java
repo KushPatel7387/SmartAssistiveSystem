@@ -48,7 +48,6 @@ public class SettingsFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
         switchLockPortrait = root.findViewById(R.id.switch_lock_portrait);
-        btnRequestLocation = root.findViewById(R.id.btn_request_location);
 
         // Lock/unlock portrait orientation
         switchLockPortrait.setOnCheckedChangeListener((buttonView, isChecked) -> {
