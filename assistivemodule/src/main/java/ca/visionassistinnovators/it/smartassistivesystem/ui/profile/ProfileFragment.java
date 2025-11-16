@@ -1,11 +1,3 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- * Sarang Prajapati – N01662036
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.profile;
 
 import android.os.Bundle;
@@ -22,11 +14,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.HashMap;   // ⭐ IMPORTANT FIX — You forgot this import!
+import java.util.HashMap;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
@@ -46,38 +39,38 @@ public class ProfileFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        // UI Components
         etName  = v.findViewById(R.id.et_profile_name);
         etEmail = v.findViewById(R.id.et_profile_email);
         etPhone = v.findViewById(R.id.et_profile_phone);
         btnSave = v.findViewById(R.id.btn_update_profile);
 
-        // Firebase
         auth = FirebaseAuth.getInstance();
-        String uid = auth.getUid();
+        FirebaseUser user = auth.getCurrentUser();
 
-        if (uid == null) {
-            Toast.makeText(getContext(), "User not logged in!", Toast.LENGTH_SHORT).show();
+        if (user == null) {
+            Toast.makeText(getContext(), "Not logged in!", Toast.LENGTH_SHORT).show();
             return v;
         }
+
+        String uid = user.getUid();
 
         userRef = FirebaseDatabase
                 .getInstance(getString(R.string.firebase_db_url))
                 .getReference("users")
                 .child(uid);
 
-        // Load profile into fields
-        loadProfileData();
+        // Load data
+        loadProfileData(user);
 
-        // Save updated profile
-        btnSave.setOnClickListener(view -> updateProfile());
+        btnSave.setOnClickListener(view -> updateProfile(uid));
 
         return v;
     }
 
-    // Load user profile data into EditTexts
-    private void loadProfileData() {
+    private void loadProfileData(FirebaseUser authUser) {
+
         userRef.get().addOnCompleteListener(task -> {
+
             if (!task.isSuccessful()) {
                 Toast.makeText(getContext(), "Failed to load profile!", Toast.LENGTH_SHORT).show();
                 return;
@@ -85,44 +78,35 @@ public class ProfileFragment extends Fragment {
 
             DataSnapshot ds = task.getResult();
 
-            if (!ds.exists()) {
-                Toast.makeText(getContext(), "Profile not found!", Toast.LENGTH_SHORT).show();
-                return;
+            // Case 1: User profile exists in database
+            if (ds.exists()) {
+                etName.setText(ds.child("name").getValue(String.class));
+                etEmail.setText(ds.child("email").getValue(String.class));
+                etPhone.setText(ds.child("phone").getValue(String.class));
             }
+            else {
+                // Case 2: Profile does NOT exist → fallback to Authentication
+                etEmail.setText(authUser.getEmail());
+                etName.setText(authUser.getDisplayName() != null ? authUser.getDisplayName() : "");
+                etPhone.setText(authUser.getPhoneNumber() != null ? authUser.getPhoneNumber() : "");
 
-            // ⭐ Set edit text values
-            etName.setText(ds.child("name").getValue(String.class));
-            etEmail.setText(ds.child("email").getValue(String.class));
-            etPhone.setText(ds.child("phone").getValue(String.class));
+                Toast.makeText(getContext(),
+                        "No DB profile found — loaded from Firebase Authentication",
+                        Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    // Update edited profile data in Firebase
-    private void updateProfile() {
+    private void updateProfile(String uid) {
+
         String name  = etName.getText().toString().trim();
         String email = etEmail.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
 
-        // Validation
-        if (TextUtils.isEmpty(name)) {
-            etName.setError("Enter name");
-            etName.requestFocus();
-            return;
-        }
+        if (TextUtils.isEmpty(name)) { etName.setError("Required"); return; }
+        if (TextUtils.isEmpty(email)) { etEmail.setError("Required"); return; }
+        if (TextUtils.isEmpty(phone)) { etPhone.setError("Required"); return; }
 
-        if (TextUtils.isEmpty(email)) {
-            etEmail.setError("Enter email");
-            etEmail.requestFocus();
-            return;
-        }
-
-        if (TextUtils.isEmpty(phone)) {
-            etPhone.setError("Enter phone");
-            etPhone.requestFocus();
-            return;
-        }
-
-        // ⭐ Firebase update map
         HashMap<String, Object> map = new HashMap<>();
         map.put("name", name);
         map.put("email", email);
@@ -130,10 +114,8 @@ public class ProfileFragment extends Fragment {
 
         userRef.updateChildren(map)
                 .addOnSuccessListener(unused ->
-                        Toast.makeText(getContext(), "Profile Updated Successfully!", Toast.LENGTH_SHORT).show()
-                )
+                        Toast.makeText(getContext(), "Profile Updated!", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Update Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show()
-                );
+                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }
