@@ -2,145 +2,93 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/teal_50"
-    android:fillViewport="true">
+    android:padding="20dp">
 
     <LinearLayout
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp"
         android:gravity="center_horizontal">
 
-        <!-- Title / Local label -->
+        <!-- DISTANCE SENSOR SECTION -->
         <TextView
-            android:id="@+id/txtLightValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Sensor Dashboard"
+            android:text="Distance Sensor"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <!-- Value coming from Firebase / source -->
         <TextView
-            android:id="@+id/txtFromFirebase"
+            android:id="@+id/textDistance"
+            android:text="Distance: 0 cm"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Source: —"
-            android:textSize="18sp"
-            android:textColor="@color/darker_gray"
-            android:layout_marginTop="12dp" />
+            android:layout_height="wrap_content"/>
 
-        <!-- Optional timestamp -->
-        <TextView
-            android:id="@+id/txtUpdatedAt"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Updated: —"
-            android:textSize="14sp"
-            android:textColor="@color/dark_gray"
-            android:layout_marginTop="8dp" />
+        <View
+            android:id="@+id/viewIndicator"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="10dp"
+            android:background="#4CAF50" />
 
-        <!-- Small loading indicator while first read happens -->
-        <ProgressBar
-            android:id="@+id/progress"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:visibility="gone" />
+        <Button
+            android:id="@+id/buttonVibrate"
+            android:text="Trigger Vibration"
+            android:layout_marginTop="15dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-        <!-- Divider -->
+
+        <!-- SEPARATOR LINE -->
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/dark_gray"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp" />
+            android:layout_height="2dp"
+            android:background="#CCCCCC"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
 
-        <!-- Section title -->
+        <!-- LIGHT SENSOR SECTION -->
         <TextView
-            android:id="@+id/txtSensorsTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="All Sensor Readings"
-            android:textSize="18sp"
+            android:text="Light Sensor"
+            android:textSize="22sp"
             android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <!-- LIGHT SENSOR ROW -->
         <TextView
-            android:id="@+id/txtSensorLight"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Light: --"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
+            android:id="@+id/textLight"
+            android:text="Light: 0 lux"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <ProgressBar
-            android:id="@+id/barLight"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="0"
-            android:layout_marginBottom="8dp" />
 
-        <!-- COLOR SENSOR ROW -->
+        <!-- COLOR SENSOR SECTION -->
         <TextView
-            android:id="@+id/txtSensorColor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Color: --"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
+            android:text="Color Sensor"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-        <ProgressBar
-            android:id="@+id/barColor"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="0"
-            android:layout_marginBottom="8dp" />
+        <View
+            android:id="@+id/viewColorBox"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:background="#000000"/>
 
-        <!-- DISTANCE SENSOR ROW -->
         <TextView
-            android:id="@+id/txtSensorDistance"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Distance: --"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
-
-        <ProgressBar
-            android:id="@+id/barDistance"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="0"
-            android:layout_marginBottom="8dp" />
-
-        <!-- UV SENSOR ROW -->
-        <TextView
-            android:id="@+id/txtSensorUv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="UV: --"
-            android:textSize="16sp"
-            android:layout_marginTop="4dp" />
-
-        <ProgressBar
-            android:id="@+id/barUV"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:max="100"
-            android:progress="0"
-            android:layout_marginBottom="8dp" />
+            android:id="@+id/textColorName"
+            android:text="Color: Unknown"
+            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
     </LinearLayout>
 </ScrollView>
