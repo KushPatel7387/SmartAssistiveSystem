@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SystèmeDAssistanceIntelligente</string>
+
+    <string name="app_name">Système d’assistance intelligente</string>
+    <string name="sos_icon">Icône SOS</string>
+    <string name="sos_alert">Alerte SOS</string>
+    <string name="sos_choose_option">Choisissez une option d’urgence</string>
+    <string name="call_ambulance">Appeler l’ambulance</string>
+    <string name="call_guardians"> Appeler les tuteurs</string>
+    <string name="flashlight_toggle">Activer/désactiver la lampe</string>
 
     <!-- Menu -->
     <string name="menu_home">Accueil</string>
@@ -9,16 +16,9 @@
     <string name="menu_about">À propos</string>
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
-        <string name="sos_icon">Icône SOS</string>
-        <string name="sos_alert">Alerte SOS</string>
-        <string name="sos_choose_option">Choisissez une option</string>
-        <string name="call_ambulance">Appeler une ambulance</string>
-        <string name="call_guardians">Appeler les gardiens</string>
-        <string name="flashlight_toggle">Basculer la lampe de poche</string>
-
 
     <string name="team_members">
- Membres de l’équipe :\n
+ Membres de l’équipe:\n
 Sarang Prajapati – N01662036\n
 Krish Patel – N01666556\n
 Kush Patel – N01657387\n
@@ -26,32 +26,31 @@ Daksh Rana – N01664095\n
 Section : 3DTues
 </string>
 
-    <!-- Accueil -->
+    <!-- Home -->
     <string name="home_title">Système d’assistance intelligente</string>
     <string name="home_desc">Ceci est l’écran d’accueil</string>
 
-    <!-- Alertes -->
+    <!-- Alerts -->
     <string name="alerts_title">Préférences d’alerte</string>
     <string name="exit_app">Quitter l’application</string>
     <string name="do_you_really_want_to_exit_smart_assistive_system">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
     <string name="yes">Oui</string>
     <string name="stay">Rester</string>
 
-    <!-- Titres des préférences -->
+    <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
     <string name="sync_header">Synchronisation</string>
 
-    <!-- Préférences des messages -->
     <string name="signature_title">Votre signature</string>
     <string name="reply_title">Action de réponse par défaut</string>
 
-    <!-- Préférences de synchronisation -->
-    <string name="sync_title">Synchroniser les e-mails périodiquement</string>
-    <string name="attachment_title">Télécharger les pièces jointes entrantes</string>
-    <string name="attachment_summary_on">Télécharger automatiquement les pièces jointes des e-mails entrants</string>
-    <string name="attachment_summary_off">Télécharger les pièces jointes uniquement sur demande manuelle</string>
+    <string name="sync_title">Synchroniser les courriels périodiquement</string>
+    <string name="attachment_title">Télécharger les pièces jointes</string>
+    <string name="attachment_summary_on">Télécharger automatiquement les pièces jointes</string>
+    <string name="attachment_summary_off">Télécharger seulement sur demande</string>
 
     <string name="hello_from_android">Bonjour d’Android !</string>
+
     <string name="message">message</string>
     <string name="timestamp">horodatage</string>
     <string name="test">test</string>
@@ -61,122 +60,134 @@ Section : 3DTues
     <string name="message3">"✅ Message : "</string>
     <string name="timestamp3">"🕒 Horodatage : "</string>
     <string name="error">"❌ Erreur : "</string>
-    <string name="https_smartassistivesystem_39072_default_rtdb_firebaseio_com">https://smartassistivesystem-39072-default-rtdb.firebaseio.com</string>
+
     <string name="exit_app2">Quitter l’application</string>
     <string name="do_you_really_want_to_exit_smart_assistive_system2">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
 
     <string name="hello_blank_fragment">Bonjour fragment vide</string>
     <string name="smartassistivesystem">Système d’assistance intelligente</string>
+
     <string name="login">Connexion</string>
-    <string name="email">E-mail</string>
-    <string name="enter_your_email">Entrez votre e-mail</string>
+    <string name="email">Courriel</string>
+    <string name="enter_your_email">Entrez votre courriel</string>
     <string name="password">Mot de passe</string>
     <string name="enter_your_password">Entrez votre mot de passe</string>
     <string name="forgot_password">Mot de passe oublié ?</string>
-    <string name="or_sign_in_with">ou connectez-vous avec</string>
+    <string name="or_sign_in_with">ou se connecter avec</string>
     <string name="continue_with_google">Continuer avec Google</string>
     <string name="don_t_have_an_account_sign_up">Vous n’avez pas de compte ? Inscrivez-vous</string>
     <string name="remember_me">Se souvenir de moi</string>
 
-    <!-- HomeActivity strings -->
     <string name="exit_app_title">Quitter l’application</string>
     <string name="exit_app_message">Voulez-vous vraiment quitter le Système d’assistance intelligente ?</string>
 
     <string name="logout_title">Déconnexion</string>
     <string name="logout_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
-    <string name="logout_button">Déconnexion</string>
+    <string name="logout_button">Se déconnecter</string>
     <string name="cancel">Annuler</string>
 
     <string name="help_title">Aide</string>
     <string name="help_message">Ceci est la section d’aide du Système d’assistance intelligente.</string>
     <string name="ok">OK</string>
-    <string name="customer_feedback">Commentaires des clients</string>
+
+    <string name="customer_feedback">Commentaires des utilisateurs</string>
+
+    <!-- Sensors -->
     <string name="light">Lumière : --</string>
     <string name="color">Couleur : --</string>
     <string name="distance">Distance : --</string>
     <string name="spectrum">Spectre : --</string>
+
     <string name="welcome_to_smart_assistive_system">Bienvenue dans le Système d’assistance intelligente</string>
-    <string name="smart_assistive_system_in_action">Système d’assistance intelligente en action</string>
+    <string name="smart_assistive_system_in_action">Système d’assistance en action</string>
+
     <string name="sensors_active">Capteurs actifs</string>
     <string name="all_systems_functioning_normally">Tous les systèmes fonctionnent normalement.</string>
+
     <string name="voice_icon">Icône vocale</string>
     <string name="voice_assistance">Assistance vocale</string>
-    <string name="tap_mic_icon_to_start_listening">Touchez l’icône du micro pour commencer à écouter.</string>
+    <string name="tap_mic_icon_to_start_listening">Touchez le micro pour commencer l’écoute.</string>
+
     <string name="alert_icon">Icône d’alerte</string>
     <string name="alerts">Alertes</string>
     <string name="no_new_alerts">Aucune nouvelle alerte.</string>
+
     <string name="home_slideshow">Diaporama d’accueil</string>
-    <string name="permission_granted_location_features_enabled">Permission accordée — fonctionnalités de localisation activées !</string>
-    <string name="please_enter_your_name_and_email">Veuillez saisir votre nom et votre e-mail.</string>
+
+    <string name="permission_granted_location_features_enabled">✅ Permission accordée — fonctionnalités de localisation activées !</string>
+
+    <string name="please_enter_your_name_and_email">Veuillez entrer votre nom et votre courriel.</string>
+
     <string name="name">nom</string>
     <string name="phone">téléphone</string>
     <string name="comment">commentaire</string>
     <string name="rating">évaluation</string>
-    <string name="Email">e-mail</string>
-    <string name="devicemodel">modèle de l’appareil</string>
-    <string name="Timestamp">horodatage</string>
-    <string name="feedback_submitted_successfully">Commentaire envoyé avec succès !</string>
-    <string name="smart_assistive_system_helping_visually_impaired_users">Système d’assistance intelligent : aide aux personnes malvoyantes</string>
+
+    <string name="feedback_submitted_successfully">✅ Commentaire soumis avec succès !</string>
+
+    <string name="smart_assistive_system_helping_visually_impaired_users">Système d’assistance : aide aux utilisateurs malvoyants</string>
+
     <string name="voice_assistance_activated">Assistance vocale activée</string>
+
     <string name="sensor_module_detecting_nearby_obstacles">Module de capteurs détectant les obstacles proches</string>
-    <string name="system_providing_safe_navigation">Système assurant une navigation sécurisée</string>
-    <string name="emergency_alert_mode_active">Mode alerte d’urgence activé</string>
+
+    <string name="system_providing_safe_navigation">Le système fournit une navigation sécurisée</string>
+
+    <string name="emergency_alert_mode_active">Mode d’alerte d’urgence actif</string>
+
     <string name="all_systems_operating_normally">Tous les systèmes fonctionnent normalement</string>
-    <string name="location_permission_already">Permission de localisation déjà accordée</string>
-    <string name="failed">Échec : </string>
+
+    <string name="location_permission_already">✅ Permission de localisation déjà accordée</string>
+
+    <string name="failed">"❌ Échec : "</string>
+
     <string name="sensors_data_light_color_distance_spectrum">Données des capteurs :\nLumière, Couleur, Distance, Spectre</string>
-    <string name="home_welcome_message">Bienvenue sur le tableau de bord du Système d’assistance intelligent</string>
 
-    <string name="camera_permission_denied">Permission d’accès à la caméra refusée</string>
-    <string name="camera_permission_rationale">L’accès à la caméra est requis pour la loupe</string>
+    <string name="home_welcome_message">Bienvenue dans le tableau de bord SAS</string>
+
+    <string name="camera_permission_denied">Permission de caméra refusée</string>
+    <string name="camera_permission_rationale">L’accès à la caméra est requis pour la loupe.</string>
     <string name="camera_start_error">Impossible de démarrer la caméra</string>
-    <string name="flash_on">Lampe torche activée</string>
-    <string name="flash_off">Lampe torche désactivée</string>
-    <string name="flash_not_supported">Lampe torche non prise en charge sur cet appareil</string>
-    <string name="cd_camera_preview">Aperçu de la caméra</string>
+    <string name="flash_on">Lampe allumée</string>
+    <string name="flash_off">Lampe éteinte</string>
+    <string name="flash_not_supported">La lampe n’est pas prise en charge sur cet appareil</string>
 
-    <string name="ambulance_number">911</string>
-    <string name="guardian_number_default">12345678</string>
-    <string name="pref_key_guardian_number">pref_guardian_number</string>
+    <string name="calling_ambulance">Appel de l’ambulance…</string>
+    <string name="calling_guardian">Appel du tuteur…</string>
 
-    <!-- UI text -->
-    <string name="calling_ambulance">Appel des secours en cours…</string>
-    <string name="calling_guardian">Appel du tuteur en cours…</string>
-    <string name="call_perm_rationale">La permission d’appel est requise pour passer des appels SOS.</string>
+    <string name="call_perm_rationale">La permission d’appel téléphonique est requise.</string>
     <string name="call_perm_granted">Permission accordée. Appel en cours…</string>
     <string name="call_perm_denied">Permission d’appel refusée.</string>
     <string name="unable_to_call">Impossible d’appeler : %1$s</string>
 
-    <!-- (If your layout needs contentDescriptions) -->
-    <string name="cd_call_ambulance">Appeler les secours</string>
+    <string name="cd_call_ambulance">Appeler l’ambulance</string>
     <string name="cd_call_guardian">Appeler le tuteur</string>
 
+    <!-- Firebase -->
     <string name="firebase_db_url">https://smartassistivesystem-39072-default-rtdb.firebaseio.com/</string>
 
     <!-- Login -->
-    <string name="err_enter_email_password">Saisissez votre e-mail et mot de passe</string>
+    <string name="err_enter_email_password">Entrez votre courriel et votre mot de passe</string>
     <string name="err_login_failed_fmt">Échec de connexion : %1$s</string>
     <string name="err_unknown">inconnu</string>
-    <string name="err_no_google_account">Aucune donnée de compte Google</string>
-    <string name="err_google_signin_failed">Connexion Google échouée : %1$s</string>
-    <string name="err_no_google_token">Aucun jeton Google reçu</string>
-    <string name="err_google_auth_failed">Authentification Google échouée</string>
+    <string name="err_no_google_account">Aucun compte Google trouvé</string>
+    <string name="err_google_signin_failed">Échec de connexion Google : %1$s</string>
+    <string name="err_no_google_token">Aucun jeton Google</string>
+    <string name="err_google_auth_failed">Échec d’authentification Google</string>
 
     <!-- Register -->
     <string name="user_already_registered">Utilisateur déjà inscrit</string>
-    <string name="auth_check_error_fmt">Erreur de vérification d’authentification : %1$s</string>
-    <string name="all_fields_required">Tous les champs sont requis</string>
-    <string name="invalid_email_format">Format d’e-mail invalide</string>
-    <string name="password_min_length">Le mot de passe doit comporter au moins 6 caractères</string>
+    <string name="auth_check_error_fmt">Erreur de vérification : %1$s</string>
+    <string name="all_fields_required">Tous les champs sont obligatoires</string>
+    <string name="invalid_email_format">Format de courriel invalide</string>
+    <string name="password_min_length">Le mot de passe doit comporter ≥ 6 caractères</string>
     <string name="passwords_do_not_match">Les mots de passe ne correspondent pas</string>
     <string name="auth_error_fmt">Erreur d’authentification : %1$s</string>
     <string name="no_uid_after_registration">Aucun UID après inscription</string>
-    <string name="registered_success">Inscription réussie !</string>
-    <string name="db_write_error_fmt">Erreur d’écriture en base : %1$s</string>
 
-    <!-- Firebase URLs & paths -->
-    <string name="rtdb_path_sensor_data">DonneesCapteurs</string>
-    <string name="rtdb_node_light_sensor">CapteurLumiere</string>
+    <!-- Firebase RTDB paths -->
+    <string name="rtdb_path_sensor_data">DonnéesCapteurs</string>
+    <string name="rtdb_node_light_sensor">CapteurLumière</string>
     <string name="rtdb_field_latest">dernier</string>
     <string name="rtdb_field_timestamp">horodatage</string>
 
@@ -184,23 +195,53 @@ Section : 3DTues
     <string name="light_level_title">Niveau de lumière (depuis le cloud)</string>
     <string name="cloud_value_fmt">Valeur cloud : %1$s lx</string>
     <string name="updated_fmt">Mis à jour : %1$s</string>
-    <string name="no_sensor_data">Aucune donnée de capteur trouvée dans la base</string>
-    <string name="db_read_error_fmt">Erreur de lecture en base : %1$s</string>
+    <string name="no_sensor_data">Aucune donnée trouvée</string>
+    <string name="db_read_error_fmt">Erreur de lecture : %1$s</string>
 
-    <!-- Settings / Permissions -->
-    <string name="screen_locked_portrait">Écran verrouillé en mode portrait</string>
+    <!-- Permissions -->
+    <string name="screen_locked_portrait">Écran verrouillé en portrait</string>
     <string name="auto_rotation_enabled">Rotation automatique activée</string>
-    <string name="permission_denied_location">Permission refusée — certaines fonctionnalités peuvent ne pas fonctionner</string>
+    <string name="permission_denied_location">Permission refusée — certaines fonctions peuvent ne pas fonctionner</string>
     <string name="open_settings">Paramètres</string>
 
-    <!-- Slideshow/Alerts -->
-    <string name="alerts_voice_warnings_title">Écran des alertes et avertissements vocaux</string>
+    <string name="create_account">Créer un compte</string>
+    <string name="full_name">Nom complet</string>
+    <string name="phone_number">Numéro de téléphone</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
+    <string name="register">S’inscrire</string>
+    <string name="already_have_account_login">Vous avez déjà un compte ? Connexion</string>
+    <string name="feedback">Commentaires</string>
 
-    <string name="rtdb_node_test">test</string>
-    <string name="rtdb_field_message">message</string>
-    <string name="log_message_prefix">Message : </string>
-    <string name="log_timestamp_prefix">Horodatage : </string>
-    <string name="log_error_prefix">Erreur : </string>
-    <string name="app_logo_description">Logo du Système d’assistance intelligent</string>
-    <string name="app_description">Cette application aide les personnes malvoyantes en détectant les obstacles proches, en fournissant un retour audio et en surveillant les conditions environnementales à l’aide de capteurs avancés et d’algorithmes d’IA.</string>
-    <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCours : Section OCA</string></resources>
+    <string name="registered_success">Inscription réussie</string>
+    <string name="db_write_error_fmt">Erreur d’écriture : %1$s</string>
+
+    <string name="alerts_voice_warnings_title">Alertes & avertissements vocaux</string>
+
+    <string name="app_logo_description">Logo du Système d’assistance intelligente</string>
+    <string name="app_description">Cette application aide les utilisateurs malvoyants grâce à la détection d’obstacles, au retour audio et à la surveillance de l’environnement.</string>
+
+    <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCours: Section OCA</string>
+
+    <string name="please_enter_your_message">Veuillez saisir votre message.</string>
+    <string name="err_first_and_last_name_required">Entrez votre prénom et nom.</string>
+    <string name="err_phone_10_digits">Entrez un numéro de téléphone valide (10 chiffres).</string>
+
+    <string name="hint_first_name">Prénom</string>
+    <string name="hint_last_name">Nom</string>
+
+    <string name="err_not_logged_in_for_feedback">Vous devez être connecté pour envoyer un commentaire.</string>
+
+    <string name="err_invalid_name_characters">Le nom ne peut contenir que des lettres, espaces, apostrophes ou traits d’union.</string>
+
+    <string name="password_too_short">Mot de passe trop court (min. 8 caractères).</string>
+    <string name="password_strength_weak">Mot de passe faible</string>
+    <string name="password_strength_medium">Mot de passe moyen</string>
+    <string name="password_strength_strong">Mot de passe fort</string>
+    <string name="err_password_complexity">Le mot de passe doit contenir majuscule, minuscule et caractère spécial.</string>
+
+    <string name="feedback_subtitle">Vos commentaires nous aident à améliorer SAS.</string>
+    <string name="rate_our_service">Évaluez notre service</string>
+    <string name="submit">Soumettre</string>
+    <string name="sensor_icon">Icône Capteurs</string>
+
+</resources>
