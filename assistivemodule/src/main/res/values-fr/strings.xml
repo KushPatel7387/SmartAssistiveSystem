@@ -215,7 +215,8 @@ Section : 3DTues
     <string name="registered_success">Inscription réussie</string>
     <string name="db_write_error_fmt">Erreur d’écriture : %1$s</string>
 
-    <string name="alerts_voice_warnings_title">Alertes & avertissements vocaux</string>
+    <!-- Alerts / voice -->
+    <string name="alerts_voice_warnings_title">Alertes et avertissements vocaux</string>
 
     <string name="app_logo_description">Logo du Système d’assistance intelligente</string>
     <string name="app_description">Cette application aide les utilisateurs malvoyants grâce à la détection d’obstacles, au retour audio et à la surveillance de l’environnement.</string>
@@ -243,5 +244,11 @@ Section : 3DTues
     <string name="rate_our_service">Évaluez notre service</string>
     <string name="submit">Soumettre</string>
     <string name="sensor_icon">Icône Capteurs</string>
+
+    <!-- New strings for SettingsFragment -->
+    <string name="notifications_enabled">Notifications activées</string>
+    <string name="notifications_disabled">Notifications désactivées</string>
+    <string name="light_theme_selected">Thème clair sélectionné</string>
+    <string name="dark_theme_selected">Thème sombre sélectionné</string>
 
 </resources>
