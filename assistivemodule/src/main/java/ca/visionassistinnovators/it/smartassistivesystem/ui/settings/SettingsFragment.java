@@ -8,93 +8,89 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.settings;
 
-import android.Manifest;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-
-import com.google.android.material.snackbar.Snackbar;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class SettingsFragment extends Fragment {
 
     private SwitchCompat switchLockPortrait;
-    private Button btnRequestLocation;
-
-    private ActivityResultLauncher<String> permissionLauncher;
+    private SwitchCompat switchNotifications;
+    private RadioGroup rgTheme;
+    private RadioButton rbLightTheme;
+    private RadioButton rbDarkTheme;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        switchLockPortrait = root.findViewById(R.id.switch_lock_portrait);
+        // ===== Bind views to XML IDs =====
+        switchLockPortrait   = root.findViewById(R.id.switch_lock_portrait);
+        switchNotifications  = root.findViewById(R.id.switch_notifications);
+        rgTheme              = root.findViewById(R.id.rg_theme);
+        rbLightTheme         = root.findViewById(R.id.rb_light_theme);
+        rbDarkTheme          = root.findViewById(R.id.rb_dark_theme);
 
-        // Lock/unlock portrait orientation
+        // ===== Lock / unlock screen orientation =====
         switchLockPortrait.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                Toast.makeText(getContext(), R.string.screen_locked_portrait, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        R.string.screen_locked_portrait,
+                        Toast.LENGTH_SHORT).show();
             } else {
                 requireActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                Toast.makeText(getContext(), R.string.auto_rotation_enabled, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),
+                        R.string.auto_rotation_enabled,
+                        Toast.LENGTH_SHORT).show();
             }
         });
 
-        // Register permission launcher
-        permissionLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
-                    if (!isAdded()) return;
-                    if (isGranted) {
-                        Snackbar.make(root, R.string.permission_granted_location_features_enabled, Snackbar.LENGTH_LONG).show();
-                    } else {
-                        Snackbar.make(root, R.string.permission_denied_location, Snackbar.LENGTH_LONG)
-                                .setAction(R.string.open_settings, v -> openAppSettings())
-                                .show();
-                    }
-                });
+        // ===== Notifications toggle (simple feedback) =====
+        switchNotifications.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Toast.makeText(getContext(),
+                        "Notifications enabled",
+                        Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getContext(),
+                        "Notifications disabled",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        // Request location on click
-        btnRequestLocation.setOnClickListener(v -> checkLocationPermission(root));
+        // ===== Theme selection (Light / Dark) =====
+        rgTheme.setOnCheckedChangeListener((group, checkedId) -> {
+            if (checkedId == R.id.rb_light_theme) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                Toast.makeText(getContext(),
+                        "Light theme selected",
+                        Toast.LENGTH_SHORT).show();
+            } else if (checkedId == R.id.rb_dark_theme) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                Toast.makeText(getContext(),
+                        "Dark theme selected",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return root;
-    }
-
-    private void checkLocationPermission(View anchor) {
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
-            Snackbar.make(anchor, R.string.location_permission_already, Snackbar.LENGTH_LONG).show();
-
-        } else {
-            permissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
-        }
-    }
-
-    private void openAppSettings() {
-        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-        Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
-        intent.setData(uri);
-        startActivity(intent);
     }
 }
