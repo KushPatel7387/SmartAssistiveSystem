@@ -238,5 +238,15 @@ Section: 3DTues
     <string name="submit">Submit</string>
     <string name="sensor_icon">Sensor Icon</string>
 
+    <!-- 24-hour feedback limit message -->
+    <string name="feedback_already_submitted_24h">
+    You can submit feedback once every 24 hours.
+</string>
+
+    <!-- %1$d = hours, %2$d = minutes -->
+    <string name="feedback_cooldown_format">
+    You can submit feedback again in %1$d h %2$d min.
+</string>
+
 
 </resources>

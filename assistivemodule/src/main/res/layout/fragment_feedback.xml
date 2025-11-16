@@ -132,6 +132,18 @@
                     app:cornerRadius="12dp"
                     app:backgroundTint="@color/teal_200" />
 
+                <!-- NEW: cooldown label (hidden by default) -->
+                <TextView
+                    android:id="@+id/tv_feedback_cooldown"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:textColor="@color/purple_700"
+                    android:textSize="14sp"
+                    android:gravity="center"
+                    android:visibility="gone"
+                    android:text="" />
+
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>

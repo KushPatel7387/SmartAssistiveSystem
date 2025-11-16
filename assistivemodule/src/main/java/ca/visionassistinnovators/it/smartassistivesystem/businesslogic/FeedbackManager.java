@@ -1,6 +1,8 @@
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.text.TextUtils;
 
 import com.google.firebase.database.DatabaseReference;
@@ -22,6 +24,13 @@ public class FeedbackManager {
     // EXACT node name from your DB
     private static final String FEEDBACK_NODE = "Feedback";
 
+    // 24 hours in ms
+    public static final long FEEDBACK_COOLDOWN_MS = 24L * 60L * 60L * 1000L;
+
+    // Local prefs for per-email cooldown
+    private static final String PREFS_NAME = "feedback_prefs";
+    private static final String KEY_PREFIX_LAST = "last_feedback_";
+
     private final NameValidator nameValidator = new NameValidator();
 
     public FeedbackManager() {
@@ -36,6 +45,20 @@ public class FeedbackManager {
                                String comment,
                                float rating,
                                FeedbackCallback callback) {
+
+        // ----- Per-email 24h cooldown check (business logic) -----
+        String userKey = buildUserKey(email);
+        long now = System.currentTimeMillis();
+        long remainingMs = getRemainingMs(context, userKey, now);
+        if (remainingMs > 0) {
+            if (callback != null) {
+                // Requirement: restrict to once per 24 hours
+                callback.onValidationError(
+                        context.getString(R.string.feedback_already_submitted_24h)
+                );
+            }
+            return;
+        }
 
         // Names required
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
@@ -79,7 +102,10 @@ public class FeedbackManager {
 
         // Auto-capitalized full name shared with registration style
         String fullName = nameValidator.buildFullName(firstName, lastName);
-        long timestamp = System.currentTimeMillis();
+        long timestamp = now;
+
+        // Device model (requirement 46)
+        String deviceModel = Build.MANUFACTURER + " " + Build.MODEL;
 
         Map<String, Object> data = new HashMap<>();
         data.put("name", fullName);
@@ -88,6 +114,7 @@ public class FeedbackManager {
         data.put("comment", comment);
         data.put("rating", rating);
         data.put("timestamp", timestamp);
+        data.put("deviceModel", deviceModel); // ✅ device model added
 
         FirebaseDatabase db = FirebaseDatabase.getInstance(
                 context.getString(R.string.firebase_db_url)
@@ -97,6 +124,9 @@ public class FeedbackManager {
         feedbackRef.push()
                 .setValue(data)
                 .addOnSuccessListener(unused -> {
+                    // Save last submission time for this email
+                    saveLastSubmissionTime(context, userKey, now);
+
                     if (callback != null) {
                         callback.onSuccess();
                     }
@@ -111,6 +141,17 @@ public class FeedbackManager {
                 });
     }
 
+    /**
+     * Used by the fragment to know if current email is already in cooldown.
+     */
+    public long getRemainingCooldownMs(Context context, String email) {
+        String userKey = buildUserKey(email);
+        long now = System.currentTimeMillis();
+        return getRemainingMs(context, userKey, now);
+    }
+
+    // ----- helpers -----
+
     private String normalizePhone(String phone) {
         if (phone == null) return null;
         String digits = phone.replaceAll("\\D", "");
@@ -118,5 +159,38 @@ public class FeedbackManager {
             return null;
         }
         return digits;
+    }
+
+    /**
+     * Build a stable key for this user.
+     * Email is unique identifier (requirement 27).
+     */
+    private String buildUserKey(String email) {
+        if (!TextUtils.isEmpty(email)) {
+            return KEY_PREFIX_LAST + email.toLowerCase();
+        }
+        // If somehow no email, treat everyone as "anonymous"
+        return KEY_PREFIX_LAST + "anonymous";
+    }
+
+    private SharedPreferences getPrefs(Context context) {
+        return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    private void saveLastSubmissionTime(Context context, String userKey, long timestamp) {
+        getPrefs(context)
+                .edit()
+                .putLong(userKey, timestamp)
+                .apply();
+    }
+
+    private long getRemainingMs(Context context, String userKey, long now) {
+        long last = getPrefs(context).getLong(userKey, 0L);
+        if (last == 0L) return 0L;
+        long diff = now - last;
+        if (diff >= FEEDBACK_COOLDOWN_MS) {
+            return 0L;
+        }
+        return FEEDBACK_COOLDOWN_MS - diff;
     }
 }
