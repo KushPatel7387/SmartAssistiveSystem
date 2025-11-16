@@ -17,17 +17,17 @@
             android:id="@+id/txtLightValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Light Level (from cloud)"
+            android:text="Sensor Dashboard"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
 
-        <!-- Value coming from Firebase -->
+        <!-- Value coming from Firebase / source -->
         <TextView
             android:id="@+id/txtFromFirebase"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Cloud Value: — lx"
+            android:text="Source: —"
             android:textSize="18sp"
             android:textColor="@color/darker_gray"
             android:layout_marginTop="12dp" />
@@ -50,6 +50,97 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:visibility="gone" />
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/dark_gray"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Section title -->
+        <TextView
+            android:id="@+id/txtSensorsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="All Sensor Readings"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:layout_marginBottom="12dp" />
+
+        <!-- LIGHT SENSOR ROW -->
+        <TextView
+            android:id="@+id/txtSensorLight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Light: --"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+
+        <ProgressBar
+            android:id="@+id/barLight"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginBottom="8dp" />
+
+        <!-- COLOR SENSOR ROW -->
+        <TextView
+            android:id="@+id/txtSensorColor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Color: --"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+
+        <ProgressBar
+            android:id="@+id/barColor"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginBottom="8dp" />
+
+        <!-- DISTANCE SENSOR ROW -->
+        <TextView
+            android:id="@+id/txtSensorDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Distance: --"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+
+        <ProgressBar
+            android:id="@+id/barDistance"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginBottom="8dp" />
+
+        <!-- UV SENSOR ROW -->
+        <TextView
+            android:id="@+id/txtSensorUv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="UV: --"
+            android:textSize="16sp"
+            android:layout_marginTop="4dp" />
+
+        <ProgressBar
+            android:id="@+id/barUV"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:max="100"
+            android:progress="0"
+            android:layout_marginBottom="8dp" />
 
     </LinearLayout>
 </ScrollView>

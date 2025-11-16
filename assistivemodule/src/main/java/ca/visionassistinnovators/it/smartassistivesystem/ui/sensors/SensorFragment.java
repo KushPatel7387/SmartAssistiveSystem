@@ -33,6 +33,10 @@ public class SensorFragment extends Fragment {
     private TextView tvLightValue, tvCloudValue, tvUpdatedAt;
     private ProgressBar progress;
 
+    // 🔹 NEW: 4 sensor labels + bar-graphs (no external lib)
+    private TextView tvSensorLight, tvSensorColor, tvSensorDistance, tvSensorUv;
+    private ProgressBar barLight, barColor, barDistance, barUv;
+
     private DatabaseReference sensorRef;
     private ValueEventListener listener;
 
@@ -50,6 +54,17 @@ public class SensorFragment extends Fragment {
         tvUpdatedAt  = root.findViewById(R.id.txtUpdatedAt);
         progress     = root.findViewById(R.id.progress);
 
+        // 🔹 NEW: findViewById for 4 sensor text + bars (make sure IDs exist in XML)
+        tvSensorLight    = root.findViewById(R.id.txtSensorLight);
+        tvSensorColor    = root.findViewById(R.id.txtSensorColor);
+        tvSensorDistance = root.findViewById(R.id.txtSensorDistance);
+        tvSensorUv       = root.findViewById(R.id.txtSensorUv);
+
+        barLight   = root.findViewById(R.id.barLight);
+        barColor   = root.findViewById(R.id.barColor);
+        barDistance= root.findViewById(R.id.barDistance);
+        barUv      = root.findViewById(R.id.barUV);
+
         // DB path from strings.xml (no hardcoding)
         sensorRef = FirebaseDatabase
                 .getInstance(getString(R.string.firebase_db_url))
@@ -61,6 +76,9 @@ public class SensorFragment extends Fragment {
         tvLightValue.setText(R.string.light_level_title);
         tvCloudValue.setText(getString(R.string.cloud_value_fmt, "—"));
         if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, "—"));
+
+        // 🔹 Initial dummy sensor values (manual) – so graphs not empty
+        applySensorValues(10f, 30f, 50f, 70f, false);
 
         // Realtime listener — READ ONLY
         listener = new ValueEventListener() {
@@ -77,11 +95,38 @@ public class SensorFragment extends Fragment {
                     String timeText   = (ts == null) ? "—" : String.valueOf(ts);
 
                     tvCloudValue.setText(getString(R.string.cloud_value_fmt, latestText));
-                    if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, timeText));
+                    if (tvUpdatedAt != null) {
+                        tvUpdatedAt.setText(getString(R.string.updated_fmt, timeText));
+                    }
+
+                    // 🔹 Try to parse light value from Firebase
+                    float lightValue = 0f;
+                    try {
+                        if (latest != null) {
+                            lightValue = Float.parseFloat(String.valueOf(latest));
+                        }
+                    } catch (NumberFormatException e) {
+                        lightValue = 0f;
+                    }
+
+                    // 🔹 Other sensors currently manual/demo (no Firebase)
+                    float colorValue    = 40f;
+                    float distanceValue = 60f;
+                    float uvValue       = 20f;
+
+                    // All 4 sensors update + bar-graph update
+                    applySensorValues(lightValue, colorValue, distanceValue, uvValue, true);
+
                 } else {
                     tvCloudValue.setText(getString(R.string.cloud_value_fmt, "—"));
-                    if (tvUpdatedAt != null) tvUpdatedAt.setText(getString(R.string.updated_fmt, "—"));
-                    Toast.makeText(requireContext(), R.string.no_sensor_data, Toast.LENGTH_SHORT).show();
+                    if (tvUpdatedAt != null) {
+                        tvUpdatedAt.setText(getString(R.string.updated_fmt, "—"));
+                    }
+                    Toast.makeText(requireContext(),
+                            R.string.no_sensor_data, Toast.LENGTH_SHORT).show();
+
+                    // 🔹 If no data in DB, keep manual demo values
+                    applySensorValues(10f, 30f, 50f, 70f, false);
                 }
             }
 
@@ -105,5 +150,49 @@ public class SensorFragment extends Fragment {
         if (sensorRef != null && listener != null) {
             sensorRef.removeEventListener(listener);
         }
+    }
+
+    // 🔹 Helper: update all 4 sensor labels + progress bars
+    private void applySensorValues(float light, float color,
+                                   float distance, float uv,
+                                   boolean fromDb) {
+
+        String source = fromDb ? "Firebase" : "Manual demo";
+        // tvCloudValue already shows latest value; source info add karva hoy to:
+        // tvCloudValue.setText(getString(R.string.cloud_value_fmt, source));
+
+        if (tvSensorLight != null) {
+            tvSensorLight.setText("Light: " + light);
+        }
+        if (tvSensorColor != null) {
+            tvSensorColor.setText("Color: " + color);
+        }
+        if (tvSensorDistance != null) {
+            tvSensorDistance.setText("Distance: " + distance);
+        }
+        if (tvSensorUv != null) {
+            tvSensorUv.setText("UV: " + uv);
+        }
+
+        if (barLight != null) {
+            barLight.setProgress(scaleToProgress(light));
+        }
+        if (barColor != null) {
+            barColor.setProgress(scaleToProgress(color));
+        }
+        if (barDistance != null) {
+            barDistance.setProgress(scaleToProgress(distance));
+        }
+        if (barUv != null) {
+            barUv.setProgress(scaleToProgress(uv));
+        }
+    }
+
+    // 🔹 Scale float 0–100 for horizontal progress bars
+    private int scaleToProgress(float value) {
+        if (Float.isNaN(value)) return 0;
+        if (value < 0f) return 0;
+        if (value > 100f) return 100;
+        return Math.round(value);
     }
 }
