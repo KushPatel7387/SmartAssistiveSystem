@@ -16,16 +16,13 @@ public class NameValidator {
      */
     public boolean isValidName(String name) {
         if (TextUtils.isEmpty(name)) {
-            return false;
+            return true;
         }
         String trimmed = name.trim();
         // At least 1 letter, no digits or weird symbols
-        return trimmed.matches("[A-Za-z][A-Za-z '\\-]*");
+        return !trimmed.matches("[A-Za-z][A-Za-z '\\-]*");
     }
 
-    /**
-     * Capitalize a single name segment: "sarang" -> "Sarang"
-     */
     public String formatSingleName(String raw) {
         if (raw == null) return "";
         String trimmed = raw.trim().toLowerCase();

@@ -32,7 +32,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsMan
 
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {
 
-    private RecyclerView rvAlerts;
     private TextView tvEmpty;
     private AlertsAdapter adapter;
     private AlertsManager alertsManager;
@@ -55,7 +54,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
     public void onViewCreated(@NonNull View root, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(root, savedInstanceState);
 
-        rvAlerts = root.findViewById(R.id.rv_alerts);
+        RecyclerView rvAlerts = root.findViewById(R.id.rv_alerts);
         tvEmpty  = root.findViewById(R.id.tv_alerts_empty);
 
         rvAlerts.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -68,9 +67,9 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Toast.makeText(requireContext(),
-                    "No signed-in user for alerts.",
+                    R.string.no_signed_in_user_for_alerts,
                     Toast.LENGTH_SHORT).show();
-            tvEmpty.setText("Sign in to see alerts.");
+            tvEmpty.setText(R.string.sign_in_to_see_alerts);
             tvEmpty.setVisibility(View.VISIBLE);
             return;
         }
@@ -97,7 +96,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         adapter.submitList(alerts);
 
         if (alerts == null || alerts.isEmpty()) {
-            tvEmpty.setText("No alerts yet.");
+            tvEmpty.setText(R.string.no_alerts_yet);
             tvEmpty.setVisibility(View.VISIBLE);
         } else {
             tvEmpty.setVisibility(View.GONE);
@@ -108,7 +107,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
     public void onError(String error) {
         if (!isAdded()) return;
         Toast.makeText(requireContext(),
-                "Failed to load alerts: " + error,
+                getString(R.string.failed_to_load_alerts) + error,
                 Toast.LENGTH_SHORT).show();
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Patterns;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -16,10 +18,8 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 /**
  * Business logic for guardian → patients relationship.
- *
  * Patients are stored under the SAME tree as registration:
  *   /users/{uid}/patients/{patientId}
- *
  * This reuses the existing "users" node like RegisterActivity
  * and does NOT overwrite user profiles.
  */
@@ -74,7 +74,7 @@ public class GuardianPatientManager {
         getGuardianPatientsRef(ctx, guardianUid)
                 .addValueEventListener(new com.google.firebase.database.ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
                         List<PatientModel> result = new ArrayList<>();
                         for (DataSnapshot child : snapshot.getChildren()) {
                             PatientModel model = child.getValue(PatientModel.class);
@@ -91,7 +91,7 @@ public class GuardianPatientManager {
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError error) {
+                    public void onCancelled(@NonNull DatabaseError error) {
                         if (listener != null) {
                             listener.onError(error.getMessage());
                         }
@@ -112,7 +112,7 @@ public class GuardianPatientManager {
 
         if (TextUtils.isEmpty(guardianUid)) {
             if (callback != null) {
-                callback.onFailure("No guardian/user ID.");
+                callback.onFailure(ctx.getString(R.string.no_guardian_user_id));
             }
             return;
         }
@@ -127,7 +127,7 @@ public class GuardianPatientManager {
             return;
         }
 
-        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
+        if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
                         ctx.getString(R.string.err_invalid_name_characters)
@@ -140,7 +140,7 @@ public class GuardianPatientManager {
         if (TextUtils.isEmpty(email) ||
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             if (callback != null) {
-                callback.onValidationError("Please enter a valid email address.");
+                callback.onValidationError(ctx.getString(R.string.please_enter_a_valid_email_address));
             }
             return;
         }
@@ -169,8 +169,7 @@ public class GuardianPatientManager {
         );
 
         DatabaseReference ref = getGuardianPatientsRef(ctx, guardianUid).push();
-        String key = ref.getKey();
-        model.id = key;
+        model.id = ref.getKey();
 
         ref.setValue(model)
                 .addOnSuccessListener(unused -> {
@@ -180,7 +179,7 @@ public class GuardianPatientManager {
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) {
-                        String msg = (e != null && e.getMessage() != null)
+                        String msg = e.getMessage() != null
                                 ? e.getMessage()
                                 : "Unknown error";
                         callback.onFailure(msg);
@@ -213,7 +212,7 @@ public class GuardianPatientManager {
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) {
-                        String msg = (e != null && e.getMessage() != null)
+                        String msg = e.getMessage() != null
                                 ? e.getMessage()
                                 : "Unknown error";
                         callback.onFailure(msg);

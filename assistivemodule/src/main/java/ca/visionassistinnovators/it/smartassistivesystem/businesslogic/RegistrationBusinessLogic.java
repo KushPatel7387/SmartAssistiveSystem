@@ -47,7 +47,7 @@ public class RegistrationBusinessLogic {
         }
 
         // 2) Name characters (reuse same rules as elsewhere)
-        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
+        if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
             return ValidationResult.error(
                     ctx.getString(R.string.err_invalid_name_characters)
             );
@@ -63,15 +63,15 @@ public class RegistrationBusinessLogic {
 
         // 4) Password / confirm required (no new string resources)
         if (TextUtils.isEmpty(password)) {
-            return ValidationResult.error("Please enter password.");
+            return ValidationResult.error(ctx.getString(R.string.please_enter_password));
         }
 
         if (TextUtils.isEmpty(confirmPassword)) {
-            return ValidationResult.error("Please confirm password.");
+            return ValidationResult.error(ctx.getString(R.string.please_confirm_password));
         }
 
         if (!password.equals(confirmPassword)) {
-            return ValidationResult.error("Passwords do not match.");
+            return ValidationResult.error(ctx.getString(R.string.passwords_do_not_match_));
         }
 
         // 5) Reuse LoginValidator for email + password rules
@@ -83,7 +83,7 @@ public class RegistrationBusinessLogic {
             // "Missing: at least 6 characters and 1 special character."
             String msg = loginResult.getMessage();
             if (TextUtils.isEmpty(msg)) {
-                msg = "Invalid email or password format.";
+                msg = ctx.getString(R.string.invalid_email_or_password_format);
             }
             return ValidationResult.error(msg);
         }

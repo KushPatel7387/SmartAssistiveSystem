@@ -247,6 +247,37 @@ Section: 3DTues
     <string name="feedback_cooldown_format">
     You can submit feedback again in %1$d h %2$d min.
 </string>
+    <string name="no_user_id">No user ID.</string>
+    <string name="system_check_complete">System Check Complete</string>
+    <string name="all_modules_are_running_normally">All modules are running normally.</string>
+    <string name="low_light_detected">Low Light Detected</string>
+    <string name="ambient_light_is_low_consider_enabling_the_magnifier">Ambient light is low. Consider enabling the magnifier.</string>
+    <string name="new_feedback_received">New Feedback Received</string>
+    <string name="you_have_new_feedback_from_a_user">You have new feedback from a user.</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
+    <string name="no_guardian_user_id">No guardian/user ID.</string>
+    <string name="please_enter_password">Please enter password.</string>
+    <string name="please_confirm_password">Please confirm password.</string>
+    <string name="passwords_do_not_match_">Passwords do not match.</string>
+    <string name="invalid_email_or_password_format">Invalid email or password format.</string>
+    <string name="smart_assistive_system">Smart Assistive System</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="developed_by">Developed by:</string>
+    <string name="sign_in_to_see_alerts">Sign in to see alerts.</string>
+    <string name="no_alerts_yet">No alerts yet.</string>
+    <string name="failed_to_load_alerts">"Failed to load alerts: "</string>
+    <string name="no_signed_in_user_for_alerts">No signed-in user for alerts.</string>
+    <string name="recent_alerts">Recent Alerts</string>
+    <string name="no_alerts_yet_">No alerts yet.</string>
+    <string name="comment_">Comment</string>
+    <string name="active">Active</string>
+    <string name="idle">Idle</string>
+    <string name="alerts_">Alerts</string>
+    <string name="users">users</string>
+    <string name="phone_">phone</string>
+    <string name="users_">users</string>
+    <string name="regular">regular</string>
+    <string name="app_icon">App Icon</string>
 
 
 </resources>

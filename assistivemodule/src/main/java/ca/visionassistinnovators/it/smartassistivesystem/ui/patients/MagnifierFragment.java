@@ -118,7 +118,7 @@ public class MagnifierFragment extends Fragment {
                 requireContext(),
                 new ScaleGestureDetector.SimpleOnScaleGestureListener() {
                     @Override
-                    public boolean onScale(ScaleGestureDetector detector) {
+                    public boolean onScale(@NonNull ScaleGestureDetector detector) {
                         if (camera == null || camera.getCameraInfo() == null) return false;
                         ZoomState zs = camera.getCameraInfo().getZoomState().getValue();
                         if (zs == null) return false;
@@ -139,7 +139,7 @@ public class MagnifierFragment extends Fragment {
     }
 
     private void toggleFlash() {
-        if (camera != null && camera.getCameraInfo() != null && camera.getCameraInfo().hasFlashUnit()) {
+        if (camera != null && camera.getCameraInfo().hasFlashUnit()) {
             flashOn = !flashOn;
             camera.getCameraControl().enableTorch(flashOn);
             Toast.makeText(
