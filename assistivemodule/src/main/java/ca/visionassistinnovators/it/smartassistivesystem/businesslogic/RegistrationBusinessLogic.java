@@ -1,39 +1,25 @@
+// File: RegistrationBusinessLogic.java
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Patterns;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 /**
- * Business rules for registration:
- *  - First + last name required + valid characters
- *  - Phone must be 10 digits
- *  - Email valid
- *  - Password: min 8 chars, 1 upper, 1 lower, 1 special
- *  - Exposes password strength (weak/medium/strong)
+ * Handles non-UI registration rules:
+ *  - Validates name, phone, email, password, confirm password
+ *  - Reuses LoginValidator for email + password rules
+ *  - Builds full name
+ *  - Normalizes phone
+ *  - Calculates password strength (for UI only)
  */
 public class RegistrationBusinessLogic {
 
-    public static class ValidationResult {
-        private final boolean valid;
-        private final String message;
+    private final NameValidator nameValidator = new NameValidator();
+    private final LoginValidator loginValidator = new LoginValidator();
 
-        public ValidationResult(boolean valid, String message) {
-            this.valid = valid;
-            this.message = message;
-        }
-
-        public boolean isValid() {
-            return valid;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-    }
-
+    // Used by RegisterActivity to show "Weak/Medium/Strong"
     public enum PasswordStrength {
         TOO_SHORT,
         WEAK,
@@ -41,75 +27,81 @@ public class RegistrationBusinessLogic {
         STRONG
     }
 
-    private final NameValidator nameValidator = new NameValidator();
+    // ─────────────────────────────────────────────
+    // MAIN VALIDATION (professor’s requirements)
+    // ─────────────────────────────────────────────
 
     public ValidationResult validate(Context ctx,
                                      String firstName,
                                      String lastName,
                                      String phone,
                                      String email,
-                                     String pass,
-                                     String conf) {
+                                     String password,
+                                     String confirmPassword) {
 
-        // First & last name required
+        // 1) Names required
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.err_first_and_last_name_required));
+            return ValidationResult.error(
+                    ctx.getString(R.string.err_first_and_last_name_required)
+            );
         }
 
-        // Same rules for names everywhere
+        // 2) Name characters (reuse same rules as elsewhere)
         if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.err_invalid_name_characters));
+            return ValidationResult.error(
+                    ctx.getString(R.string.err_invalid_name_characters)
+            );
         }
 
-        String normalizedPhone = normalizePhone(phone);
-        if (normalizedPhone == null) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.err_phone_10_digits));
+        // 3) Phone: must be valid 10 digits
+        String normalized = normalizePhone(phone);
+        if (normalized == null) {
+            return ValidationResult.error(
+                    ctx.getString(R.string.err_phone_10_digits)
+            );
         }
 
-        if (TextUtils.isEmpty(email)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.all_fields_required));
+        // 4) Password / confirm required (no new string resources)
+        if (TextUtils.isEmpty(password)) {
+            return ValidationResult.error("Please enter password.");
         }
 
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.invalid_email_format));
+        if (TextUtils.isEmpty(confirmPassword)) {
+            return ValidationResult.error("Please confirm password.");
         }
 
-        if (TextUtils.isEmpty(pass) || TextUtils.isEmpty(conf)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.all_fields_required));
+        if (!password.equals(confirmPassword)) {
+            return ValidationResult.error("Passwords do not match.");
         }
 
-        // Min length 8
-        if (pass.length() < 8) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.password_too_short));
+        // 5) Reuse LoginValidator for email + password rules
+        LoginValidator.ValidationResult loginResult =
+                loginValidator.validate(email, password);
+
+        if (!loginResult.isValid()) {
+            // Combined message from LoginValidator, e.g.
+            // "Missing: at least 6 characters and 1 special character."
+            String msg = loginResult.getMessage();
+            if (TextUtils.isEmpty(msg)) {
+                msg = "Invalid email or password format.";
+            }
+            return ValidationResult.error(msg);
         }
 
-        // Complexity: 1 upper, 1 lower, 1 special
-        if (!isPasswordComplexEnough(pass)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.err_password_complexity));
-        }
-
-        if (!pass.equals(conf)) {
-            return new ValidationResult(false,
-                    ctx.getString(R.string.passwords_do_not_match));
-        }
-
-        return new ValidationResult(true, null);
+        // If we reach here, everything is valid
+        return ValidationResult.ok();
     }
+
+    // ─────────────────────────────────────────────
+    // Helper methods used by RegisterActivity
+    // ─────────────────────────────────────────────
 
     public String buildFullName(String firstName, String lastName) {
         return nameValidator.buildFullName(firstName, lastName);
     }
 
     /**
-     * Keep only digits, require exactly 10. Returns null if invalid.
+     * Returns 10-digit phone string or null if invalid.
      */
     public String normalizePhone(String phone) {
         if (phone == null) return null;
@@ -120,42 +112,61 @@ public class RegistrationBusinessLogic {
         return digits;
     }
 
-    // ─────────────────────────────────────────
-    // Password helpers
-    // ─────────────────────────────────────────
-
     /**
-     * At least 8 chars, 1 upper, 1 lower, 1 special char.
-     */
-    public boolean isPasswordComplexEnough(String password) {
-        if (password == null || password.length() < 8) return false;
-
-        boolean hasUpper   = password.matches(".*[A-Z].*");
-        boolean hasLower   = password.matches(".*[a-z].*");
-        boolean hasSpecial = password.matches(".*[^A-Za-z0-9].*");
-
-        return hasUpper && hasLower && hasSpecial;
-    }
-
-    /**
-     * Strength based on length ONLY:
-     *  <8        -> TOO_SHORT
-     *  8-9       -> WEAK
-     *  10-11     -> MEDIUM
-     *  12 or more-> STRONG
+     * Password strength for the UI indicator.
+     * NOTE: This is for visual feedback only and does not affect validation.
      */
     public PasswordStrength getPasswordStrength(String password) {
-        if (password == null) return PasswordStrength.TOO_SHORT;
+        if (password == null || password.isEmpty()) {
+            return PasswordStrength.TOO_SHORT;
+        }
+
         int len = password.length();
 
-        if (len < 8) {
+        // < 6 → too short (also invalid per rules)
+        if (len < 6) {
             return PasswordStrength.TOO_SHORT;
-        } else if (len < 10) {
+        }
+
+        // 6–7 chars → weak
+        if (len < 8) {
             return PasswordStrength.WEAK;
-        } else if (len < 12) {
+        }
+
+        // exactly 8 chars → medium
+        if (len == 8) {
             return PasswordStrength.MEDIUM;
-        } else {
-            return PasswordStrength.STRONG;
+        }
+
+        // 9 or more → strong
+        return PasswordStrength.STRONG;
+    }
+
+
+    // Simple result wrapper used by RegisterActivity
+    public static class ValidationResult {
+        private final boolean valid;
+        private final String message;
+
+        private ValidationResult(boolean valid, String message) {
+            this.valid = valid;
+            this.message = message;
+        }
+
+        public static ValidationResult ok() {
+            return new ValidationResult(true, null);
+        }
+
+        public static ValidationResult error(String message) {
+            return new ValidationResult(false, message);
+        }
+
+        public boolean isValid() {
+            return valid;
+        }
+
+        public String getMessage() {
+            return message;
         }
     }
 }

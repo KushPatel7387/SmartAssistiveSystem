@@ -7,10 +7,12 @@ import java.util.regex.Pattern;
 
 public class LoginValidator {
 
+    // Simple email pattern (good enough for assignment)
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
             "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
     );
 
+    // Professor requirement: minimum 6 characters
     private static final int MIN_LENGTH = 6;
 
     public boolean isEmailOrPasswordEmpty(String email, String password) {
@@ -18,27 +20,37 @@ public class LoginValidator {
                 email.trim().isEmpty() || password.trim().isEmpty();
     }
 
-    // THIS METHOD MUST EXIST
+    // THIS METHOD MUST EXIST – used by LoginActivity and RegistrationBusinessLogic
     public ValidationResult validate(String email, String password) {
         List<String> errors = new ArrayList<>();
 
-        // Email
+        // Null safety
+        if (email == null) email = "";
+        if (password == null) password = "";
+
+        // Email format
         if (!EMAIL_PATTERN.matcher(email).matches()) {
             errors.add("Invalid email address");
         }
 
-        // Password
+        // Password length
         if (password.length() < MIN_LENGTH) {
             errors.add("at least " + MIN_LENGTH + " characters");
         }
+
+        // Must have at least 1 uppercase letter
         if (!password.matches(".*[A-Z].*")) {
             errors.add("1 uppercase letter");
         }
+
+        // Must have at least 1 digit
         if (!password.matches(".*[0-9].*")) {
             errors.add("1 digit");
         }
-        if (!password.matches(".*[@#$%^&+=!].*")) {
-            errors.add("1 special char (@#$%^&+=!)");
+
+        // Must have at least 1 special character (ANY non-alphanumeric)
+        if (!password.matches(".*[^A-Za-z0-9].*")) {
+            errors.add("1 special character");
         }
 
         return new ValidationResult(errors);
@@ -67,7 +79,13 @@ public class LoginValidator {
         }
 
         public boolean isEmailError() {
-            return errors.stream().anyMatch(e -> e.contains("email"));
+            // Any error mentioning "email" is considered an email error
+            for (String e : errors) {
+                if (e.toLowerCase().contains("email")) {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
