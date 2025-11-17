@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp"
-    android:background="@color/teal_50">
+    android:background="?attr/colorSurface">
 
     <TextView
         android:layout_width="wrap_content"
@@ -13,12 +13,13 @@
         android:text="Recent Alerts"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="@color/purple_700"
+        android:textColor="?attr/colorOnSurface"
         android:layout_marginBottom="12dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_alerts"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
+
 </LinearLayout>

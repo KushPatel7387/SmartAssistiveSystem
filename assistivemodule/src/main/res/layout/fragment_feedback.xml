@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/teal_50"
+    android:background="?attr/colorSurfaceVariant"
     android:fillViewport="true">
 
     <LinearLayout
@@ -16,10 +16,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:padding="20dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="6dp"
-            app:cardBackgroundColor="@android:color/white"
-            android:padding="20dp">
+            app:cardBackgroundColor="?attr/colorSurface">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -27,7 +27,6 @@
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
 
-                <!-- Icon / Illustration -->
                 <ImageView
                     android:id="@+id/img_feedback_icon"
                     android:layout_width="80dp"
@@ -36,7 +35,6 @@
                     android:layout_marginBottom="12dp"
                     android:contentDescription="@string/customer_feedback" />
 
-                <!-- Title -->
                 <TextView
                     android:id="@+id/tv_feedback_title"
                     android:layout_width="wrap_content"
@@ -44,21 +42,19 @@
                     android:text="@string/customer_feedback"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@color/purple_700"
+                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginBottom="4dp" />
 
-                <!-- Subtitle -->
                 <TextView
                     android:id="@+id/tv_feedback_subtitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/feedback_subtitle"
                     android:textSize="14sp"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:layout_marginBottom="16dp"
                     android:gravity="center" />
 
-                <!-- FIRST NAME -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -73,7 +69,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- LAST NAME -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -88,7 +83,6 @@
                         android:inputType="textPersonName" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- COMMENT -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -104,7 +98,6 @@
                         android:inputType="textMultiLine" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Stars + label inside card -->
                 <TextView
                     android:id="@+id/tv_rate_label"
                     android:layout_width="wrap_content"
@@ -112,7 +105,7 @@
                     android:text="@string/rate_our_service"
                     android:textSize="16sp"
                     android:textStyle="bold"
-                    android:textColor="@color/purple_700"
+                    android:textColor="?attr/colorOnSurface"
                     android:layout_marginBottom="8dp" />
 
                 <RatingBar
@@ -123,22 +116,21 @@
                     android:stepSize="1.0"
                     android:layout_marginBottom="16dp" />
 
-                <!-- Submit Button inside the card -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btn_submit_feedback"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/submit"
                     app:cornerRadius="12dp"
-                    app:backgroundTint="@color/teal_200" />
+                    app:backgroundTint="?attr/colorPrimary"
+                    android:textColor="?attr/colorOnPrimary" />
 
-                <!-- NEW: cooldown label (hidden by default) -->
                 <TextView
                     android:id="@+id/tv_feedback_cooldown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:textColor="@color/purple_700"
+                    android:textColor="?attr/colorOnSurfaceVariant"
                     android:textSize="14sp"
                     android:gravity="center"
                     android:visibility="gone"
