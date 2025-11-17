@@ -67,7 +67,7 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 ## Currenlty working on Deliverable 4
 
 
-##Screenshot of the Application
+##Screenshot of the Application##
 ![App Home Screen](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/HomeScreen.jpg?raw=true)
 ![Settings Fragment](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Settings.jpg?raw=true)
 ![Sensor Readings](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Sensors.jpg?raw=true)
