@@ -37,6 +37,52 @@ public class FeedbackManager {
         // no-op
     }
 
+    /**
+     * Validate feedback + 24h rule.
+     *
+     * @return null if everything is valid, otherwise a localized error message.
+     */
+    public String validateFeedback(Context context,
+                                   String firstName,
+                                   String lastName,
+                                   String phone,
+                                   String email,
+                                   String comment,
+                                   float rating) {
+
+        // ----- 24h per-email cooldown (also considered "validation") -----
+        String userKey = buildUserKey(email);
+        long now = System.currentTimeMillis();
+        long remainingMs = getRemainingMs(context, userKey, now);
+        if (remainingMs > 0) {
+            return context.getString(R.string.feedback_already_submitted_24h);
+        }
+
+        // Names required
+        if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
+            return context.getString(R.string.err_first_and_last_name_required);
+        }
+
+        // Same rules as registration
+        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
+            return context.getString(R.string.err_invalid_name_characters);
+        }
+
+        // Phone rule same style (10 digits)
+        String normalizedPhone = normalizePhone(phone);
+        if (normalizedPhone == null) {
+            return context.getString(R.string.err_phone_10_digits);
+        }
+
+        if (TextUtils.isEmpty(comment)) {
+            return context.getString(R.string.please_enter_your_message);
+        }
+
+        // (Optional) rating rule: if you want to enforce rating > 0, add here.
+
+        return null; // everything OK
+    }
+
     public void submitFeedback(Context context,
                                String firstName,
                                String lastName,
@@ -46,63 +92,24 @@ public class FeedbackManager {
                                float rating,
                                FeedbackCallback callback) {
 
-        // ----- Per-email 24h cooldown check (business logic) -----
-        String userKey = buildUserKey(email);
-        long now = System.currentTimeMillis();
-        long remainingMs = getRemainingMs(context, userKey, now);
-        if (remainingMs > 0) {
+        // Reuse same validation logic inside manager
+        String validationError = validateFeedback(context, firstName, lastName, phone, email, comment, rating);
+        if (validationError != null) {
             if (callback != null) {
-                // Requirement: restrict to once per 24 hours
-                callback.onValidationError(
-                        context.getString(R.string.feedback_already_submitted_24h)
-                );
+                callback.onValidationError(validationError);
             }
             return;
         }
 
-        // Names required
-        if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
-            if (callback != null) {
-                callback.onValidationError(
-                        context.getString(R.string.err_first_and_last_name_required)
-                );
-            }
-            return;
-        }
+        // At this point, we know:
+        // - Not in 24h cooldown
+        // - Names, phone, and comment are valid
 
-        // Same rules as registration
-        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
-            if (callback != null) {
-                callback.onValidationError(
-                        context.getString(R.string.err_invalid_name_characters)
-                );
-            }
-            return;
-        }
-
-        // Phone rule same style (10 digits)
         String normalizedPhone = normalizePhone(phone);
-        if (normalizedPhone == null) {
-            if (callback != null) {
-                callback.onValidationError(
-                        context.getString(R.string.err_phone_10_digits)
-                );
-            }
-            return;
-        }
+        // normalizedPhone cannot be null here if validateFeedback ran
 
-        if (TextUtils.isEmpty(comment)) {
-            if (callback != null) {
-                callback.onValidationError(
-                        context.getString(R.string.please_enter_your_message)
-                );
-            }
-            return;
-        }
-
-        // Auto-capitalized full name shared with registration style
         String fullName = nameValidator.buildFullName(firstName, lastName);
-        long timestamp = now;
+        long timestamp = System.currentTimeMillis();
 
         // Device model (requirement 46)
         String deviceModel = Build.MANUFACTURER + " " + Build.MODEL;
@@ -114,18 +121,20 @@ public class FeedbackManager {
         data.put("comment", comment);
         data.put("rating", rating);
         data.put("timestamp", timestamp);
-        data.put("deviceModel", deviceModel); // ✅ device model added
+        data.put("deviceModel", deviceModel);
 
         FirebaseDatabase db = FirebaseDatabase.getInstance(
                 context.getString(R.string.firebase_db_url)
         );
         DatabaseReference feedbackRef = db.getReference(FEEDBACK_NODE);
 
+        // Save to DB
         feedbackRef.push()
                 .setValue(data)
                 .addOnSuccessListener(unused -> {
-                    // Save last submission time for this email
-                    saveLastSubmissionTime(context, userKey, now);
+                    // Save last submission time for this email (for 24h rule)
+                    String userKey = buildUserKey(email);
+                    saveLastSubmissionTime(context, userKey, timestamp);
 
                     if (callback != null) {
                         callback.onSuccess();
@@ -162,14 +171,12 @@ public class FeedbackManager {
     }
 
     /**
-     * Build a stable key for this user.
-     * Email is unique identifier (requirement 27).
+     * Email is the unique identifier (requirement 27).
      */
     private String buildUserKey(String email) {
         if (!TextUtils.isEmpty(email)) {
             return KEY_PREFIX_LAST + email.toLowerCase();
         }
-        // If somehow no email, treat everyone as "anonymous"
         return KEY_PREFIX_LAST + "anonymous";
     }
 

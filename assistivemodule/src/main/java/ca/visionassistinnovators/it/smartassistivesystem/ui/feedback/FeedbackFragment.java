@@ -68,9 +68,6 @@ public class FeedbackFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         currentEmail = (user != null && user.getEmail() != null) ? user.getEmail() : "";
 
-        // Phone still comes from Prefs when we submit
-        // but email is used as unique cooldown ID.
-
         // Check if this user is already in the 24h cooldown window
         long remaining = feedbackManager.getRemainingCooldownMs(ctx, currentEmail);
         if (remaining > 0) {
@@ -104,17 +101,32 @@ public class FeedbackFragment extends Fragment {
         final String comment   = etComment.getText().toString().trim();
         final float rating     = ratingBar.getRating();
 
-        // Email already stored in currentEmail
         final String email = currentEmail;
-
-        // Phone from SharedPreferences (saved at login from DB)
         final String phone = Prefs.getString(ctx, Prefs.KEY_USER_PHONE, "");
+
+        // ✅ FIRST: validate everything (including 24h rule) BEFORE showing progress
+        String validationError = feedbackManager.validateFeedback(
+                ctx,
+                firstName,
+                lastName,
+                phone,
+                email,
+                comment,
+                rating
+        );
+
+        if (validationError != null) {
+            Toast.makeText(ctx, validationError, Toast.LENGTH_SHORT).show();
+            return; // do NOT show progress bar
+        }
+
+        // From here, we know inputs are valid & user is not in cooldown
 
         // Show centered progress bar & dim background, disable button
         showProgressDialog();
         setSubmitButtonEnabled(false);
 
-        // Wait 5 seconds before actually sending to DB (for assignment screenshot)
+        // Wait 5 seconds before actually sending to DB (assignment requirement)
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
 
             feedbackManager.submitFeedback(
@@ -158,8 +170,9 @@ public class FeedbackFragment extends Fragment {
 
                         @Override
                         public void onValidationError(String message) {
+                            // This should rarely happen now (we already validated),
+                            // but we still handle it.
                             hideProgressDialog();
-                            // Re-enable button if not in cooldown
                             setSubmitButtonEnabled(true);
                             Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
                         }
@@ -188,7 +201,7 @@ public class FeedbackFragment extends Fragment {
         }
     }
 
-    // ===== Cooldown UI: greyed button + timer (requirement 51) =====
+    // ===== Cooldown UI: greyed button + timer =====
 
     private void startCooldown(long remainingMs) {
         setSubmitButtonEnabled(false);
@@ -198,7 +211,6 @@ public class FeedbackFragment extends Fragment {
             cooldownTimer.cancel();
         }
 
-        // Update every minute: hours + minutes remaining
         cooldownTimer = new CountDownTimer(remainingMs, 60_000L) {
             @Override
             public void onTick(long millisUntilFinished) {
