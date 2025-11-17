@@ -1,55 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
     android:background="#FFF5F5"
     tools:context=".ui.home.SosFragment">
 
-    <ImageView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_sos_alert"
-        app:tint="@android:color/holo_red_dark"
-        android:contentDescription="@string/sos_icon" />
+    <!-- Main content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
+        <!-- Header: Guardian & patient info -->
+        <TextView
+            android:id="@+id/tv_patient_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Patient List (SOS)"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_red_dark"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_patient_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Patients: 0"
+            android:textSize="14sp"
+            android:textColor="#444444"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/tv_empty_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No patients yet. Tap + to add your first patient."
+            android:textSize="14sp"
+            android:textColor="#888888"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone" />
+
+        <!-- Patient list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_patients"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:clipToPadding="false"
+            android:paddingBottom="72dp"
+            tools:listitem="@layout/item_patient" />
+
+    </LinearLayout>
+
+    <!-- Add patient FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_add_patient"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/sos_alert"
-        android:textSize="24sp"
-        android:textColor="@android:color/holo_red_dark"
-        android:textStyle="bold"
-        android:layout_marginTop="16dp" />
+        android:contentDescription="Add patient"
+        app:srcCompat="@android:drawable/ic_input_add"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/teal_200"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="16dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/sos_choose_option"
-        android:textColor="#444"
-        android:layout_marginBottom="30dp" />
-
-    <!-- 🚑 Ambulance Button -->
-    <Button
-        android:id="@+id/btnCallAmbulance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/call_ambulance"
-        android:backgroundTint="#009688"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp" />
-
-    <!-- 👨‍👩‍👧‍👦 Guardians Button -->
-    <Button
-        android:id="@+id/btnCallGuardian"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/call_guardians"
-        android:backgroundTint="#6200EE"
-        android:textColor="@android:color/white" />
-
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
