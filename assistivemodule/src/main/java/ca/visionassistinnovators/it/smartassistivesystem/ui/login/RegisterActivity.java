@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         usersRef = FirebaseDatabase
                 .getInstance(getString(R.string.firebase_db_url))
-                .getReference("users");
+                .getReference(getString(R.string.users_));
 
         registrationLogic = new RegistrationBusinessLogic();
 
@@ -146,7 +146,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     // Assuming UserModel(name, phone, email, role)
-                    UserModel user = new UserModel(fullName, phone, email, "regular");
+                    UserModel user = new UserModel(fullName, phone, email, getString(R.string.regular));
                     usersRef.child(uid).setValue(user)
                             .addOnSuccessListener(unused -> {
                                 Toast.makeText(this,

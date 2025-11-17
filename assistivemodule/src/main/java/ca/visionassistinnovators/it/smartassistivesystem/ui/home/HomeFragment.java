@@ -97,9 +97,9 @@ public class HomeFragment extends Fragment {
     private void setupPieChart() {
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(60, "Active"));
-        entries.add(new PieEntry(25, "Idle"));
-        entries.add(new PieEntry(15, "Alerts"));
+        entries.add(new PieEntry(60, getString(R.string.active)));
+        entries.add(new PieEntry(25, getString(R.string.idle)));
+        entries.add(new PieEntry(15, getString(R.string.alerts_)));
 
         PieDataSet dataSet = new PieDataSet(entries, "Patient Status");
         dataSet.setColors(

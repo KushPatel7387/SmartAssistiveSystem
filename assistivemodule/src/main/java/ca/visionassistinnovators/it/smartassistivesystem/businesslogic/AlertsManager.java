@@ -56,7 +56,7 @@ public class AlertsManager {
 
         if (TextUtils.isEmpty(userUid)) {
             if (listener != null) {
-                listener.onError("No user ID.");
+                listener.onError(ctx.getString(R.string.no_user_id));
             }
             return;
         }
@@ -128,14 +128,15 @@ public class AlertsManager {
 
                 long now = System.currentTimeMillis();
 
-                pushAlert(ref, "System Check Complete",
-                        "All modules are running normally.", now - 3_600_000L);
+                pushAlert(ref, ctx.getString(R.string.system_check_complete),
+                        ctx.getString(R.string.all_modules_are_running_normally), now - 3_600_000L);
 
-                pushAlert(ref, "Low Light Detected",
-                        "Ambient light is low. Consider enabling the magnifier.", now - 1_800_000L);
+                pushAlert(ref, ctx.getString(R.string.ambient_light_is_low_consider_enabling_the_magnifier),
+                        ctx.getString(R.string.low_light_detected), now - 1_800_000L);
 
-                pushAlert(ref, "New Feedback Received",
-                        "You have new feedback from a user.", now - 600_000L);
+                pushAlert(ref, ctx.getString(R.string.you_have_new_feedback_from_a_user)
+                        ,
+                        ctx.getString(R.string.new_feedback_received), now - 600_000L);
             }
 
             @Override

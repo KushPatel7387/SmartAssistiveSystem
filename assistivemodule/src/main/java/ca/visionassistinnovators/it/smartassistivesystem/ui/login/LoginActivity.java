@@ -253,14 +253,14 @@ public class LoginActivity extends AppCompatActivity {
 
         DatabaseReference userRef = FirebaseDatabase
                 .getInstance(getString(R.string.firebase_db_url))
-                .getReference("users")
+                .getReference(getString(R.string.users))
                 .child(uid);
 
         userRef.get().addOnSuccessListener(snapshot -> {
             if (!snapshot.exists()) return;
 
             // phone can be stored as String OR Long in Firebase, so read as Object
-            Object phoneObj = snapshot.child("phone").getValue();
+            Object phoneObj = snapshot.child(getString(R.string.phone_)).getValue();
             if (phoneObj != null) {
                 String phoneStr = String.valueOf(phoneObj);  // works for Long & String
                 // save to SharedPreferences via facade
