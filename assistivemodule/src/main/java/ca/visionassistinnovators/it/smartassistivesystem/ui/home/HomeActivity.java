@@ -50,67 +50,60 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        // Drawer setup
+        // Drawer
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
         // NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        // Top-level destinations, INCLUDING FALL DETECTION
+        // Top-level destinations
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_magnifier,
                 R.id.nav_sos,
                 R.id.nav_alerts,
                 R.id.nav_sensors,
-                R.id.nav_fall_detection,    // 👈 NEW FRAGMENT ADDED
+                R.id.nav_fall_detection,
                 R.id.nav_profile,
                 R.id.nav_feedback,
-                R.id.nav_settings
+                R.id.nav_settings,
+                R.id.nav_help
         ).setOpenableLayout(drawerLayout).build();
 
-        // Connect toolbar + drawer + navigation
+        // Toolbar + Drawer + Navigation
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Drawer: Custom logic for logout + Fall Detection
+        // Drawer Click Logic
         navigationView.setNavigationItemSelectedListener(item -> {
+
             int id = item.getItemId();
 
-            // 👇 Logout handling
             if (id == R.id.nav_logout) {
                 showLogoutDialog();
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
 
-            // 👇 Fall Detection handling
-            if (id == R.id.nav_fall_detection) {
-                navController.navigate(R.id.nav_fall_detection);
-                drawerLayout.closeDrawer(GravityCompat.START);
-                return true;
-            }
-
-            // Default Navigation Component behavior
             boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
             drawerLayout.closeDrawer(GravityCompat.START);
             return handled;
         });
 
-        // Bottom navigation connects to navController
+        // Bottom Navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        // Confirm exit on back press
+        // Back Press Exit Popup
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle(R.string.exit_app_title)
-                        .setMessage(R.string.exit_app_message)
+                        .setTitle("Exit App")
+                        .setMessage("Are you sure you want to exit?")
                         .setIcon(R.drawable.ic_exit)
-                        .setPositiveButton(R.string.yes, (d, w) -> finishAffinity())
-                        .setNegativeButton(R.string.stay, (d, w) -> d.dismiss())
+                        .setPositiveButton("Yes", (d, w) -> finishAffinity())
+                        .setNegativeButton("Stay", (d, w) -> d.dismiss())
                         .show();
             }
         });
@@ -118,12 +111,12 @@ public class HomeActivity extends AppCompatActivity {
 
     private void showLogoutDialog() {
         new AlertDialog.Builder(this)
-                .setTitle(R.string.logout_title)
-                .setMessage(R.string.logout_message)
-                .setPositiveButton(R.string.logout_button, (dialog, which) -> {
-                    // Firebase sign out
+                .setTitle("Logout")
+                .setMessage("Do you really want to logout?")
+                .setPositiveButton("Logout", (dialog, which) -> {
+
                     FirebaseAuth.getInstance().signOut();
-                    // Google sign out
+
                     GoogleSignInClient gsc = GoogleSignIn.getClient(
                             this,
                             new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -137,7 +130,7 @@ public class HomeActivity extends AppCompatActivity {
                     startActivity(i);
                     finish();
                 })
-                .setNegativeButton(R.string.cancel, null)
+                .setNegativeButton("Cancel", null)
                 .show();
     }
 
@@ -146,23 +139,18 @@ public class HomeActivity extends AppCompatActivity {
         return true;
     }
 
+    // Top-right menu items (Help, About, etc.)
     @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
         int id = item.getItemId();
 
         if (id == R.id.action_about) {
             navController.navigate(R.id.nav_about);
             return true;
         }
-        else if (id == R.id.nav_feedback) {
-            navController.navigate(R.id.nav_feedback);
-            return true;
-        }
-        else if (id == R.id.action_help) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.help_title)
-                    .setMessage(R.string.help_message)
-                    .setPositiveButton(R.string.ok, null)
-                    .show();
+
+        if (id == R.id.action_help) {
+            navController.navigate(R.id.nav_help);   // 👈 Use Help Fragment
             return true;
         }
 

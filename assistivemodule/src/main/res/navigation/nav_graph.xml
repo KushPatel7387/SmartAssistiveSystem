@@ -76,6 +76,13 @@
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.detection.FallDetectionFragment"
         android:label="Fall Detection" />
 
+    <fragment
+        android:id="@+id/nav_help"
+        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.help.HelpFragment"
+        android:label="Help"
+        tools:layout="@layout/fragment_help" />
+
+
 
 
 
