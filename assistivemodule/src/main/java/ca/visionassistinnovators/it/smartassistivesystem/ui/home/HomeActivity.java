@@ -54,16 +54,17 @@ public class HomeActivity extends AppCompatActivity {
         drawerLayout = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
 
-        // Nav controller
+        // NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        // Top-level destinations
+        // Top-level destinations, INCLUDING FALL DETECTION
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_magnifier,
                 R.id.nav_sos,
                 R.id.nav_alerts,
                 R.id.nav_sensors,
+                R.id.nav_fall_detection,    // 👈 NEW FRAGMENT ADDED
                 R.id.nav_profile,
                 R.id.nav_feedback,
                 R.id.nav_settings
@@ -73,24 +74,35 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Drawer: handle logout separately (sign out Google + Firebase)
+        // Drawer: Custom logic for logout + Fall Detection
         navigationView.setNavigationItemSelectedListener(item -> {
             int id = item.getItemId();
+
+            // 👇 Logout handling
             if (id == R.id.nav_logout) {
                 showLogoutDialog();
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
+
+            // 👇 Fall Detection handling
+            if (id == R.id.nav_fall_detection) {
+                navController.navigate(R.id.nav_fall_detection);
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+
+            // Default Navigation Component behavior
             boolean handled = NavigationUI.onNavDestinationSelected(item, navController);
             drawerLayout.closeDrawer(GravityCompat.START);
             return handled;
         });
 
-        // Bottom navigation
+        // Bottom navigation connects to navController
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
 
-        // Back press confirm
+        // Confirm exit on back press
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
@@ -111,11 +123,10 @@ public class HomeActivity extends AppCompatActivity {
                 .setPositiveButton(R.string.logout_button, (dialog, which) -> {
                     // Firebase sign out
                     FirebaseAuth.getInstance().signOut();
-                    // Google sign out (safe even if user didn’t use Google)
+                    // Google sign out
                     GoogleSignInClient gsc = GoogleSignIn.getClient(
                             this,
-                            new com.google.android.gms.auth.api.signin.GoogleSignInOptions
-                                    .Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                                     .requestEmail()
                                     .build()
                     );
@@ -137,11 +148,15 @@ public class HomeActivity extends AppCompatActivity {
 
     @Override public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_about) { navController.navigate(R.id.nav_about); return true; }
+
+        if (id == R.id.action_about) {
+            navController.navigate(R.id.nav_about);
+            return true;
+        }
         else if (id == R.id.nav_feedback) {
             navController.navigate(R.id.nav_feedback);
+            return true;
         }
-
         else if (id == R.id.action_help) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.help_title)
@@ -150,6 +165,7 @@ public class HomeActivity extends AppCompatActivity {
                     .show();
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
