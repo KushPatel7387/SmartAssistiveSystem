@@ -8,18 +8,30 @@
     android:background="?attr/colorSurface">
 
     <TextView
+        android:id="@+id/tv_alerts_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Recent Alerts"
         android:textSize="20sp"
         android:textStyle="bold"
         android:textColor="?attr/colorOnSurface"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:id="@+id/tv_alerts_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="No alerts yet."
+        android:textSize="14sp"
+        android:textColor="?attr/colorOnSurface"
+        android:paddingVertical="8dp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_alerts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scrollbars="vertical" />
 
 </LinearLayout>
