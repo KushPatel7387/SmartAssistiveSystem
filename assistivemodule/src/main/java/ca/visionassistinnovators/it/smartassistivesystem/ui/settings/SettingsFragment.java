@@ -13,10 +13,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
@@ -26,6 +29,10 @@ public class SettingsFragment extends Fragment {
 
     private SwitchCompat switchLockPortrait;
     private SwitchCompat switchNotifications;
+
+    private RadioGroup rgTheme;
+    private RadioButton rbLightTheme;
+    private RadioButton rbDarkTheme;
 
     @Nullable
     @Override
@@ -38,6 +45,29 @@ public class SettingsFragment extends Fragment {
         // Get UI controls
         switchLockPortrait = root.findViewById(R.id.switch_lock_portrait);
         switchNotifications = root.findViewById(R.id.switch_notifications);
+
+        rgTheme = root.findViewById(R.id.rg_theme);
+        rbLightTheme = root.findViewById(R.id.rb_light_theme);
+        rbDarkTheme = root.findViewById(R.id.rb_dark_theme);
+
+        // Apply current theme to radio buttons
+        int currentMode = AppCompatDelegate.getDefaultNightMode();
+        if (currentMode == AppCompatDelegate.MODE_NIGHT_YES) {
+            rbDarkTheme.setChecked(true);
+        } else if (currentMode == AppCompatDelegate.MODE_NIGHT_NO) {
+            rbLightTheme.setChecked(true);
+        }
+
+        // Theme toggle (Light / Dark) – applies to whole app
+        rgTheme.setOnCheckedChangeListener((group, checkedId) -> {
+            if (!isAdded()) return;
+
+            if (checkedId == R.id.rb_light_theme) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+            } else if (checkedId == R.id.rb_dark_theme) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+            }
+        });
 
         // Lock to portrait
         switchLockPortrait.setOnCheckedChangeListener((buttonView, isChecked) -> {
