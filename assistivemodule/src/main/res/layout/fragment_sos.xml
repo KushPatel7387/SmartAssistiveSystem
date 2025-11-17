@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFF5F5"
-    tools:context=".ui.home.SosFragment">
+    tools:context=".ui.patients.SosFragment">
 
     <!-- Main content -->
     <LinearLayout

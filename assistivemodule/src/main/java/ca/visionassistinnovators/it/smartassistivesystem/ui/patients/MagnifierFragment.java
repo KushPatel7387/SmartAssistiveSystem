@@ -6,7 +6,7 @@
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
  */
-package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
+package ca.visionassistinnovators.it.smartassistivesystem.ui.patients;
 
 import android.Manifest;
 import android.content.pm.PackageManager;

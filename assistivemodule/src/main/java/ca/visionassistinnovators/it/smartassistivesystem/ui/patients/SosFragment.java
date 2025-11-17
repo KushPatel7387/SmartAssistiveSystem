@@ -1,4 +1,4 @@
-package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
+package ca.visionassistinnovators.it.smartassistivesystem.ui.patients;
 
 import android.Manifest;
 import android.content.Context;
