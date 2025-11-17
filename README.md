@@ -63,11 +63,16 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 
 ## 🔗 Links
 - **GitHub Repo:** [SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
-- **Invitation Link:** [GitHub Invite](https://github.com/KushPatel7387/SmartAssistiveSystem/invitations)
-
+- 
 ## Currenlty working on Deliverable 4
 
 
+## Screenshot of the Application
+![App Home Screen](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/HomeScreen.jpg?raw=true)
+![Settings Fragment](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Settings.jpg?raw=true)
+![Sensor Readings](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Sensors.jpg?raw=true)
+![Feedback Fragment](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Feedback.jpg?raw=true)
+![Patient List](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Patients.jpg?raw=true)
 
 © 2025 **SmartAssistiveSystem – Group 5**  
 *CENG-322 Software Project, Humber College*
