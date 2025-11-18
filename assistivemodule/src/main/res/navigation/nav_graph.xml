@@ -9,28 +9,29 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeFragment"
-        android:label="Home"
+        android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <!-- Alerts -->
     <fragment
         android:id="@+id/nav_alerts"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.alerts.AlertFragment"
-        android:label="Alerts"
+        android:label="@string/alerts_"
         tools:layout="@layout/fragment_alerts" />
 
     <!-- Sensors -->
     <fragment
         android:id="@+id/nav_sensors"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.sensors.SensorFragment"
-        android:label="Sensors"
+        android:label="@string/menu_sensors"
         tools:layout="@layout/fragment_sensors" />
 
+    <!-- Feedback -->
     <fragment
         android:id="@+id/nav_feedback"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.feedback.FeedbackFragment"
-        android:label="@string/feedback" />
-
+        android:label="@string/feedback"
+        tools:layout="@layout/fragment_feedback" />
 
     <!-- Profile -->
     <fragment
@@ -50,40 +51,34 @@
     <fragment
         android:id="@+id/nav_settings"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.settings.SettingsFragment"
-        android:label="Settings"
+        android:label="@string/menu_settings"
         tools:layout="@layout/fragment_settings" />
 
+    <!-- Magnifier -->
     <fragment
         android:id="@+id/nav_magnifier"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.patients.MagnifierFragment"
         android:label="Magnifier"
         tools:layout="@layout/fragment_magnifier" />
 
+    <!-- Patients / SOS -->
     <fragment
         android:id="@+id/nav_sos"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.patients.SosFragment"
-        android:label="SOS"
+        android:label="Patients"
         tools:layout="@layout/fragment_sos" />
 
-    <fragment
-        android:id="@+id/nav_feedback"
-        android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.feedback.FeedbackFragment"
-        android:label="Feedback"
-        tools:layout="@layout/fragment_feedback" />
-
+    <!-- Fall Detection -->
     <fragment
         android:id="@+id/nav_fall_detection"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.detection.FallDetectionFragment"
         android:label="Fall Detection" />
 
+    <!-- Help -->
     <fragment
         android:id="@+id/nav_help"
         android:name="ca.visionassistinnovators.it.smartassistivesystem.ui.help.HelpFragment"
         android:label="Help"
         tools:layout="@layout/fragment_help" />
-
-
-
-
 
 </navigation>
