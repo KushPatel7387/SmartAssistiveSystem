@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         // NavController
         navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
 
-        // Top-level destinations (unchanged, just including nav_help as before)
+        // Top-level destinations (including help)
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
                 R.id.nav_magnifier,
@@ -91,13 +91,20 @@ public class HomeActivity extends AppCompatActivity {
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
-        // Drawer click logic (keep logout behaviour)
+        // Drawer click logic (with explicit Home handling)
         navigationView.setNavigationItemSelectedListener(item -> {
 
             int id = item.getItemId();
 
             if (id == R.id.nav_logout) {
                 showLogoutDialog();
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+
+            if (id == R.id.nav_home) {
+                // Always go to Home fragment
+                navController.popBackStack(R.id.nav_home, false);
                 drawerLayout.closeDrawer(GravityCompat.START);
                 return true;
             }
@@ -110,6 +117,18 @@ public class HomeActivity extends AppCompatActivity {
         // Bottom navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav);
         NavigationUI.setupWithNavController(bottomNav, navController);
+
+        // Explicit Home handling for bottom navigation
+        bottomNav.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+
+            if (id == R.id.nav_home) {
+                navController.popBackStack(R.id.nav_home, false);
+                return true;
+            }
+
+            return NavigationUI.onNavDestinationSelected(item, navController);
+        });
 
         // Back press → confirmation dialog
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
@@ -287,7 +306,7 @@ public class HomeActivity extends AppCompatActivity {
 
         switch (dest) {
             case HOME:
-                navController.navigate(R.id.nav_home);
+                navController.popBackStack(R.id.nav_home, false);
                 break;
 
             case SENSORS:
