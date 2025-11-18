@@ -280,4 +280,22 @@ Section: 3DTues
     <string name="app_icon">App Icon</string>
 
 
+
+
+    <!-- Voice assistant -->
+    <string name="voice_hint">
+        Say: Open home, Open sensors, Open feedback, Open settings, or Open patients.
+    </string>
+    <string name="voice_not_understood">
+        Sorry, I didn\'t catch that. Try saying Open sensors or Go to feedback.
+    </string>
+    <string name="voice_permission_denied">
+        Microphone permission denied. Voice commands are disabled.
+    </string>
+    <string name="voice_listening_toast">Listening...</string>
+    <string name="voice_not_supported">
+        Speech recognition is not available on this device.
+    </string>
+    <string name="voice_result_pattern">You said: %1$s</string>
+
 </resources>
