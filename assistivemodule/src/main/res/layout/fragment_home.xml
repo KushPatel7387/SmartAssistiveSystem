@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -30,7 +30,7 @@
         <!-- Slideshow -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="320dp"
             android:layout_marginBottom="16dp">
 
             <ImageView
@@ -53,83 +53,206 @@
                 android:textSize="14sp" />
         </FrameLayout>
 
-        <!-- Patient Summary Card -->
+        <!-- DASHBOARD CARDS -->
+
+        <!-- Patients card -->
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_home_patients"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginBottom="4dp"
+            android:foreground="?attr/selectableItemBackground"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="1dp"
-            app:strokeColor="@color/teal_700">
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="12dp"
                 android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/img_alert"
+                    android:contentDescription="@string/alerts" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
-                    android:layout_weight="1">
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
 
                     <TextView
                         android:id="@+id/tv_home_patient_label"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Patients linked to your account"
-                        android:textSize="14sp"
+                        android:textStyle="bold"
                         android:textColor="@color/purple_700"
-                        android:textStyle="bold" />
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/tv_home_patient_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
-                        android:textSize="32sp"
+                        android:textSize="24sp"
                         android:textStyle="bold"
-                        android:textColor="@color/teal_700"
-                        android:layout_marginTop="4dp" />
+                        android:textColor="@color/purple_500"
+                        android:paddingTop="4dp" />
                 </LinearLayout>
 
                 <Button
                     android:id="@+id/btn_home_manage_patients"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="View Patients"
                     android:minWidth="0dp"
-                    android:minHeight="0dp"
-                    android:paddingLeft="16dp"
-                    android:paddingRight="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp" />
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="View Patients"
+                    android:textAllCaps="false" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Optional existing cards (leave if you already have these layouts) -->
-        <include
-            layout="@layout/item_card_sensor_status"
-            tools:ignore="MissingConstraints" />
+        <!-- Sensors card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_home_sensors"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="4dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true">
 
-        <include
-            layout="@layout/item_card_voice"
-            tools:ignore="MissingConstraints" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:gravity="center_vertical">
 
-        <include
-            layout="@layout/item_card_alerts"
-            tools:ignore="MissingConstraints" />
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/img_sensor"
+                    android:contentDescription="@string/sensor_icon" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_home_sensors_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sensors_active"
+                        android:textStyle="bold"
+                        android:textColor="@color/purple_700"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_home_sensors_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/sensors_data_light_color_distance_spectrum"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:paddingTop="4dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_home_view_sensors"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="View"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Alerts card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_home_alerts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="16dp"
+            android:foreground="?attr/selectableItemBackground"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardUseCompatPadding="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/img_alert"
+                    android:contentDescription="@string/alerts" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp">
+
+                    <TextView
+                        android:id="@+id/tv_home_alerts_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/alerts"
+                        android:textStyle="bold"
+                        android:textColor="@color/purple_700"
+                        android:textSize="16sp" />
+
+                    <TextView
+                        android:id="@+id/tv_home_alerts_subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_new_alerts"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray"
+                        android:paddingTop="4dp" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_home_view_alerts"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:text="View"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Pie Chart -->
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pieChartPatients"
             android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_marginTop="24dp" />
+            android:layout_height="260dp" />
 
         <!-- Bar Chart -->
         <com.github.mikephil.charting.charts.BarChart

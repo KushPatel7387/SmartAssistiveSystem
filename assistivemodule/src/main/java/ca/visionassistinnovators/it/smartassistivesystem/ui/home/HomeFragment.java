@@ -22,7 +22,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -49,10 +49,15 @@ public class HomeFragment extends Fragment {
     private PieChart pieChartPatients;
     private BarChart barChartSensors;
 
-    // New dashboard views
+    // Dashboard views
     private TextView tvPatientCount;
     private TextView tvPatientLabel;
     private Button btnManagePatients;
+
+    private Button btnViewSensors;
+    private Button btnViewAlerts;
+    private View cardSensors;
+    private View cardAlerts;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private int index = 0;
@@ -77,10 +82,16 @@ public class HomeFragment extends Fragment {
         imgSlideshow = view.findViewById(R.id.imgSlideshow);
         tvCaption = view.findViewById(R.id.tv_caption);
 
-        // Dashboard views
+        // Dashboard views: Patients
         tvPatientCount = view.findViewById(R.id.tv_home_patient_count);
         tvPatientLabel = view.findViewById(R.id.tv_home_patient_label);
         btnManagePatients = view.findViewById(R.id.btn_home_manage_patients);
+
+        // Dashboard views: Sensors & Alerts
+        btnViewSensors = view.findViewById(R.id.btn_home_view_sensors);
+        btnViewAlerts = view.findViewById(R.id.btn_home_view_alerts);
+        cardSensors = view.findViewById(R.id.card_home_sensors);
+        cardAlerts = view.findViewById(R.id.card_home_alerts);
 
         // Charts
         pieChartPatients = view.findViewById(R.id.pieChartPatients);
@@ -88,14 +99,30 @@ public class HomeFragment extends Fragment {
 
         patientManager = new GuardianPatientManager();
 
-        // Navigate to Patients / SOS fragment
-        btnManagePatients.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(
-                    requireActivity(),
-                    R.id.nav_host_fragment_content_main
-            );
-            navController.navigate(R.id.nav_sos); // your patients/SOS fragment
-        });
+        // NavController for this fragment
+        NavController navController = NavHostFragment.findNavController(this);
+
+        // Patients: button + whole card
+        View cardPatients = view.findViewById(R.id.card_home_patients);
+        View.OnClickListener openPatients = v ->
+                navController.navigate(R.id.nav_sos);
+
+        btnManagePatients.setOnClickListener(openPatients);
+        cardPatients.setOnClickListener(openPatients);
+
+        // Sensors: button + whole card
+        View.OnClickListener openSensors = v ->
+                navController.navigate(R.id.nav_sensors);
+
+        btnViewSensors.setOnClickListener(openSensors);
+        cardSensors.setOnClickListener(openSensors);
+
+        // Alerts: button + whole card
+        View.OnClickListener openAlerts = v ->
+                navController.navigate(R.id.nav_alerts);
+
+        btnViewAlerts.setOnClickListener(openAlerts);
+        cardAlerts.setOnClickListener(openAlerts);
 
         startSlideShow();
         setupPieChart();
@@ -135,7 +162,6 @@ public class HomeFragment extends Fragment {
                             btnManagePatients.setVisibility(View.VISIBLE);
                         }
 
-                        // Optional: reflect count in pie chart “Active vs Idle”
                         updatePieChartWithPatientCount(count);
                     }
 
@@ -182,7 +208,6 @@ public class HomeFragment extends Fragment {
     // PIE CHART - PATIENTS
     // ------------------------------
     private void setupPieChart() {
-        // initial dummy values, will be updated when patient count is loaded
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(1, getString(R.string.active)));
         entries.add(new PieEntry(0, getString(R.string.idle)));
@@ -206,11 +231,11 @@ public class HomeFragment extends Fragment {
     private void updatePieChartWithPatientCount(int totalPatients) {
         if (pieChartPatients == null) return;
 
-        int active = Math.max(totalPatients - 1, 0); // fake split just to look nice
+        int active = Math.max(totalPatients - 1, 0);
         int idle = totalPatients - active;
         if (totalPatients == 0) {
             active = 0;
-            idle = 1; // so chart still shows something
+            idle = 1;
         }
 
         ArrayList<PieEntry> entries = new ArrayList<>();
