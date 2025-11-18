@@ -67,8 +67,8 @@ public class HomeActivity extends AppCompatActivity {
                 R.id.nav_fall_detection,
                 R.id.nav_profile,
                 R.id.nav_feedback,
-                R.id.nav_settings,
-                R.id.nav_help
+                R.id.nav_settings
+
         ).setOpenableLayout(drawerLayout).build();
 
         // Toolbar + Drawer + Navigation
