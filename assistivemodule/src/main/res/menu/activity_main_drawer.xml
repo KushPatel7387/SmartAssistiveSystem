@@ -9,6 +9,11 @@
             android:title="Home" />
 
         <item
+            android:id="@+id/nav_profile"
+            android:title="My Profile"
+            android:icon="@drawable/img_user"/>
+
+        <item
             android:id="@+id/nav_alerts"
             android:icon="@drawable/img_alert"
             android:title="Alerts" />
@@ -19,35 +24,24 @@
             android:title="Sensors" />
 
         <item
+            android:id="@+id/nav_fall_detection"
+            android:title="Fall Detection"
+            android:icon="@drawable/ic_warning" />
+
+        <item
             android:id="@+id/nav_feedback"
             android:title="@string/feedback"
             android:icon="@drawable/ic_feedback" />
 
-
         <item
-            android:id="@+id/nav_profile"
-            android:title="My Profile"
-            android:icon="@drawable/img_user"/>
-
-
-        <!-- About removed from drawer per professor -->
-
-        <!-- keep settings in drawer -->
+            android:id="@+id/nav_logout"
+            android:icon="@android:drawable/ic_lock_power_off"
+            android:title="Logout" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings"
             android:title="Settings" />
 
-        <item
-            android:id="@+id/nav_fall_detection"
-            android:title="Fall Detection"
-            android:icon="@drawable/ic_warning" />
-
-        <!-- logout moved here per professor -->
-        <item
-            android:id="@+id/nav_logout"
-            android:icon="@android:drawable/ic_lock_power_off"
-            android:title="Logout" />
 
 
     </group>
