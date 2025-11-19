@@ -245,10 +245,49 @@ Section : 3DTues
     <string name="submit">Soumettre</string>
     <string name="sensor_icon">Icône Capteurs</string>
 
-    <!-- New strings for SettingsFragment -->
-    <string name="notifications_enabled">Notifications activées</string>
-    <string name="notifications_disabled">Notifications désactivées</string>
-    <string name="light_theme_selected">Thème clair sélectionné</string>
-    <string name="dark_theme_selected">Thème sombre sélectionné</string>
+    <string name="feedback_already_submitted_24h">Vous ne pouvez soumettre un retour qu’une fois toutes les 24 heures.</string>
+
+    <!-- %1$d = heures, %2$d = minutes -->
+    <string name="feedback_cooldown_format">Vous pourrez soumettre un nouveau retour dans %1$d h %2$d min.</string>
+
+    <string name="no_user_id">Aucun identifiant utilisateur.</string>
+    <string name="system_check_complete">Vérification du système terminée</string>
+    <string name="all_modules_are_running_normally">Tous les modules fonctionnent normalement.</string>
+    <string name="low_light_detected">Faible luminosité détectée</string>
+    <string name="ambient_light_is_low_consider_enabling_the_magnifier">La luminosité ambiante est faible. Pensez à activer la loupe.</string>
+    <string name="new_feedback_received">Nouveau retour reçu</string>
+    <string name="you_have_new_feedback_from_a_user">Vous avez reçu un nouveau retour d’un utilisateur.</string>
+    <string name="please_enter_a_valid_email_address">Veuillez saisir une adresse e-mail valide.</string>
+    <string name="no_guardian_user_id">Aucun identifiant tuteur/utilisateur.</string>
+    <string name="please_enter_password">Veuillez saisir un mot de passe.</string>
+    <string name="please_confirm_password">Veuillez confirmer le mot de passe.</string>
+    <string name="passwords_do_not_match_">Les mots de passe ne correspondent pas.</string>
+    <string name="invalid_email_or_password_format">Format d’e-mail ou de mot de passe invalide.</string>
+    <string name="smart_assistive_system">Système d’assistance intelligent</string>
+    <string name="version_1_0">Version 1.0</string>
+    <string name="developed_by">Développé par :</string>
+    <string name="sign_in_to_see_alerts">Connectez-vous pour voir les alertes.</string>
+    <string name="no_alerts_yet">Aucune alerte pour le moment.</string>
+    <string name="failed_to_load_alerts">Échec du chargement des alertes : </string>
+    <string name="no_signed_in_user_for_alerts">Aucun utilisateur connecté pour les alertes.</string>
+    <string name="recent_alerts">Alertes récentes</string>
+    <string name="no_alerts_yet_">Aucune alerte pour le moment.</string>
+    <string name="comment_">Commentaire</string>
+    <string name="active">Actif</string>
+    <string name="idle">Inactif</string>
+    <string name="alerts_">Alertes</string>
+    <string name="users">utilisateurs</string>
+    <string name="phone_">téléphone</string>
+    <string name="users_">utilisateurs</string>
+    <string name="regular">normal</string>
+    <string name="app_icon">Icône de l’application</string>
+
+    <!-- Voice assistant -->
+    <string name="voice_hint">Dites : Ouvrir l’accueil, Ouvrir les capteurs, Ouvrir les retours, Ouvrir les paramètres ou Ouvrir les patients.</string>
+    <string name="voice_not_understood">Désolé, je n’ai pas compris. Essayez de dire « Ouvrir les capteurs » ou « Aller aux retours ».</string>
+    <string name="voice_permission_denied">Permission du microphone refusée. Les commandes vocales sont désactivées.</string>
+    <string name="voice_listening_toast">Écoute en cours…</string>
+    <string name="voice_not_supported">La reconnaissance vocale n’est pas disponible sur cet appareil.</string>
+    <string name="voice_result_pattern">Vous avez dit : %1$s</string>
 
 </resources>
