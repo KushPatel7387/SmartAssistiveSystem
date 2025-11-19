@@ -28,6 +28,7 @@ import java.util.List;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertModel;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsAdapter;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsManager;
 
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {

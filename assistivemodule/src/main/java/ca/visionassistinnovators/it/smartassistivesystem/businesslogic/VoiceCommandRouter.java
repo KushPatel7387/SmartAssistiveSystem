@@ -8,7 +8,7 @@
  *  - "open settings"  → SETTINGS
  *  - "open patients" / "open sos" → PATIENTS
  */
-package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
+package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import java.util.Locale;
 

@@ -6,7 +6,7 @@
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
  */
-package ca.visionassistinnovators.it.smartassistivesystem.ui.patients;
+package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
-import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientModel;
 
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientViewHolder> {
 

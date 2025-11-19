@@ -38,7 +38,7 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GoogleLog
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginBusinessLogic;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginValidator;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
-import ca.visionassistinnovators.it.smartassistivesystem.ui.util.LoginPrefsFacade;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.LoginPrefsFacade;
 
 public class LoginActivity extends AppCompatActivity {
 

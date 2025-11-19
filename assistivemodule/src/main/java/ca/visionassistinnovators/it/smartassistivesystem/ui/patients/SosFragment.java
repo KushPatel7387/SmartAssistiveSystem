@@ -39,6 +39,7 @@ import java.util.List;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GuardianPatientManager;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientAdapter;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientModel;
 
 public class SosFragment extends Fragment {

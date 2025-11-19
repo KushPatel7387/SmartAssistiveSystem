@@ -26,7 +26,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.FeedbackManager;
-import ca.visionassistinnovators.it.smartassistivesystem.ui.util.Prefs;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.Prefs;
 
 public class FeedbackFragment extends Fragment {
 

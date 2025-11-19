@@ -5,8 +5,8 @@ import android.content.Context;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import ca.visionassistinnovators.it.smartassistivesystem.ui.util.LoginPrefsFacade;
-import ca.visionassistinnovators.it.smartassistivesystem.ui.util.Prefs;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.LoginPrefsFacade;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.Prefs;
 
 /**
  * Handles non-UI login rules:

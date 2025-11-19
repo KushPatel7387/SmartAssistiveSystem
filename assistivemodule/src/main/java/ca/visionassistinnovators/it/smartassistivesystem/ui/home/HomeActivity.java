@@ -44,6 +44,7 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.VoiceCommandRouter;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
 
 public class HomeActivity extends AppCompatActivity {

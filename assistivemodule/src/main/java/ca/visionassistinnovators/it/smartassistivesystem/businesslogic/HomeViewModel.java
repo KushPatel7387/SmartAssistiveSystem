@@ -6,7 +6,7 @@
  * Krish Patel – N01666556
  * Kush Patel – N01657387
  */
-package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
+package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.app.Application;
 import androidx.annotation.NonNull;
