@@ -1,5 +1,6 @@
 package ca.visionassistinnovators.it.smartassistivesystem.ui.help;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ public class HelpFragment extends Fragment {
 
     public HelpFragment() {}
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

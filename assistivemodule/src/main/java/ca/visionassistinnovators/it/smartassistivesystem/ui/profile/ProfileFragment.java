@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
         FirebaseUser user = auth.getCurrentUser();
 
         if (user == null) {
-            Toast.makeText(getContext(), "Not logged in!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.not_logged_in, Toast.LENGTH_SHORT).show();
             return v;
         }
 
@@ -64,7 +64,7 @@ public class ProfileFragment extends Fragment {
 
         userRef = FirebaseDatabase
                 .getInstance(getString(R.string.firebase_db_url))
-                .getReference("users")
+                .getReference(getString(R.string.users1))
                 .child(uid);
 
         // Load data
@@ -88,9 +88,9 @@ public class ProfileFragment extends Fragment {
 
             // Case 1: User profile exists in database
             if (ds.exists()) {
-                etName.setText(ds.child("name").getValue(String.class));
-                etEmail.setText(ds.child("email").getValue(String.class));
-                etPhone.setText(ds.child("phone").getValue(String.class));
+                etName.setText(ds.child(getString(R.string.name1)).getValue(String.class));
+                etEmail.setText(ds.child(getString(R.string.email1)).getValue(String.class));
+                etPhone.setText(ds.child(getString(R.string.phone1)).getValue(String.class));
             }
             else {
                 // Case 2: Profile does NOT exist → fallback to Authentication
@@ -99,7 +99,7 @@ public class ProfileFragment extends Fragment {
                 etPhone.setText(authUser.getPhoneNumber() != null ? authUser.getPhoneNumber() : "");
 
                 Toast.makeText(getContext(),
-                        "No DB profile found — loaded from Firebase Authentication",
+                        R.string.no_db_profile_found_loaded_from_firebase_authentication,
                         Toast.LENGTH_SHORT).show();
             }
         });

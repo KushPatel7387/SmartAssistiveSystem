@@ -9,6 +9,7 @@
 package ca.visionassistinnovators.it.smartassistivesystem.ui.patients;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -44,10 +45,8 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientMo
 
 public class SosFragment extends Fragment {
 
-    private RecyclerView rvPatients;
     private TextView tvPatientCount;
     private TextView tvEmptyState;
-    private FloatingActionButton fabAdd;
 
     private PatientAdapter adapter;
     private GuardianPatientManager patientManager;
@@ -67,10 +66,10 @@ public class SosFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_sos, container, false);
 
-        rvPatients      = root.findViewById(R.id.rv_patients);
+        RecyclerView rvPatients = root.findViewById(R.id.rv_patients);
         tvPatientCount  = root.findViewById(R.id.tv_patient_count);
         tvEmptyState    = root.findViewById(R.id.tv_empty_state);
-        fabAdd          = root.findViewById(R.id.fab_add_patient);
+        FloatingActionButton fabAdd = root.findViewById(R.id.fab_add_patient);
 
         rvPatients.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new PatientAdapter(new PatientAdapter.OnPatientActionListener() {
@@ -142,6 +141,7 @@ public class SosFragment extends Fragment {
                 });
     }
 
+    @SuppressLint("SetTextI18n")
     private void updatePatientCount(int count) {
         tvPatientCount.setText("Patients: " + count);
         tvEmptyState.setVisibility(count == 0 ? View.VISIBLE : View.GONE);
@@ -226,13 +226,13 @@ public class SosFragment extends Fragment {
                                 @Override
                                 public void onFailure(String error) {
                                     Toast.makeText(requireContext(),
-                                            "Failed to delete: " + error,
+                                            getString(R.string.failed_to_delete) + error,
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
                     );
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.cancel1, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
@@ -242,7 +242,7 @@ public class SosFragment extends Fragment {
     private void callPatient(PatientModel patient) {
         if (patient == null || patient.phone == null || patient.phone.isEmpty()) {
             Toast.makeText(requireContext(),
-                    "No phone number for this patient.",
+                    R.string.no_phone_number_for_this_patient,
                     Toast.LENGTH_SHORT).show();
             return;
         }
@@ -269,7 +269,7 @@ public class SosFragment extends Fragment {
             startActivity(intent);
         } else {
             Toast.makeText(requireContext(),
-                    "No app found to place calls.",
+                    R.string.no_app_found_to_place_calls,
                     Toast.LENGTH_SHORT).show();
         }
     }

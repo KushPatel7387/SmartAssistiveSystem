@@ -308,5 +308,20 @@ Section: 3DTues
     <string name="light1">"Light: "</string>
     <string name="color_s">Color: %s</string>
     <string name="color_unknown">Color: Unknown</string>
+    <string name="exit_app1">Exit App</string>
+    <string name="are_you_sure_you_want_to_exit1">Are you sure you want to exit?</string>
+    <string name="yes1">Yes</string>
+    <string name="no_phone_number_for_this_patient">No phone number for this patient.</string>
+    <string name="cancel1">Cancel</string>
+    <string name="failed_to_delete">"Failed to delete: "</string>
+    <string name="no_app_found_to_place_calls">No app found to place calls.</string>
+    <string name="not_logged_in">Not logged in!</string>
+    <string name="users1">users</string>
+    <string name="name1">name</string>
+    <string name="email1">email</string>
+    <string name="phone1">phone</string>
+    <string name="no_db_profile_found_loaded_from_firebase_authentication">No DB profile found — loaded from Firebase Authentication</string>
+    <string name="notifications_enabled">Notifications Enabled</string>
+    <string name="notifications_disabled">Notifications Disabled</string>
 
 </resources>

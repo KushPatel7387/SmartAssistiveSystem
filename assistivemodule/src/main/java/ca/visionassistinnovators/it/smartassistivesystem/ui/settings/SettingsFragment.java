@@ -95,9 +95,9 @@ public class SettingsFragment extends Fragment {
             if (!isAdded()) return;
 
             if (isChecked) {
-                Toast.makeText(getContext(), "Notifications Enabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.notifications_enabled, Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(getContext(), "Notifications Disabled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.notifications_disabled, Toast.LENGTH_SHORT).show();
             }
         });
 

@@ -136,10 +136,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void handleOnBackPressed() {
                 new AlertDialog.Builder(HomeActivity.this)
-                        .setTitle("Exit App")
-                        .setMessage("Are you sure you want to exit?")
+                        .setTitle(R.string.exit_app1)
+                        .setMessage(R.string.are_you_sure_you_want_to_exit1)
                         .setIcon(R.drawable.ic_exit)
-                        .setPositiveButton("Yes", (d, w) -> finishAffinity())
+                        .setPositiveButton(R.string.yes1, (d, w) -> finishAffinity())
                         .setNegativeButton("Stay", (d, w) -> d.dismiss())
                         .show();
             }
