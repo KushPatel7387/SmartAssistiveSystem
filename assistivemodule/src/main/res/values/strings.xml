@@ -297,5 +297,9 @@ Section: 3DTues
         Speech recognition is not available on this device.
     </string>
     <string name="voice_result_pattern">You said: %1$s</string>
+    <string name="emergency_alert">⚠️ Emergency Alert</string>
+    <string name="possible_fall_detected_time">"Possible fall detected!\nTime: "</string>
+    <string name="fall_detected_at">"Fall Detected at: "</string>
+    <string name="no_fall_detected">No Fall Detected</string>
 
 </resources>

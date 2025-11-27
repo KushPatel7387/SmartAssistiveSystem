@@ -1,5 +1,6 @@
 package ca.visionassistinnovators.it.smartassistivesystem.ui.detection;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.hardware.Sensor;
@@ -8,7 +9,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -97,6 +97,7 @@ public class FallDetectionFragment extends Fragment {
 
     private void readFallStatus() {
         fallRef.addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Boolean detected = snapshot.child("detected").getValue(Boolean.class);
@@ -104,10 +105,10 @@ public class FallDetectionFragment extends Fragment {
 
                 if (detected != null && detected) {
                     showAlert(time);
-                    textFallStatus.setText("Fall Detected at: " + time);
+                    textFallStatus.setText(getString(R.string.fall_detected_at) + time);
                     imgStatus.setColorFilter(0xFFD32F2F); // red
                 } else {
-                    textFallStatus.setText("No Fall Detected");
+                    textFallStatus.setText(R.string.no_fall_detected);
                     imgStatus.setColorFilter(0xFF4CAF50); // green
                 }
             }
@@ -128,9 +129,9 @@ public class FallDetectionFragment extends Fragment {
 
     private void showAlert(String time) {
         new AlertDialog.Builder(getContext())
-                .setTitle("⚠️ Emergency Alert")
-                .setMessage("Possible fall detected!\nTime: " + time)
-                .setPositiveButton("OK", null)
+                .setTitle(R.string.emergency_alert)
+                .setMessage(getString(R.string.possible_fall_detected_time) + time)
+                .setPositiveButton(R.string.ok, null)
                 .show();
     }
 }
