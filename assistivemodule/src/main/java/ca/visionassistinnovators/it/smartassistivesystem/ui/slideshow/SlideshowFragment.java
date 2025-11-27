@@ -24,8 +24,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class SlideshowFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,7 +31,7 @@ public class SlideshowFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_slideshow, container, false);
 
-        slideshowViewModel = new ViewModelProvider(this).get(SlideshowViewModel.class);
+        SlideshowViewModel slideshowViewModel = new ViewModelProvider(this).get(SlideshowViewModel.class);
 
         final TextView textView = root.findViewById(R.id.text_slideshow);
         slideshowViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
