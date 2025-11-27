@@ -304,5 +304,9 @@ Section: 3DTues
     <string name="yyyy_mm_dd_hh_mm_ss">yyyy-MM-dd HH:mm:ss</string>
     <string name="detected">detected</string>
     <string name="timestamp1">timestamp</string>
+    <string name="distance1">"Distance: "</string>
+    <string name="light1">"Light: "</string>
+    <string name="color_s">Color: %s</string>
+    <string name="color_unknown">Color: Unknown</string>
 
 </resources>

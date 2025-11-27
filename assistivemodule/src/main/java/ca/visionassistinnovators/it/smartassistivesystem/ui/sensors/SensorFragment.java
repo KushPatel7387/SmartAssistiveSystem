@@ -8,6 +8,7 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.sensors;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -65,7 +66,7 @@ public class SensorFragment extends Fragment {
                 Integer distance = snapshot.getValue(Integer.class);
                 if (distance == null) return;
 
-                textDistance.setText("Distance: " + distance + " cm");
+                textDistance.setText(new StringBuilder().append(getString(R.string.distance1)).append(distance).append(" cm").toString());
 
                 if (distance > 100) {
                     viewIndicator.setBackgroundColor(Color.parseColor("#4CAF50")); // Green
@@ -88,7 +89,7 @@ public class SensorFragment extends Fragment {
                 Integer lux = snapshot.getValue(Integer.class);
                 if (lux == null) return;
 
-                textLight.setText("Light: " + lux + " lux");
+                textLight.setText(String.format("%s%d lux", getString(R.string.light1), lux));
             }
 
             @Override
@@ -98,6 +99,7 @@ public class SensorFragment extends Fragment {
 
     private void readColorSensor() {
         dbRef.child("color").addValueEventListener(new com.google.firebase.database.ValueEventListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -110,10 +112,10 @@ public class SensorFragment extends Fragment {
 
                 viewColorBox.setBackgroundColor(Color.rgb(r, g, b));
 
-                if (name != null)
-                    textColorName.setText("Color: " + name);
-                else
-                    textColorName.setText("Color: Unknown");
+                if (name != null) {
+                    textColorName.setText(String.format(getString(R.string.color_s), name));
+                } else
+                    textColorName.setText(R.string.color_unknown);
             }
 
             @Override
