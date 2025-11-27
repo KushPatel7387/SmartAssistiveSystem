@@ -8,6 +8,7 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         return new PatientViewHolder(v);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull PatientViewHolder holder, int position) {
         PatientModel model = patients.get(position);
@@ -60,7 +62,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         holder.tvPhone.setText(model.phone != null ? model.phone : "");
 
         // Sensor placeholders
-        holder.tvSensor1.setText("S1: " + (model.sensor1 != null ? model.sensor1 : "--"));
+        holder.tvSensor1.setText("S1: " + (null != model.sensor1 ? model.sensor1 : "--"));
         holder.tvSensor2.setText("S2: " + (model.sensor2 != null ? model.sensor2 : "--"));
         holder.tvSensor3.setText("S3: " + (model.sensor3 != null ? model.sensor3 : "--"));
         holder.tvSensor4.setText("S4: " + (model.sensor4 != null ? model.sensor4 : "--"));

@@ -301,5 +301,8 @@ Section: 3DTues
     <string name="possible_fall_detected_time">"Possible fall detected!\nTime: "</string>
     <string name="fall_detected_at">"Fall Detected at: "</string>
     <string name="no_fall_detected">No Fall Detected</string>
+    <string name="yyyy_mm_dd_hh_mm_ss">yyyy-MM-dd HH:mm:ss</string>
+    <string name="detected">detected</string>
+    <string name="timestamp1">timestamp</string>
 
 </resources>

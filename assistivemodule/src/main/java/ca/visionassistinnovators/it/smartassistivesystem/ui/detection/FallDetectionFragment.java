@@ -120,10 +120,10 @@ public class FallDetectionFragment extends Fragment {
 
     private void setupSimulationButton() {
         buttonSimulate.setOnClickListener(v -> {
-            String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(new Date());
+            String timeStamp = new SimpleDateFormat(getString(R.string.yyyy_mm_dd_hh_mm_ss), Locale.getDefault()).format(new Date());
 
-            fallRef.child("detected").setValue(true);
-            fallRef.child("timestamp").setValue(timeStamp);
+            fallRef.child(getString(R.string.detected)).setValue(true);
+            fallRef.child(getString(R.string.timestamp1)).setValue(timeStamp);
         });
     }
 
