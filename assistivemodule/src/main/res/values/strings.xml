@@ -324,6 +324,11 @@ Section: 3DTues
     <string name="notifications_enabled">Notifications Enabled</string>
     <string name="notifications_disabled">Notifications Disabled</string>
     <string name="fab_help">Help and Tips</string>
+    <string name="test_notification">Send test notification</string>
+    <string name="notifications_permission_denied">
+    Notifications permission was denied. You can enable it later from Settings.
+</string>
+
 
 
 </resources>

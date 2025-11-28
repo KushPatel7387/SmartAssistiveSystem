@@ -8,15 +8,20 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.alerts;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,8 +35,11 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertModel;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsAdapter;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsManager;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {
+
+    private static final int REQ_POST_NOTIFICATIONS = 2001;
 
     private TextView tvEmpty;
     private AlertsAdapter adapter;
@@ -57,6 +65,10 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
 
         RecyclerView rvAlerts = root.findViewById(R.id.rv_alerts);
         tvEmpty  = root.findViewById(R.id.tv_alerts_empty);
+
+        // 🔔 Test Notification button (for API 33 permission demo)
+        Button btnTestNotification = root.findViewById(R.id.btn_test_notification);
+        btnTestNotification.setOnClickListener(v -> handleTestNotificationClick());
 
         rvAlerts.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -89,7 +101,64 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         }
     }
 
+    // -----------------------------------
+    // 🔔 Test Notification (API 33 logic)
+    // -----------------------------------
+    private void handleTestNotificationClick() {
+        if (!isAdded()) return;
+
+        // API 33+ → must have POST_NOTIFICATIONS runtime permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            int granted = ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+            );
+
+            if (granted != PackageManager.PERMISSION_GRANTED) {
+                // Ask user for permission
+                requestPermissions(
+                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                        REQ_POST_NOTIFICATIONS
+                );
+                return;
+            }
+        }
+
+        // Permission already granted OR not required (<33)
+        NotificationHelper.showTestAlertNotification(requireContext());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQ_POST_NOTIFICATIONS) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                // User accepted → fire test notification now
+                if (isAdded()) {
+                    NotificationHelper.showTestAlertNotification(requireContext());
+                }
+
+            } else {
+                // User denied → show short message
+                if (isAdded()) {
+                    Toast.makeText(
+                            requireContext(),
+                            getString(R.string.notifications_permission_denied),
+                            Toast.LENGTH_SHORT
+                    ).show();
+                }
+            }
+        }
+    }
+
+    // -----------------------------------
     // AlertsManager.AlertsListener
+    // -----------------------------------
     @Override
     public void onAlertsChanged(List<AlertModel> alerts) {
         if (!isAdded()) return;

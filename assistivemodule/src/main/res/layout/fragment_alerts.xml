@@ -6,6 +6,7 @@
     android:padding="16dp"
     android:background="?attr/colorSurface">
 
+    <!-- Alerts Title -->
     <TextView
         android:id="@+id/tv_alerts_title"
         android:layout_width="wrap_content"
@@ -16,6 +17,16 @@
         android:textColor="?attr/colorOnSurface"
         android:layout_marginBottom="8dp" />
 
+    <!-- 🔔 Test Notification Button (API 33 Permission Demo) -->
+    <Button
+        android:id="@+id/btn_test_notification"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/test_notification"
+        android:textAllCaps="false"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Empty Message -->
     <TextView
         android:id="@+id/tv_alerts_empty"
         android:layout_width="match_parent"
@@ -26,6 +37,7 @@
         android:paddingVertical="8dp"
         android:visibility="gone" />
 
+    <!-- Alerts List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_alerts"
         android:layout_width="match_parent"
