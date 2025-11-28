@@ -323,5 +323,7 @@ Section: 3DTues
     <string name="no_db_profile_found_loaded_from_firebase_authentication">No DB profile found — loaded from Firebase Authentication</string>
     <string name="notifications_enabled">Notifications Enabled</string>
     <string name="notifications_disabled">Notifications Disabled</string>
+    <string name="fab_help">Help and Tips</string>
+
 
 </resources>

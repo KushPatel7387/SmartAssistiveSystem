@@ -32,6 +32,8 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;   // ✅ NEW
+import com.google.android.material.snackbar.Snackbar;                          // ✅ NEW
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -97,6 +99,9 @@ public class HomeFragment extends Fragment {
         pieChartPatients = view.findViewById(R.id.pieChartPatients);
         barChartSensors = view.findViewById(R.id.barChartSensors);
 
+        // ✅ Floating Action Button (FAB)
+        FloatingActionButton fabHelp = view.findViewById(R.id.fab_help);
+
         patientManager = new GuardianPatientManager();
 
         // NavController for this fragment
@@ -123,6 +128,19 @@ public class HomeFragment extends Fragment {
 
         btnViewAlerts.setOnClickListener(openAlerts);
         cardAlerts.setOnClickListener(openAlerts);
+
+        // ✅ FAB behavior: show quick-help Snackbar + shortcut to Sensors
+        fabHelp.setOnClickListener(v -> {
+            Snackbar.make(
+                            v,
+                            "Tip: Open Sensors, SOS or Alerts to view real-time assistive data.",
+                            Snackbar.LENGTH_LONG
+                    )
+                    .setAction("Open Sensors", actionView ->
+                            navController.navigate(R.id.nav_sensors)
+                    )
+                    .show();
+        });
 
         startSlideShow();
         setupPieChart();
