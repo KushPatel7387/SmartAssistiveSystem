@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View; // ✅ NEW: needed for splash icon animation
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -42,13 +43,34 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Install Android 12+ splash screen
         final SplashScreen splash = SplashScreen.installSplashScreen(this);
 
+        // ✅ Exit animation: small zoom + fade-out on the icon
+        splash.setOnExitAnimationListener(splashScreenView -> {
+            View iconView = splashScreenView.getIconView();
+            if (iconView != null) {
+                iconView.animate()
+                        .alpha(0f)          // fade out
+                        .scaleX(1.2f)       // slight zoom
+                        .scaleY(1.2f)
+                        .setDuration(500L)  // 0.5 second
+                        .withEndAction(splashScreenView::remove)
+                        .start();
+            } else {
+                // Fallback: just remove if icon missing
+                splashScreenView.remove();
+            }
+        });
+
+        // ✅ Keep splash on screen until Firebase checks or timeout
         splash.setKeepOnScreenCondition(() -> !(isWriteDone && isReadDone) && !isTimeout);
 
+        // Firebase connectivity tests (existing logic)
         doFirebaseTestWrite();
         doFirebaseTestRead();
 
+        // Max splash time: after 2 seconds force proceed
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             isTimeout = true;
             checkAndProceed();
@@ -96,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
                 isReadDone = true;
                 checkAndProceed();
             }
+
             @Override public void onCancelled(@NonNull DatabaseError error) {
                 Log.e(TAG, getString(R.string.log_error_prefix) + error.getMessage());
                 isReadDone = true;
