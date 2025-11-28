@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -63,6 +64,9 @@ public class SensorFragment extends Fragment {
 
         dbRef = FirebaseDatabase.getInstance().getReference("sensors");
 
+        // 🔍 Analytics: screen view
+        EventLogger.logScreenView(requireContext(), "SensorFragment");
+
         // ✅ Load last known snapshot for OFFLINE mode
         loadOfflineSnapshot(requireContext());
 
@@ -101,6 +105,13 @@ public class SensorFragment extends Fragment {
 
                         // ✅ Save last distance reading for OFFLINE mode
                         saveDistanceOffline(requireContext(), distance);
+
+                        // 🔍 Analytics: distance update
+                        EventLogger.logEvent(
+                                requireContext(),
+                                "sensor_distance_update",
+                                "distance_cm=" + distance
+                        );
                     }
 
                     @Override
@@ -122,6 +133,13 @@ public class SensorFragment extends Fragment {
 
                         // ✅ Save last light reading for OFFLINE mode
                         saveLightOffline(requireContext(), lux);
+
+                        // 🔍 Analytics: light update
+                        EventLogger.logEvent(
+                                requireContext(),
+                                "sensor_light_update",
+                                "lux=" + lux
+                        );
                     }
 
                     @Override
@@ -155,6 +173,15 @@ public class SensorFragment extends Fragment {
 
                         // ✅ Save last color reading for OFFLINE mode
                         saveColorOffline(requireContext(), r, g, b, name);
+
+                        // 🔍 Analytics: color update
+                        String detail = "r=" + r + ", g=" + g + ", b=" + b +
+                                (name != null ? (", name=" + name) : "");
+                        EventLogger.logEvent(
+                                requireContext(),
+                                "sensor_color_update",
+                                detail
+                        );
                     }
 
                     @Override
@@ -165,6 +192,13 @@ public class SensorFragment extends Fragment {
     private void setupVibrationButton() {
         buttonVibrate.setOnClickListener(v -> {
             dbRef.child("vibration").child("trigger").setValue(true);
+
+            // 🔍 Analytics: vibration trigger
+            EventLogger.logEvent(
+                    requireContext(),
+                    "sensor_vibration_trigger",
+                    "Vibration command sent to Arduino / ESP"
+            );
         });
     }
 
@@ -202,6 +236,8 @@ public class SensorFragment extends Fragment {
         SharedPreferences prefs = c.getSharedPreferences(
                 PREF_OFFLINE_SENSORS, Context.MODE_PRIVATE);
 
+        boolean anyLoaded = false;
+
         // Distance
         if (prefs.contains(KEY_DISTANCE)) {
             int distance = prefs.getInt(KEY_DISTANCE, 0);
@@ -220,6 +256,7 @@ public class SensorFragment extends Fragment {
             } else {
                 viewIndicator.setBackgroundColor(Color.parseColor("#F44336")); // Red
             }
+            anyLoaded = true;
         }
 
         // Light
@@ -228,6 +265,7 @@ public class SensorFragment extends Fragment {
             textLight.setText(
                     String.format("%s%d lux", getString(R.string.light1), lux)
             );
+            anyLoaded = true;
         }
 
         // Color
@@ -248,6 +286,16 @@ public class SensorFragment extends Fragment {
             } else {
                 textColorName.setText(R.string.color_unknown);
             }
+            anyLoaded = true;
+        }
+
+        if (anyLoaded) {
+            // 🔍 Analytics: offline snapshot used
+            EventLogger.logEvent(
+                    c,
+                    "sensors_offline_snapshot_loaded",
+                    "Loaded cached sensor values when screen opened."
+            );
         }
     }
 }

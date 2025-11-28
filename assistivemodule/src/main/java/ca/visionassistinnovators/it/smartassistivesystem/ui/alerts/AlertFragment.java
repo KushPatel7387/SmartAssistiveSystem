@@ -35,6 +35,7 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertModel;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsAdapter;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsManager;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {
@@ -84,10 +85,16 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
                     Toast.LENGTH_SHORT).show();
             tvEmpty.setText(R.string.sign_in_to_see_alerts);
             tvEmpty.setVisibility(View.VISIBLE);
+
+            // 🔍 Analytics: alert screen opened without sign-in
+            EventLogger.logScreenView(requireContext(), "AlertFragment_no_user");
             return;
         }
 
         currentUid = user.getUid();
+
+        // 🔍 Analytics: screen view
+        EventLogger.logScreenView(requireContext(), "AlertFragment");
 
         // This will also auto-seed sample alerts if none exist
         alertsManager.listenForAlerts(requireContext(), currentUid, this);
@@ -107,6 +114,13 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
     private void handleTestNotificationClick() {
         if (!isAdded()) return;
 
+        // 🔍 Analytics: button tap
+        EventLogger.logEvent(
+                requireContext(),
+                "alerts_test_notification_click",
+                "User tapped Send Test Notification button."
+        );
+
         // API 33+ → must have POST_NOTIFICATIONS runtime permission
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             int granted = ContextCompat.checkSelfPermission(
@@ -115,6 +129,14 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
             );
 
             if (granted != PackageManager.PERMISSION_GRANTED) {
+
+                // 🔍 Analytics: permission flow started
+                EventLogger.logEvent(
+                        requireContext(),
+                        "alerts_request_notification_permission",
+                        "POST_NOTIFICATIONS requested from AlertsFragment."
+                );
+
                 // Ask user for permission
                 requestPermissions(
                         new String[]{Manifest.permission.POST_NOTIFICATIONS},
@@ -126,6 +148,13 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
 
         // Permission already granted OR not required (<33)
         NotificationHelper.showTestAlertNotification(requireContext());
+
+        // 🔍 Analytics: test notification actually sent
+        EventLogger.logEvent(
+                requireContext(),
+                "alerts_test_notification_sent",
+                "NotificationHelper.showTestAlertNotification() called."
+        );
     }
 
     @Override
@@ -141,6 +170,13 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
                 // User accepted → fire test notification now
                 if (isAdded()) {
                     NotificationHelper.showTestAlertNotification(requireContext());
+
+                    // 🔍 Analytics: permission granted
+                    EventLogger.logEvent(
+                            requireContext(),
+                            "alerts_notification_permission_granted",
+                            "POST_NOTIFICATIONS granted; test notification sent."
+                    );
                 }
 
             } else {
@@ -151,6 +187,13 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
                             getString(R.string.notifications_permission_denied),
                             Toast.LENGTH_SHORT
                     ).show();
+
+                    // 🔍 Analytics: permission denied
+                    EventLogger.logEvent(
+                            requireContext(),
+                            "alerts_notification_permission_denied",
+                            "User denied POST_NOTIFICATIONS."
+                    );
                 }
             }
         }
@@ -168,8 +211,22 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         if (alerts == null || alerts.isEmpty()) {
             tvEmpty.setText(R.string.no_alerts_yet);
             tvEmpty.setVisibility(View.VISIBLE);
+
+            // 🔍 Analytics: no alerts for user
+            EventLogger.logEvent(
+                    requireContext(),
+                    "alerts_empty",
+                    "No alerts found for this guardian."
+            );
         } else {
             tvEmpty.setVisibility(View.GONE);
+
+            // 🔍 Analytics: alerts loaded
+            EventLogger.logEvent(
+                    requireContext(),
+                    "alerts_loaded",
+                    "Loaded " + alerts.size() + " alerts."
+            );
         }
     }
 
@@ -179,5 +236,12 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         Toast.makeText(requireContext(),
                 getString(R.string.failed_to_load_alerts) + error,
                 Toast.LENGTH_SHORT).show();
+
+        // 🔍 Analytics: error while loading alerts
+        EventLogger.logEvent(
+                requireContext(),
+                "alerts_load_error",
+                error
+        );
     }
 }
