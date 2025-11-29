@@ -8,6 +8,8 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.profile;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -39,6 +41,12 @@ public class ProfileFragment extends Fragment {
     private FirebaseAuth auth;
     private DatabaseReference userRef;
 
+    // ---- OFFLINE PROFILE CACHE ----
+    private static final String PREF_OFFLINE_PROFILE = "sas_offline_profile";
+    private static final String KEY_PROFILE_NAME  = "offline_profile_name";
+    private static final String KEY_PROFILE_EMAIL = "offline_profile_email";
+    private static final String KEY_PROFILE_PHONE = "offline_profile_phone";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -67,7 +75,10 @@ public class ProfileFragment extends Fragment {
                 .getReference(getString(R.string.users1))
                 .child(uid);
 
-        // Load data
+        // 1) Load last saved profile from local cache (works in Airplane mode)
+        loadOfflineProfile(requireContext());
+
+        // 2) Try to refresh from Firebase when online
         loadProfileData(user);
 
         btnSave.setOnClickListener(view -> updateProfile(uid));
@@ -75,35 +86,110 @@ public class ProfileFragment extends Fragment {
         return v;
     }
 
+    // ---------------- OFFLINE HELPERS ----------------
+
+    private void loadOfflineProfile(Context context) {
+        SharedPreferences prefs =
+                context.getSharedPreferences(PREF_OFFLINE_PROFILE, Context.MODE_PRIVATE);
+
+        String cachedName  = prefs.getString(KEY_PROFILE_NAME, "");
+        String cachedEmail = prefs.getString(KEY_PROFILE_EMAIL, "");
+        String cachedPhone = prefs.getString(KEY_PROFILE_PHONE, "");
+
+        boolean anyLoaded = false;
+
+        if (!TextUtils.isEmpty(cachedName)) {
+            etName.setText(cachedName);
+            anyLoaded = true;
+        }
+        if (!TextUtils.isEmpty(cachedEmail)) {
+            etEmail.setText(cachedEmail);
+            anyLoaded = true;
+        }
+        if (!TextUtils.isEmpty(cachedPhone)) {
+            etPhone.setText(cachedPhone);
+            anyLoaded = true;
+        }
+
+        // Optional: you can remove this toast if you find it noisy
+        if (anyLoaded) {
+            Toast.makeText(
+                    getContext(),
+                    "Profile loaded from last offline copy.",
+                    Toast.LENGTH_SHORT
+            ).show();
+        }
+    }
+
+    private void saveOfflineProfile(Context context,
+                                    String name,
+                                    String email,
+                                    String phone) {
+        context.getSharedPreferences(PREF_OFFLINE_PROFILE, Context.MODE_PRIVATE)
+                .edit()
+                .putString(KEY_PROFILE_NAME,  name != null ? name.trim() : "")
+                .putString(KEY_PROFILE_EMAIL, email != null ? email.trim() : "")
+                .putString(KEY_PROFILE_PHONE, phone != null ? phone.trim() : "")
+                .apply();
+    }
+
+    // ---------------- ONLINE LOAD ----------------
+
     private void loadProfileData(FirebaseUser authUser) {
 
         userRef.get().addOnCompleteListener(task -> {
 
             if (!task.isSuccessful()) {
+                // If this fails (e.g., Airplane mode), we keep whatever offline data we already showed.
                 Toast.makeText(getContext(), "Failed to load profile!", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             DataSnapshot ds = task.getResult();
 
-            // Case 1: User profile exists in database
             if (ds.exists()) {
-                etName.setText(ds.child(getString(R.string.name1)).getValue(String.class));
-                etEmail.setText(ds.child(getString(R.string.email1)).getValue(String.class));
-                etPhone.setText(ds.child(getString(R.string.phone1)).getValue(String.class));
-            }
-            else {
-                // Case 2: Profile does NOT exist → fallback to Authentication
-                etEmail.setText(authUser.getEmail());
-                etName.setText(authUser.getDisplayName() != null ? authUser.getDisplayName() : "");
-                etPhone.setText(authUser.getPhoneNumber() != null ? authUser.getPhoneNumber() : "");
+                // Case 1: Profile exists in DB
+                String name  = ds.child(getString(R.string.name1)).getValue(String.class);
+                String email = ds.child(getString(R.string.email1)).getValue(String.class);
+                String phone = ds.child(getString(R.string.phone1)).getValue(String.class);
 
-                Toast.makeText(getContext(),
+                if (name != null) {
+                    etName.setText(name);
+                }
+                if (email != null) {
+                    etEmail.setText(email);
+                }
+                if (phone != null) {
+                    etPhone.setText(phone);
+                }
+
+                if (getContext() != null) {
+                    saveOfflineProfile(getContext(), name, email, phone);
+                }
+            } else {
+                // Case 2: No DB profile → fallback to Firebase Authentication fields
+                String email = authUser.getEmail();
+                String name  = authUser.getDisplayName() != null ? authUser.getDisplayName() : "";
+                String phone = authUser.getPhoneNumber() != null ? authUser.getPhoneNumber() : "";
+
+                etEmail.setText(email);
+                etName.setText(name);
+                etPhone.setText(phone);
+
+                if (getContext() != null) {
+                    saveOfflineProfile(getContext(), name, email, phone);
+                }
+
+                Toast.makeText(
+                        getContext(),
                         R.string.no_db_profile_found_loaded_from_firebase_authentication,
-                        Toast.LENGTH_SHORT).show();
+                        Toast.LENGTH_SHORT
+                ).show();
             }
         });
     }
+
+    // ---------------- UPDATE PROFILE ----------------
 
     private void updateProfile(String uid) {
 
@@ -111,7 +197,7 @@ public class ProfileFragment extends Fragment {
         String email = etEmail.getText().toString().trim();
         String phone = etPhone.getText().toString().trim();
 
-        if (TextUtils.isEmpty(name)) { etName.setError("Required"); return; }
+        if (TextUtils.isEmpty(name))  { etName.setError("Required");  return; }
         if (TextUtils.isEmpty(email)) { etEmail.setError("Required"); return; }
         if (TextUtils.isEmpty(phone)) { etPhone.setError("Required"); return; }
 
@@ -121,9 +207,18 @@ public class ProfileFragment extends Fragment {
         map.put("phone", phone);
 
         userRef.updateChildren(map)
-                .addOnSuccessListener(unused ->
-                        Toast.makeText(getContext(), "Profile Updated!", Toast.LENGTH_SHORT).show())
+                .addOnSuccessListener(unused -> {
+                    Toast.makeText(getContext(), "Profile Updated!", Toast.LENGTH_SHORT).show();
+                    if (getContext() != null) {
+                        // Also refresh offline cache with the new values
+                        saveOfflineProfile(getContext(), name, email, phone);
+                    }
+                })
                 .addOnFailureListener(e ->
-                        Toast.makeText(getContext(), "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                        Toast.makeText(
+                                getContext(),
+                                "Error: " + e.getMessage(),
+                                Toast.LENGTH_SHORT
+                        ).show());
     }
 }
