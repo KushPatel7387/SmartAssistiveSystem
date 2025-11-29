@@ -111,14 +111,7 @@ public class ProfileFragment extends Fragment {
             anyLoaded = true;
         }
 
-        // Optional: you can remove this toast if you find it noisy
-        if (anyLoaded) {
-            Toast.makeText(
-                    getContext(),
-                    "Profile loaded from last offline copy.",
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+
     }
 
     private void saveOfflineProfile(Context context,
