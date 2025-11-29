@@ -43,6 +43,8 @@ import java.util.List;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GuardianPatientManager;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientModel;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
 
 public class HomeFragment extends Fragment {
 
@@ -299,5 +301,13 @@ public class HomeFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacksAndMessages(null);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventLogger.logScreenView(requireContext(), "Home");
+        // DEBUG ONLY: run this when you want to generate the stats
+
+        AnalyticsAggregator.debugLogScreenUsage(requireContext());
     }
 }

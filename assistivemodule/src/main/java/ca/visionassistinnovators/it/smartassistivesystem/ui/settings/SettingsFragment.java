@@ -24,6 +24,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
+
 
 public class SettingsFragment extends Fragment {
 
@@ -103,4 +106,10 @@ public class SettingsFragment extends Fragment {
 
         return root;
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventLogger.logScreenView(requireContext(), "Settings");
+    }
+
 }

@@ -38,6 +38,9 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsMan
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
+
+
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {
 
     private static final int REQ_POST_NOTIFICATIONS = 2001;
@@ -244,4 +247,10 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
                 error
         );
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventLogger.logScreenView(requireContext(), "Alerts");
+    }
+
 }

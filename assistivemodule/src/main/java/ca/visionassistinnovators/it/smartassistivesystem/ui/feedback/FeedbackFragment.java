@@ -27,6 +27,9 @@ import com.google.firebase.auth.FirebaseUser;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.FeedbackManager;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.Prefs;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
+
 
 public class FeedbackFragment extends Fragment {
 
@@ -246,4 +249,10 @@ public class FeedbackFragment extends Fragment {
         etComment.setText("");
         ratingBar.setRating(0f);
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventLogger.logScreenView(requireContext(), "Feedback");
+    }
+
 }
