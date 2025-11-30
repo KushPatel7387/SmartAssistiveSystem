@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -37,12 +38,14 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.*;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.switchmaterial.SwitchMaterial;
@@ -61,47 +64,21 @@ import ca.visionassistinnovators.it.smartassistivesystem.ui.services.WalkingAssi
 
 public class HomeFragment extends Fragment {
 
-    private TextView tvCaption;
+    private TextView tvCaption, tvPatientCount, tvPatientLabel;
     private ImageView imgSlideshow;
+    private Button btnManagePatients, btnViewSensors, btnViewAlerts;
+    private View cardSensors, cardAlerts;
+    private SwitchMaterial walkingSwitch;
+
     private PieChart pieChartPatients;
     private BarChart barChartSensors;
-
-    private TextView tvPatientCount;
-    private TextView tvPatientLabel;
-    private Button btnManagePatients;
-
-    private Button btnViewSensors;
-    private Button btnViewAlerts;
-    private View cardSensors;
-    private View cardAlerts;
-
-    private SwitchMaterial walkingSwitch;  // ⭐ New switch UI
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private int index = 0;
 
     private GuardianPatientManager patientManager;
 
-    // ---------------------------------------------------------
-    // ⭐ NEW — Runtime permission launcher for Android 12–15
-    // ---------------------------------------------------------
-    private final ActivityResultLauncher<String[]> locationPermissionLauncher =
-            registerForActivityResult(
-                    new ActivityResultContracts.RequestMultiplePermissions(),
-                    result -> {
-                        boolean fine = result.getOrDefault(
-                                Manifest.permission.ACCESS_FINE_LOCATION, false);
-                        boolean coarse = result.getOrDefault(
-                                Manifest.permission.ACCESS_COARSE_LOCATION, false);
-
-                        if (fine || coarse) {
-                            startWalkingAssistService();
-                        } else {
-                            walkingSwitch.setChecked(false);
-                            Toast.makeText(requireContext(),
-                                    "Location permission required", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+    private ActivityResultLauncher<String[]> permissionLauncher;
 
     public HomeFragment() {}
 
@@ -139,35 +116,36 @@ public class HomeFragment extends Fragment {
         patientManager = new GuardianPatientManager();
         NavController navController = NavHostFragment.findNavController(this);
 
-        // Patient navigation
+        // Navigation
         View cardPatients = view.findViewById(R.id.card_home_patients);
-        View.OnClickListener openPatients = v ->
-                navController.navigate(R.id.nav_sos);
+
+        View.OnClickListener openPatients = v -> navController.navigate(R.id.nav_sos);
+
         btnManagePatients.setOnClickListener(openPatients);
         cardPatients.setOnClickListener(openPatients);
 
-        // Sensors
-        btnViewSensors.setOnClickListener(v -> navController.navigate(R.id.nav_sensors));
         cardSensors.setOnClickListener(v -> navController.navigate(R.id.nav_sensors));
+        btnViewSensors.setOnClickListener(v -> navController.navigate(R.id.nav_sensors));
 
-        // Alerts
-        btnViewAlerts.setOnClickListener(v -> navController.navigate(R.id.nav_alerts));
         cardAlerts.setOnClickListener(v -> navController.navigate(R.id.nav_alerts));
+        btnViewAlerts.setOnClickListener(v -> navController.navigate(R.id.nav_alerts));
 
-        // FAB Helper
         fabHelp.setOnClickListener(v ->
-                Snackbar.make(v,
-                                "Tip: Check Sensors or Alerts for real-time assistance.",
-                                Snackbar.LENGTH_LONG)
+                Snackbar.make(v, "Tip: Check Sensors or Alerts for real-time assistance.", Snackbar.LENGTH_LONG)
                         .setAction("Open Sensors", a ->
                                 navController.navigate(R.id.nav_sensors))
                         .show()
         );
 
-        // ⭐ Walking Assist Toggle
-        walkingSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
-            if (isChecked) requestLocationPermissions();
-            else stopWalkingAssistService();
+        // Permissions
+        setupPermissionLauncher();
+
+        walkingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                requestWalkingPermissions();
+            } else {
+                stopWalkingAssistService();
+            }
         });
 
         startSlideShow();
@@ -176,36 +154,66 @@ public class HomeFragment extends Fragment {
         setupPatientSummary();
     }
 
-    // ---------------------------------------------------------
-    // ⭐ PERMISSION CHECK
-    // ---------------------------------------------------------
-    private void requestLocationPermissions() {
-        boolean fine = ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
+    // ------------------------------------------------------------------------
+    // Permission Handling
+    // ------------------------------------------------------------------------
+    private void setupPermissionLauncher() {
+        permissionLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestMultiplePermissions(),
+                result -> {
 
-        boolean coarse = ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED;
+                    boolean fine = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+                    boolean coarse = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
 
-        if (fine || coarse) {
-            startWalkingAssistService();
-        } else {
-            locationPermissionLauncher.launch(new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION
-            });
-        }
+                    boolean fgServiceLocation =
+                            result.getOrDefault(Manifest.permission.FOREGROUND_SERVICE_LOCATION, false);
+
+                    // Android 14+ requires FOREGROUND_SERVICE_LOCATION
+                    if (Build.VERSION.SDK_INT >= 34 && !fgServiceLocation) {
+                        walkingSwitch.setChecked(false);
+                        Toast.makeText(requireContext(),
+                                "Foreground service location permission is required",
+                                Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    if (fine || coarse) {
+                        startWalkingAssistService();
+                    } else {
+                        walkingSwitch.setChecked(false);
+                        Toast.makeText(requireContext(),
+                                "Permissions required for Walking Assistance",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
     }
 
-    // ---------------------------------------------------------
-    // ⭐ START WALKING ASSIST SERVICE SAFELY
-    // ---------------------------------------------------------
+    private void requestWalkingPermissions() {
+        List<String> perms = new ArrayList<>();
+
+        perms.add(Manifest.permission.ACCESS_FINE_LOCATION);
+        perms.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        if (Build.VERSION.SDK_INT >= 33) {
+            perms.add(Manifest.permission.POST_NOTIFICATIONS);
+        }
+        if (Build.VERSION.SDK_INT >= 34) {
+            perms.add(Manifest.permission.FOREGROUND_SERVICE_LOCATION);
+        }
+
+        permissionLauncher.launch(perms.toArray(new String[0]));
+    }
+
+    // ------------------------------------------------------------------------
+    // Foreground Service Start / Stop
+    // ------------------------------------------------------------------------
     private void startWalkingAssistService() {
+
         if (!isGPSEnabled()) {
             walkingSwitch.setChecked(false);
             Snackbar.make(requireView(),
-                            "GPS is required for Walking Assistance.",
+                            "GPS is required to enable Walking Assistance.",
                             Snackbar.LENGTH_LONG)
                     .setAction("Enable", v ->
                             startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
@@ -214,29 +222,27 @@ public class HomeFragment extends Fragment {
         }
 
         Intent intent = new Intent(requireContext(), WalkingAssistService.class);
-        requireContext().startForegroundService(intent);
 
-        Toast.makeText(requireContext(),
-                "Walking Assistance Enabled", Toast.LENGTH_SHORT).show();
+        ContextCompat.startForegroundService(requireContext(), intent);
+
+        Toast.makeText(requireContext(), "Walking Assistance Enabled", Toast.LENGTH_SHORT).show();
     }
 
     private void stopWalkingAssistService() {
         Intent intent = new Intent(requireContext(), WalkingAssistService.class);
         requireContext().stopService(intent);
-
-        Toast.makeText(requireContext(),
-                "Walking Assistance Disabled", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Walking Assistance Disabled", Toast.LENGTH_SHORT).show();
     }
 
     private boolean isGPSEnabled() {
-        LocationManager lm =
-                (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        LocationManager lm = (LocationManager)
+                requireContext().getSystemService(Context.LOCATION_SERVICE);
         return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
-    // ---------------------------------------------------------
-    // PATIENT SUMMARY
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Patient Summary
+    // ------------------------------------------------------------------------
     private void setupPatientSummary() {
         FirebaseUser current = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -278,9 +284,9 @@ public class HomeFragment extends Fragment {
         );
     }
 
-    // ---------------------------------------------------------
-    // SLIDESHOW
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Slideshow
+    // ------------------------------------------------------------------------
     private void startSlideShow() {
         final int[] images = {
                 R.drawable.img_sensor,
@@ -308,9 +314,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // ---------------------------------------------------------
-    // PIE CHART
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Pie Chart
+    // ------------------------------------------------------------------------
     private void setupPieChart() {
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(1, getString(R.string.active)));
@@ -352,13 +358,14 @@ public class HomeFragment extends Fragment {
         );
 
         PieData data = new PieData(dataSet);
+
         pieChartPatients.setData(data);
         pieChartPatients.invalidate();
     }
 
-    // ---------------------------------------------------------
-    // BAR CHART
-    // ---------------------------------------------------------
+    // ------------------------------------------------------------------------
+    // Bar Chart
+    // ------------------------------------------------------------------------
     private void setupBarChart() {
         ArrayList<BarEntry> entries = new ArrayList<>();
         entries.add(new BarEntry(1, 95));
