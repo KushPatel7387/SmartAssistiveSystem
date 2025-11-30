@@ -47,11 +47,12 @@ public class RegistrationBusinessLogic {
         }
 
         // 2) Name characters (reuse same rules as elsewhere)
-        if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
+        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
             return ValidationResult.error(
                     ctx.getString(R.string.err_invalid_name_characters)
             );
         }
+
 
         // 3) Phone: must be valid 10 digits
         String normalized = normalizePhone(phone);

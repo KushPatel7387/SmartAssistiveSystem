@@ -32,7 +32,6 @@ import java.util.List;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
-
 public class GuardianPatientManager {
 
     private static final String USERS_NODE     = "users";
@@ -156,7 +155,7 @@ public class GuardianPatientManager {
             return;
         }
 
-        // Validate names
+        // Validate names (not empty)
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -166,9 +165,8 @@ public class GuardianPatientManager {
             return;
         }
 
-        // NOTE: This keeps your existing logic exactly as-is,
-        // even though the validator is a bit counter-intuitive.
-        if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
+        // Validate characters: only letters, spaces, apostrophes, hyphens
+        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
                         ctx.getString(R.string.err_invalid_name_characters)

@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "ca.visionassistinnovators.it.smartassistivesystem"
-        minSdk 28        // ✅ lowered for better CameraX device support
+        minSdk 28
         targetSdk 36
         versionCode 1
         versionName "1.0"
@@ -32,6 +32,11 @@ android {
     buildFeatures {
         viewBinding true
     }
+
+    // ✅ Needed so Robolectric can load resources (strings, layouts, etc.)
+    testOptions {
+        unitTests.includeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -42,11 +47,11 @@ dependencies {
     implementation "androidx.camera:camera-lifecycle:$camerax_version"
     implementation "androidx.camera:camera-view:$camerax_version"
     implementation "androidx.camera:camera-extensions:$camerax_version"
+
+    // Charts & Maps / Location
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
     implementation 'com.google.android.gms:play-services-maps:18.2.0'
     implementation 'com.google.android.gms:play-services-location:21.2.0'
-
-
 
     // ✅ Core + Material + Splash
     implementation "androidx.core:core-splashscreen:1.0.1"
@@ -54,9 +59,9 @@ dependencies {
 
     // ✅ Google Sign-In
     implementation 'com.google.android.gms:play-services-auth:21.1.0'
-    implementation 'com.google.firebase:firebase-database'
 
     // ✅ Firebase
+    implementation 'com.google.firebase:firebase-database'
     implementation libs.firebase.database
     implementation libs.firebase.auth
 
@@ -70,8 +75,21 @@ dependencies {
     implementation libs.navigation.ui
     implementation libs.preference
 
-    // ✅ Testing
+    // ------------------------
+    // ✅ Testing dependencies
+    // ------------------------
+
+    // Local unit tests (JUnit – from version catalog)
     testImplementation libs.junit
+
+    // Robolectric & AndroidX test core for JVM tests with Context/resources
+    testImplementation 'androidx.test:core:1.5.0'
+    testImplementation 'org.robolectric:robolectric:4.11.1'
+
+    // Instrumented tests
     androidTestImplementation libs.ext.junit
     androidTestImplementation libs.espresso.core
+
+    // Extra AndroidX test rules (useful for ActivityScenarioRule etc.)
+    androidTestImplementation 'androidx.test:rules:1.5.0'
 }

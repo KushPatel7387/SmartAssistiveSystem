@@ -64,9 +64,10 @@ public class FeedbackManager {
         }
 
         // Same rules as registration
-        if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
+        if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
             return context.getString(R.string.err_invalid_name_characters);
         }
+
 
         // Phone rule same style (10 digits)
         String normalizedPhone = normalizePhone(phone);

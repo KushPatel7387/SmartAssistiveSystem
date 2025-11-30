@@ -1,40 +1,48 @@
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
-import android.text.TextUtils;
+import java.util.Locale;
 
 /**
  * Shared business rules for names (first, last, or full):
- *  - Not empty
+ *  - Not null or empty
  *  - Only letters, spaces, apostrophes, and hyphens
  *  - Can be auto-formatted to Capitalized form
  */
 public class NameValidator {
 
     /**
-     * Check if a given name is syntactically valid.
-     * Allows A–Z, a–z, spaces, apostrophes, and hyphens.
+     * Returns true only when the name is syntactically valid.
+     * Allows A–Z, a–z, spaces, apostrophes (') and hyphens (-).
      */
     public boolean isValidName(String name) {
-        if (TextUtils.isEmpty(name)) {
-            return true;
-        }
+        if (name == null) return false;
+
         String trimmed = name.trim();
-        // At least 1 letter, no digits or weird symbols
-        return !trimmed.matches("[A-Za-z][A-Za-z '\\-]*");
+        if (trimmed.isEmpty()) return false;
+
+        // Must start with a letter, rest can be letters/space/'/-
+        return trimmed.matches("[A-Za-z][A-Za-z '\\-]*");
     }
 
+    /**
+     * Capitalize a single name part ("sarang" -> "Sarang").
+     */
     public String formatSingleName(String raw) {
         if (raw == null) return "";
-        String trimmed = raw.trim().toLowerCase();
+        String trimmed = raw.trim();
         if (trimmed.isEmpty()) return "";
-        return Character.toUpperCase(trimmed.charAt(0)) +
-                (trimmed.length() > 1 ? trimmed.substring(1) : "");
+
+        String lower = trimmed.toLowerCase(Locale.getDefault());
+        return Character.toUpperCase(lower.charAt(0)) +
+                (lower.length() > 1 ? lower.substring(1) : "");
     }
 
     /**
      * Build a full name from first and last, formatted.
      */
     public String buildFullName(String firstName, String lastName) {
-        return formatSingleName(firstName) + " " + formatSingleName(lastName);
+        String first = formatSingleName(firstName);
+        String last  = formatSingleName(lastName);
+        return (first + " " + last).trim();
     }
 }
