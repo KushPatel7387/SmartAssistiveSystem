@@ -21,7 +21,9 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.maps.model.LatLng;
+
 import android.content.pm.ServiceInfo;
+
 import java.util.Locale;
 
 public class WalkingAssistService extends Service implements LocationListener {
@@ -30,7 +32,7 @@ public class WalkingAssistService extends Service implements LocationListener {
     private TextToSpeech tts;
     private Vibrator vibrator;
 
-    // Demo locations - replace with database later
+    // Demo locations
     LatLng CROSSWALK = new LatLng(43.7325, -79.6086);
     LatLng BUS_STOP  = new LatLng(43.7330, -79.6075);
 
@@ -48,21 +50,29 @@ public class WalkingAssistService extends Service implements LocationListener {
 
         createNotificationChannel();
 
-        // ✔ Safe Foreground Start (works on ALL Android versions)
-        startForeground(1, buildNotification());
+        // ✔ NEW — Required for Android 12–16
+        Notification notification = buildNotification();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(
+                    1,
+                    notification,
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION   // <-- FIXED ERROR
+            );
+        } else {
+            startForeground(1, notification);
+        }
 
         requestLocationUpdates();
     }
-
-
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) { return null; }
 
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // NOTIFICATION
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     private Notification buildNotification() {
         return new NotificationCompat.Builder(this, "walk_channel")
                 .setContentTitle("Walking Assistance Active")
@@ -84,9 +94,9 @@ public class WalkingAssistService extends Service implements LocationListener {
         }
     }
 
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     // LOCATION UPDATES
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
     private void requestLocationUpdates() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -98,15 +108,15 @@ public class WalkingAssistService extends Service implements LocationListener {
 
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                1500,
-                1,
+                1500,   // every 1.5 sec
+                1,      // min 1 meter
                 this
         );
     }
 
-    // -----------------------------------------------------------------------------
-    // LOCATION HANDLING
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // LOCATION RECEIVED
+    // -------------------------------------------------------------------------
     @Override
     public void onLocationChanged(Location location) {
 
@@ -123,7 +133,7 @@ public class WalkingAssistService extends Service implements LocationListener {
             speak("Your bus stop is here");
         }
 
-        // No landmark nearby → vibrate (off sidewalk)
+        // No known landmark → alert via vibration
         if (dCrosswalk > 25 && dBusStop > 25) {
             vibrate();
         }
@@ -135,9 +145,9 @@ public class WalkingAssistService extends Service implements LocationListener {
         return result[0];
     }
 
-    // -----------------------------------------------------------------------------
-    // HELPERS
-    // -----------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // UTILITIES
+    // -------------------------------------------------------------------------
     private void speak(String msg) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             tts.speak(msg, TextToSpeech.QUEUE_FLUSH, null, null);
@@ -148,9 +158,7 @@ public class WalkingAssistService extends Service implements LocationListener {
 
     private void vibrate() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(
-                    VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE)
-            );
+            vibrator.vibrate(VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE));
         } else {
             vibrator.vibrate(250);
         }
