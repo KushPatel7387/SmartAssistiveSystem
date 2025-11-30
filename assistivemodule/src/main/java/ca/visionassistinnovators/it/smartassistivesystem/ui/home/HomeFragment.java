@@ -6,20 +6,31 @@
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
  */
+
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
+import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -32,8 +43,9 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;   // ✅ NEW
-import com.google.android.material.snackbar.Snackbar;                          // ✅ NEW
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -45,6 +57,7 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GuardianP
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.PatientModel;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.services.WalkingAssistService;
 
 public class HomeFragment extends Fragment {
 
@@ -53,7 +66,6 @@ public class HomeFragment extends Fragment {
     private PieChart pieChartPatients;
     private BarChart barChartSensors;
 
-    // Dashboard views
     private TextView tvPatientCount;
     private TextView tvPatientLabel;
     private Button btnManagePatients;
@@ -63,10 +75,33 @@ public class HomeFragment extends Fragment {
     private View cardSensors;
     private View cardAlerts;
 
+    private SwitchMaterial walkingSwitch;  // ⭐ New switch UI
+
     private final Handler handler = new Handler(Looper.getMainLooper());
     private int index = 0;
 
     private GuardianPatientManager patientManager;
+
+    // ---------------------------------------------------------
+    // ⭐ NEW — Runtime permission launcher for Android 12–15
+    // ---------------------------------------------------------
+    private final ActivityResultLauncher<String[]> locationPermissionLauncher =
+            registerForActivityResult(
+                    new ActivityResultContracts.RequestMultiplePermissions(),
+                    result -> {
+                        boolean fine = result.getOrDefault(
+                                Manifest.permission.ACCESS_FINE_LOCATION, false);
+                        boolean coarse = result.getOrDefault(
+                                Manifest.permission.ACCESS_COARSE_LOCATION, false);
+
+                        if (fine || coarse) {
+                            startWalkingAssistService();
+                        } else {
+                            walkingSwitch.setChecked(false);
+                            Toast.makeText(requireContext(),
+                                    "Location permission required", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
     public HomeFragment() {}
 
@@ -82,66 +117,57 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Slideshow + caption
         imgSlideshow = view.findViewById(R.id.imgSlideshow);
         tvCaption = view.findViewById(R.id.tv_caption);
 
-        // Dashboard views: Patients
         tvPatientCount = view.findViewById(R.id.tv_home_patient_count);
         tvPatientLabel = view.findViewById(R.id.tv_home_patient_label);
         btnManagePatients = view.findViewById(R.id.btn_home_manage_patients);
 
-        // Dashboard views: Sensors & Alerts
         btnViewSensors = view.findViewById(R.id.btn_home_view_sensors);
         btnViewAlerts = view.findViewById(R.id.btn_home_view_alerts);
         cardSensors = view.findViewById(R.id.card_home_sensors);
         cardAlerts = view.findViewById(R.id.card_home_alerts);
 
-        // Charts
+        walkingSwitch = view.findViewById(R.id.switchWalkingAssist);
+
         pieChartPatients = view.findViewById(R.id.pieChartPatients);
         barChartSensors = view.findViewById(R.id.barChartSensors);
 
-        // ✅ Floating Action Button (FAB)
         FloatingActionButton fabHelp = view.findViewById(R.id.fab_help);
 
         patientManager = new GuardianPatientManager();
-
-        // NavController for this fragment
         NavController navController = NavHostFragment.findNavController(this);
 
-        // Patients: button + whole card
+        // Patient navigation
         View cardPatients = view.findViewById(R.id.card_home_patients);
         View.OnClickListener openPatients = v ->
                 navController.navigate(R.id.nav_sos);
-
         btnManagePatients.setOnClickListener(openPatients);
         cardPatients.setOnClickListener(openPatients);
 
-        // Sensors: button + whole card
-        View.OnClickListener openSensors = v ->
-                navController.navigate(R.id.nav_sensors);
+        // Sensors
+        btnViewSensors.setOnClickListener(v -> navController.navigate(R.id.nav_sensors));
+        cardSensors.setOnClickListener(v -> navController.navigate(R.id.nav_sensors));
 
-        btnViewSensors.setOnClickListener(openSensors);
-        cardSensors.setOnClickListener(openSensors);
+        // Alerts
+        btnViewAlerts.setOnClickListener(v -> navController.navigate(R.id.nav_alerts));
+        cardAlerts.setOnClickListener(v -> navController.navigate(R.id.nav_alerts));
 
-        // Alerts: button + whole card
-        View.OnClickListener openAlerts = v ->
-                navController.navigate(R.id.nav_alerts);
+        // FAB Helper
+        fabHelp.setOnClickListener(v ->
+                Snackbar.make(v,
+                                "Tip: Check Sensors or Alerts for real-time assistance.",
+                                Snackbar.LENGTH_LONG)
+                        .setAction("Open Sensors", a ->
+                                navController.navigate(R.id.nav_sensors))
+                        .show()
+        );
 
-        btnViewAlerts.setOnClickListener(openAlerts);
-        cardAlerts.setOnClickListener(openAlerts);
-
-        // ✅ FAB behavior: show quick-help Snackbar + shortcut to Sensors
-        fabHelp.setOnClickListener(v -> {
-            Snackbar.make(
-                            v,
-                            "Tip: Open Sensors, SOS or Alerts to view real-time assistive data.",
-                            Snackbar.LENGTH_LONG
-                    )
-                    .setAction("Open Sensors", actionView ->
-                            navController.navigate(R.id.nav_sensors)
-                    )
-                    .show();
+        // ⭐ Walking Assist Toggle
+        walkingSwitch.setOnCheckedChangeListener((btn, isChecked) -> {
+            if (isChecked) requestLocationPermissions();
+            else stopWalkingAssistService();
         });
 
         startSlideShow();
@@ -150,11 +176,70 @@ public class HomeFragment extends Fragment {
         setupPatientSummary();
     }
 
-    // ------------------------------
-    // PATIENT SUMMARY (live from Firebase)
-    // ------------------------------
+    // ---------------------------------------------------------
+    // ⭐ PERMISSION CHECK
+    // ---------------------------------------------------------
+    private void requestLocationPermissions() {
+        boolean fine = ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+
+        boolean coarse = ContextCompat.checkSelfPermission(
+                requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED;
+
+        if (fine || coarse) {
+            startWalkingAssistService();
+        } else {
+            locationPermissionLauncher.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            });
+        }
+    }
+
+    // ---------------------------------------------------------
+    // ⭐ START WALKING ASSIST SERVICE SAFELY
+    // ---------------------------------------------------------
+    private void startWalkingAssistService() {
+        if (!isGPSEnabled()) {
+            walkingSwitch.setChecked(false);
+            Snackbar.make(requireView(),
+                            "GPS is required for Walking Assistance.",
+                            Snackbar.LENGTH_LONG)
+                    .setAction("Enable", v ->
+                            startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)))
+                    .show();
+            return;
+        }
+
+        Intent intent = new Intent(requireContext(), WalkingAssistService.class);
+        requireContext().startForegroundService(intent);
+
+        Toast.makeText(requireContext(),
+                "Walking Assistance Enabled", Toast.LENGTH_SHORT).show();
+    }
+
+    private void stopWalkingAssistService() {
+        Intent intent = new Intent(requireContext(), WalkingAssistService.class);
+        requireContext().stopService(intent);
+
+        Toast.makeText(requireContext(),
+                "Walking Assistance Disabled", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean isGPSEnabled() {
+        LocationManager lm =
+                (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    // ---------------------------------------------------------
+    // PATIENT SUMMARY
+    // ---------------------------------------------------------
     private void setupPatientSummary() {
         FirebaseUser current = FirebaseAuth.getInstance().getCurrentUser();
+
         if (current == null) {
             tvPatientCount.setText("--");
             tvPatientLabel.setText("Sign in to manage patients");
@@ -175,13 +260,12 @@ public class HomeFragment extends Fragment {
                         if (count == 0) {
                             tvPatientLabel.setText("No patients added yet");
                             btnManagePatients.setText("Add Patient");
-                            btnManagePatients.setVisibility(View.VISIBLE);
                         } else {
                             tvPatientLabel.setText("Patients linked to your account");
                             btnManagePatients.setText("View Patients");
-                            btnManagePatients.setVisibility(View.VISIBLE);
                         }
 
+                        btnManagePatients.setVisibility(View.VISIBLE);
                         updatePieChartWithPatientCount(count);
                     }
 
@@ -194,9 +278,9 @@ public class HomeFragment extends Fragment {
         );
     }
 
-    // ------------------------------
+    // ---------------------------------------------------------
     // SLIDESHOW
-    // ------------------------------
+    // ---------------------------------------------------------
     private void startSlideShow() {
         final int[] images = {
                 R.drawable.img_sensor,
@@ -224,9 +308,9 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // ------------------------------
-    // PIE CHART - PATIENTS
-    // ------------------------------
+    // ---------------------------------------------------------
+    // PIE CHART
+    // ---------------------------------------------------------
     private void setupPieChart() {
         ArrayList<PieEntry> entries = new ArrayList<>();
         entries.add(new PieEntry(1, getString(R.string.active)));
@@ -237,14 +321,12 @@ public class HomeFragment extends Fragment {
                 getResources().getColor(R.color.teal_700),
                 getResources().getColor(R.color.purple_500)
         );
-        dataSet.setValueTextSize(12f);
 
         PieData data = new PieData(dataSet);
 
         pieChartPatients.setData(data);
         pieChartPatients.setUsePercentValues(true);
         pieChartPatients.getDescription().setEnabled(false);
-        pieChartPatients.getLegend().setEnabled(true);
         pieChartPatients.invalidate();
     }
 
@@ -253,6 +335,7 @@ public class HomeFragment extends Fragment {
 
         int active = Math.max(totalPatients - 1, 0);
         int idle = totalPatients - active;
+
         if (totalPatients == 0) {
             active = 0;
             idle = 1;
@@ -267,23 +350,21 @@ public class HomeFragment extends Fragment {
                 getResources().getColor(R.color.teal_700),
                 getResources().getColor(R.color.purple_500)
         );
-        dataSet.setValueTextSize(12f);
 
         PieData data = new PieData(dataSet);
         pieChartPatients.setData(data);
         pieChartPatients.invalidate();
     }
 
-    // ------------------------------
-    // BAR CHART - SENSOR HEALTH
-    // ------------------------------
+    // ---------------------------------------------------------
+    // BAR CHART
+    // ---------------------------------------------------------
     private void setupBarChart() {
-
         ArrayList<BarEntry> entries = new ArrayList<>();
-        entries.add(new BarEntry(1, 95)); // Distance sensor
-        entries.add(new BarEntry(2, 88)); // Light sensor
-        entries.add(new BarEntry(3, 91)); // Color sensor
-        entries.add(new BarEntry(4, 76)); // Fall-detection / IMU sensor
+        entries.add(new BarEntry(1, 95));
+        entries.add(new BarEntry(2, 88));
+        entries.add(new BarEntry(3, 91));
+        entries.add(new BarEntry(4, 76));
 
         BarDataSet dataSet = new BarDataSet(entries, "Sensor Health (%)");
         dataSet.setColor(getResources().getColor(R.color.purple_500));
@@ -293,7 +374,6 @@ public class HomeFragment extends Fragment {
 
         barChartSensors.setData(data);
         barChartSensors.getDescription().setEnabled(false);
-        barChartSensors.getLegend().setEnabled(false);
         barChartSensors.invalidate();
     }
 
@@ -302,12 +382,11 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         handler.removeCallbacksAndMessages(null);
     }
+
     @Override
     public void onResume() {
         super.onResume();
         EventLogger.logScreenView(requireContext(), "Home");
-        // DEBUG ONLY: run this when you want to generate the stats
-
         AnalyticsAggregator.debugLogScreenUsage(requireContext());
     }
 }

@@ -8,7 +8,7 @@
     android:background="@color/teal_50"
     tools:context=".ui.home.HomeFragment">
 
-    <!-- Scrollable content -->
+    <!-- Scroll -->
     <ScrollView
         android:id="@+id/home_scroll"
         android:layout_width="match_parent"
@@ -21,19 +21,19 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Title -->
+            <!-- TITLE -->
             <TextView
                 android:id="@+id/text_home"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/welcome_to_smart_assistive_system"
+                android:textColor="@color/purple_700"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/purple_700"
                 android:gravity="center"
                 android:padding="12dp" />
 
-            <!-- Slideshow -->
+            <!-- SLIDESHOW -->
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="320dp"
@@ -43,8 +43,8 @@
                     android:id="@+id/imgSlideshow"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="@string/home_slideshow"
-                    android:scaleType="centerCrop" />
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@string/home_slideshow" />
 
                 <TextView
                     android:id="@+id/tv_caption"
@@ -53,23 +53,53 @@
                     android:layout_gravity="bottom"
                     android:padding="8dp"
                     android:gravity="center"
-                    android:background="#66000000"
                     android:textColor="@android:color/white"
-                    android:textStyle="bold"
-                    android:textSize="14sp" />
+                    android:background="#66000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </FrameLayout>
 
-            <!-- Patients card -->
+            <!-- WALKING ASSIST FEATURE -->
+            <LinearLayout
+                android:id="@+id/layoutWalkingAssist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_card_light">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_walk_assist" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingStart="12dp"
+                    android:text="Walking Assistance"
+                    android:textColor="@color/purple_700"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchWalkingAssist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <!-- PATIENT CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_home_patients"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="4dp"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
-                app:cardUseCompatPadding="true">
+                android:layout_marginBottom="8dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -81,25 +111,23 @@
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/img_alert"
-                        android:contentDescription="@string/alerts" />
+                        android:src="@drawable/img_alert" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="12dp">
 
                         <TextView
                             android:id="@+id/tv_home_patient_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Patients linked to your account"
-                            android:textStyle="bold"
                             android:textColor="@color/purple_700"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_home_patient_count"
@@ -116,55 +144,48 @@
                         android:id="@+id/btn_home_manage_patients"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minWidth="0dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:text="View Patients"
                         android:textAllCaps="false" />
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Sensors card -->
+            <!-- SENSOR CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_home_sensors"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:foreground="?attr/selectableItemBackground"
+                android:layout_marginBottom="8dp"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:padding="12dp"
+                    android:orientation="horizontal"
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/img_sensor"
-                        android:contentDescription="@string/sensor_icon" />
+                        android:src="@drawable/img_sensor" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="12dp">
 
                         <TextView
                             android:id="@+id/tv_home_sensors_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sensors_active"
-                            android:textStyle="bold"
                             android:textColor="@color/purple_700"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_home_sensors_subtitle"
@@ -172,63 +193,54 @@
                             android:layout_height="wrap_content"
                             android:text="@string/sensors_data_light_color_distance_spectrum"
                             android:textSize="12sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:paddingTop="4dp" />
+                            android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btn_home_view_sensors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minWidth="0dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:text="View"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Alerts card -->
+            <!-- ALERTS CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/card_home_alerts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
                 android:layout_marginBottom="16dp"
-                android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                app:cardUseCompatPadding="true">
+                app:cardElevation="6dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:padding="12dp"
+                    android:orientation="horizontal"
                     android:gravity="center_vertical">
 
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:src="@drawable/img_alert"
-                        android:contentDescription="@string/alerts" />
+                        android:src="@drawable/img_alert" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:orientation="vertical"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
+                        android:paddingStart="12dp">
 
                         <TextView
                             android:id="@+id/tv_home_alerts_title"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/alerts"
-                            android:textStyle="bold"
                             android:textColor="@color/purple_700"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_home_alerts_subtitle"
@@ -236,29 +248,25 @@
                             android:layout_height="wrap_content"
                             android:text="@string/no_new_alerts"
                             android:textSize="12sp"
-                            android:textColor="@android:color/darker_gray"
-                            android:paddingTop="4dp" />
+                            android:textColor="@android:color/darker_gray" />
                     </LinearLayout>
 
                     <Button
                         android:id="@+id/btn_home_view_alerts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:minWidth="0dp"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp"
                         android:text="View"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Pie Chart -->
+            <!-- PIE CHART -->
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChartPatients"
                 android:layout_width="match_parent"
                 android:layout_height="260dp" />
 
-            <!-- Bar Chart -->
+            <!-- BAR CHART -->
             <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/barChartSensors"
                 android:layout_width="match_parent"
@@ -269,14 +277,14 @@
         </LinearLayout>
     </ScrollView>
 
-    <!-- ✅ Floating Action Button (FAB) -->
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
         android:layout_margin="24dp"
-        android:contentDescription="@string/fab_help"
-        app:srcCompat="@drawable/ic_help" />
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_help"
+        android:contentDescription="@string/fab_help" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
