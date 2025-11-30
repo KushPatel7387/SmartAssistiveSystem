@@ -27,6 +27,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -47,16 +49,12 @@ public class SosFragment extends Fragment {
 
     private TextView tvPatientCount;
     private TextView tvEmptyState;
-
     private PatientAdapter adapter;
     private GuardianPatientManager patientManager;
-
-    // Same uid as registration/login
     private String guardianUid;
 
-    // For runtime CALL_PHONE permission
     private ActivityResultLauncher<String> callPermissionLauncher;
-    private String pendingPhoneToCall; // store phone while asking permission
+    private String pendingPhoneToCall;
 
     @Nullable
     @Override
@@ -67,12 +65,30 @@ public class SosFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_sos, container, false);
 
         RecyclerView rvPatients = root.findViewById(R.id.rv_patients);
-        tvPatientCount  = root.findViewById(R.id.tv_patient_count);
-        tvEmptyState    = root.findViewById(R.id.tv_empty_state);
+        tvPatientCount = root.findViewById(R.id.tv_patient_count);
+        tvEmptyState = root.findViewById(R.id.tv_empty_state);
         FloatingActionButton fabAdd = root.findViewById(R.id.fab_add_patient);
 
         rvPatients.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // ADAPTER WITH CLICK LISTENER
         adapter = new PatientAdapter(new PatientAdapter.OnPatientActionListener() {
+            @Override
+            public void onPatientClicked(PatientModel patient) {
+                if (patient == null || patient.id == null) {
+                    Toast.makeText(requireContext(), "Invalid patient", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Bundle bundle = new Bundle();
+                bundle.putString("patientId", patient.id);
+
+                NavController navController =
+                        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+
+                navController.navigate(R.id.navigation_location, bundle);
+            }
+
             @Override
             public void onCallClicked(PatientModel patient) {
                 callPatient(patient);
@@ -83,33 +99,27 @@ public class SosFragment extends Fragment {
                 confirmDeletePatient(patient);
             }
         });
+
         rvPatients.setAdapter(adapter);
 
         patientManager = new GuardianPatientManager();
 
-        // Firebase uid (same as RegisterActivity/LoginActivity)
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         guardianUid = (user != null) ? user.getUid() : null;
 
-        if (guardianUid == null || guardianUid.isEmpty()) {
-            Toast.makeText(getContext(),
-                    "No logged-in user. Please login again.",
-                    Toast.LENGTH_SHORT).show();
-        } else {
-            listenForPatients();
-        }
+        if (guardianUid != null) listenForPatients();
+        else Toast.makeText(getContext(), "Login again.", Toast.LENGTH_SHORT).show();
 
-        // --- CALL_PHONE permission launcher ---
+        // PHONE PERMISSION HANDLER
         callPermissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestPermission(),
                 isGranted -> {
                     if (!isAdded()) return;
                     if (isGranted && pendingPhoneToCall != null) {
                         actuallyCallPhone(pendingPhoneToCall);
-                    } else if (!isGranted) {
+                    } else {
                         Toast.makeText(requireContext(),
-                                "Call permission denied. Cannot place call.",
-                                Toast.LENGTH_SHORT).show();
+                                "Call permission denied.", Toast.LENGTH_SHORT).show();
                     }
                     pendingPhoneToCall = null;
                 });
@@ -120,9 +130,7 @@ public class SosFragment extends Fragment {
     }
 
     private void listenForPatients() {
-        Context ctx = requireContext();
-
-        patientManager.listenForPatients(ctx, guardianUid,
+        patientManager.listenForPatients(requireContext(), guardianUid,
                 new GuardianPatientManager.PatientListListener() {
                     @Override
                     public void onPatientsChanged(List<PatientModel> patients) {
@@ -132,11 +140,8 @@ public class SosFragment extends Fragment {
 
                     @Override
                     public void onError(String error) {
-                        if (isAdded()) {
-                            Toast.makeText(requireContext(),
-                                    "Error loading patients: " + error,
-                                    Toast.LENGTH_SHORT).show();
-                        }
+                        Toast.makeText(requireContext(),
+                                "Error: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -151,54 +156,43 @@ public class SosFragment extends Fragment {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.dialog_add_patient, null, false);
 
-        final TextInputEditText etFirstName = dialogView.findViewById(R.id.et_patient_first_name);
-        final TextInputEditText etLastName  = dialogView.findViewById(R.id.et_patient_last_name);
-        final TextInputEditText etEmail     = dialogView.findViewById(R.id.et_patient_email);
-        final TextInputEditText etPhone     = dialogView.findViewById(R.id.et_patient_phone);
+        TextInputEditText etFirstName = dialogView.findViewById(R.id.et_patient_first_name);
+        TextInputEditText etLastName = dialogView.findViewById(R.id.et_patient_last_name);
+        TextInputEditText etEmail = dialogView.findViewById(R.id.et_patient_email);
+        TextInputEditText etPhone = dialogView.findViewById(R.id.et_patient_phone);
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Add Patient")
                 .setView(dialogView)
                 .setPositiveButton("Save", (dialog, which) -> {
-                    String fName = etFirstName.getText() != null
-                            ? etFirstName.getText().toString().trim() : "";
-                    String lName = etLastName.getText() != null
-                            ? etLastName.getText().toString().trim() : "";
-                    String email = etEmail.getText() != null
-                            ? etEmail.getText().toString().trim() : "";
-                    String phone = etPhone.getText() != null
-                            ? etPhone.getText().toString().trim() : "";
 
-                    patientManager.addPatient(
-                            requireContext(),
-                            guardianUid,
-                            fName,
-                            lName,
-                            email,
-                            phone,
+                    String fName = etFirstName.getText() != null ? etFirstName.getText().toString().trim() : "";
+                    String lName = etLastName.getText() != null ? etLastName.getText().toString().trim() : "";
+                    String email = etEmail.getText() != null ? etEmail.getText().toString().trim() : "";
+                    String phone = etPhone.getText() != null ? etPhone.getText().toString().trim() : "";
+
+                    patientManager.addPatient(requireContext(), guardianUid,
+                            fName, lName, email, phone,
                             new GuardianPatientManager.AddPatientCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(requireContext(),
-                                            "Patient added.",
+                                    Toast.makeText(requireContext(), "Patient added.",
                                             Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onValidationError(String message) {
-                                    Toast.makeText(requireContext(),
-                                            message,
+                                    Toast.makeText(requireContext(), message,
                                             Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(String error) {
                                     Toast.makeText(requireContext(),
-                                            "Failed to add patient: " + error,
+                                            "Failed: " + error,
                                             Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                    );
+                            });
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .show();
@@ -209,68 +203,46 @@ public class SosFragment extends Fragment {
 
         new MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Delete Patient")
-                .setMessage("Are you sure you want to delete this patient?")
+                .setMessage("Are you sure?")
                 .setPositiveButton("Delete", (dialog, which) -> {
-                    patientManager.deletePatient(
-                            requireContext(),
-                            guardianUid,
-                            patient.id,
+
+                    patientManager.deletePatient(requireContext(), guardianUid, patient.id,
                             new GuardianPatientManager.DeletePatientCallback() {
                                 @Override
                                 public void onSuccess() {
                                     Toast.makeText(requireContext(),
-                                            "Patient deleted.",
-                                            Toast.LENGTH_SHORT).show();
+                                            "Deleted.", Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(String error) {
                                     Toast.makeText(requireContext(),
-                                            getString(R.string.failed_to_delete) + error,
+                                            "Failed: " + error,
                                             Toast.LENGTH_SHORT).show();
                                 }
-                            }
-                    );
+                            });
                 })
-                .setNegativeButton(R.string.cancel1, (dialog, which) -> dialog.dismiss())
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
-    // ─────────────────────────────────────────────
-    // CALL logic (direct call with permission)
-    // ─────────────────────────────────────────────
     private void callPatient(PatientModel patient) {
-        if (patient == null || patient.phone == null || patient.phone.isEmpty()) {
-            Toast.makeText(requireContext(),
-                    R.string.no_phone_number_for_this_patient,
-                    Toast.LENGTH_SHORT).show();
+        if (patient.phone == null || patient.phone.isEmpty()) {
+            Toast.makeText(requireContext(), "No phone number.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        String phone = patient.phone;
-
-        // Check runtime permission
-        if (ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.CALL_PHONE
-        ) == PackageManager.PERMISSION_GRANTED) {
-            // Already granted → call immediately
-            actuallyCallPhone(phone);
+        if (ContextCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+            actuallyCallPhone(patient.phone);
         } else {
-            // Ask for permission, remember which phone we wanted to call
-            pendingPhoneToCall = phone;
+            pendingPhoneToCall = patient.phone;
             callPermissionLauncher.launch(Manifest.permission.CALL_PHONE);
         }
     }
 
     private void actuallyCallPhone(String phone) {
-        String tel = "tel:" + phone;
-        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(tel));
-        if (intent.resolveActivity(requireContext().getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Toast.makeText(requireContext(),
-                    R.string.no_app_found_to_place_calls,
-                    Toast.LENGTH_SHORT).show();
-        }
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
+        startActivity(intent);
     }
 }

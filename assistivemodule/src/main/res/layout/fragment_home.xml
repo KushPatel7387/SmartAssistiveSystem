@@ -90,7 +90,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
+
+
             </LinearLayout>
+
 
             <!-- PATIENT CARD -->
             <com.google.android.material.card.MaterialCardView
@@ -107,6 +110,8 @@
                     android:orientation="horizontal"
                     android:padding="12dp"
                     android:gravity="center_vertical">
+
+
 
                     <ImageView
                         android:layout_width="40dp"
