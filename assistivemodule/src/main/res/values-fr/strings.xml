@@ -118,15 +118,15 @@ Section : 3DTues
     <string name="Email">courriel</string>
     <string name="devicemodel">modèleAppareil</string>
     <string name="Timestamp">horodatage</string>
-    <string name="feedback_submitted_successfully">✅ Commentaire envoyé avec succès !</string>
+    <string name="feedback_submitted_successfully"> Commentaire envoyé avec succès !</string>
     <string name="smart_assistive_system_helping_visually_impaired_users">Smart Assistive System : aide aux utilisateurs malvoyants</string>
     <string name="voice_assistance_activated">Assistance vocale activée</string>
     <string name="sensor_module_detecting_nearby_obstacles">Module de capteurs détectant les obstacles à proximité</string>
     <string name="system_providing_safe_navigation">Système fournissant une navigation sécuritaire</string>
     <string name="emergency_alert_mode_active">Mode d’alerte d’urgence actif</string>
     <string name="all_systems_operating_normally">Tous les systèmes fonctionnent normalement</string>
-    <string name="location_permission_already">✅ Autorisation de localisation déjà accordée</string>
-    <string name="failed">"❌ Échec : "</string>
+    <string name="location_permission_already"> Autorisation de localisation déjà accordée</string>
+    <string name="failed">" Échec : "</string>
     <string name="sensors_data_light_color_distance_spectrum">Données des capteurs :\nLumière, Couleur, Distance, Spectre</string>
     <string name="home_welcome_message">Bienvenue sur le tableau de bord Smart Assistive System</string>
 
@@ -293,7 +293,7 @@ Section : 3DTues
         La reconnaissance vocale n’est pas disponible sur cet appareil.
     </string>
     <string name="voice_result_pattern">Vous avez dit : %1$s</string>
-    <string name="emergency_alert">⚠️ Alerte d’urgence</string>
+    <string name="emergency_alert"> Alerte d’urgence</string>
     <string name="possible_fall_detected_time">"Possibilité de chute détectée !\nHeure : "</string>
     <string name="fall_detected_at">"Chute détectée à : "</string>
     <string name="no_fall_detected">Aucune chute détectée</string>
