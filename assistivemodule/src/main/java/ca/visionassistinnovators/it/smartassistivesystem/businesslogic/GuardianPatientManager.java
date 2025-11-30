@@ -1,3 +1,17 @@
+/**
+ * Course Section: OCA
+ * Team Members:
+ * Sarang Prajapati – N01662036
+ * Krish Patel – N01666556
+ * Kush Patel – N01657387
+ * Daksh Rana – N01664095
+ *
+ * Business logic for guardian → patients relationship.
+ * Patients are stored under the SAME tree as registration:
+ *   /users/{uid}/patients/{patientId}
+ * This reuses the existing "users" node like RegisterActivity
+ * and does NOT overwrite user profiles.
+ */
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.content.Context;
@@ -18,20 +32,7 @@ import java.util.List;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- *
- * Business logic for guardian → patients relationship.
- * Patients are stored under the SAME tree as registration:
- *   /users/{uid}/patients/{patientId}
- * This reuses the existing "users" node like RegisterActivity
- * and does NOT overwrite user profiles.
- */
+
 public class GuardianPatientManager {
 
     private static final String USERS_NODE     = "users";
