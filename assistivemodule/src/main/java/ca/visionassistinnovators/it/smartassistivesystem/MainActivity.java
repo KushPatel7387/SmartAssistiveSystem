@@ -9,11 +9,13 @@
 package ca.visionassistinnovators.it.smartassistivesystem;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import android.view.View; // ✅ NEW: needed for splash icon animation
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,7 +35,7 @@ import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final long MAX_SPLASH_TIME = 2000L; // 2 sec max
+    private static final long MAX_SPLASH_TIME = 2000L;
 
     private volatile boolean isWriteDone = false;
     private volatile boolean isReadDone  = false;
@@ -41,36 +43,64 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // 🌙 Auto Light/Dark background
+        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+        if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
+            getWindow().getDecorView().setBackgroundColor(Color.BLACK);
+        } else {
+            getWindow().getDecorView().setBackgroundColor(Color.WHITE);
+        }
+
         super.onCreate(savedInstanceState);
 
-        // Install Android 12+ splash screen
+        // ---------------------------------------------------------------
+        // 🚀 ANDROID 12+ SPLASH SCREEN + ZOOM/FADE ANIMATION
+        // ---------------------------------------------------------------
         final SplashScreen splash = SplashScreen.installSplashScreen(this);
 
-        // ✅ Exit animation: small zoom + fade-out on the icon
         splash.setOnExitAnimationListener(splashScreenView -> {
+
             View iconView = splashScreenView.getIconView();
+
             if (iconView != null) {
+
+                // Start slightly small and transparent
+                iconView.setScaleX(0.75f);
+                iconView.setScaleY(0.75f);
+                iconView.setAlpha(0f);
+
+                // Zoom-in + fade-in animation
                 iconView.animate()
-                        .alpha(0f)          // fade out
-                        .scaleX(1.2f)       // slight zoom
-                        .scaleY(1.2f)
-                        .setDuration(500L)  // 0.5 second
-                        .withEndAction(splashScreenView::remove)
+                        .scaleX(1.15f)       // smooth zoom in
+                        .scaleY(1.15f)
+                        .alpha(1f)           // fade in
+                        .setDuration(500L)
+                        .withEndAction(() -> {
+
+                            // Fade out animation
+                            iconView.animate()
+                                    .alpha(0f)
+                                    .setDuration(350L)
+                                    .withEndAction(splashScreenView::remove)
+                                    .start();
+                        })
                         .start();
+
             } else {
-                // Fallback: just remove if icon missing
                 splashScreenView.remove();
             }
         });
 
-        // ✅ Keep splash on screen until Firebase checks or timeout
-        splash.setKeepOnScreenCondition(() -> !(isWriteDone && isReadDone) && !isTimeout);
+        // Keep splash until Firebase done or timeout
+        splash.setKeepOnScreenCondition(() ->
+                !(isWriteDone && isReadDone) && !isTimeout
+        );
 
-        // Firebase connectivity tests (existing logic)
+        // Firebase logic (unchanged)
         doFirebaseTestWrite();
         doFirebaseTestRead();
 
-        // Max splash time: after 2 seconds force proceed
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             isTimeout = true;
             checkAndProceed();
@@ -94,7 +124,7 @@ public class MainActivity extends AppCompatActivity {
                 })
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Write failed: " + e.getMessage());
-                    isWriteDone = true; // don’t block
+                    isWriteDone = true;
                     checkAndProceed();
                 });
     }
@@ -136,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     private void goToLogin() {
         if (isFinishing()) return;
         startActivity(new Intent(this, LoginActivity.class));
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
     }
 }

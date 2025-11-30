@@ -27,7 +27,7 @@
         <!-- Dark splash background -->
         <item name="windowSplashScreenBackground">@color/black</item>
         <!-- Use a separate night splash icon -->
-        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash_night</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
         <!-- After splash, fall back to night theme -->
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
