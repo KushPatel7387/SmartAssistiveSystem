@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="16dp"
+    android:layout_margin="10dp"
     app:cardCornerRadius="16dp"
     app:cardElevation="6dp"
     app:strokeColor="@color/purple_200"
@@ -17,12 +17,14 @@
         android:padding="16dp"
         android:gravity="center_vertical">
 
+        <!-- Alert Icon -->
         <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
             android:src="@drawable/img_alert"
             android:contentDescription="@string/alert_icon" />
 
+        <!-- Alert Text Area -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -30,7 +32,9 @@
             android:orientation="vertical"
             android:paddingStart="12dp">
 
+            <!-- Alert Title -->
             <TextView
+                android:id="@+id/tv_alert_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/alerts"
@@ -38,13 +42,17 @@
                 android:textSize="16sp"
                 android:textColor="@color/black" />
 
+            <!-- Alert Status / Description -->
             <TextView
                 android:id="@+id/tv_alert_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_new_alerts"
-                android:textColor="@color/darker_gray" />
+                android:textSize="13sp"
+                android:textColor="@color/darker_gray"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
     </LinearLayout>
+
 </com.google.android.material.card.MaterialCardView>
