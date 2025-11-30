@@ -5,7 +5,7 @@
     <string name="sos_alert">Alerte SOS</string>
     <string name="sos_choose_option">Choisissez une option d’urgence</string>
     <string name="call_ambulance">Appeler l’ambulance</string>
-    <string name="call_guardians">Appeler les tuteurs</string>
+    <string name="call_guardians"> Appeler les proches</string>
     <string name="flashlight_toggle">Activer/Désactiver la lampe de poche</string>
 
     <!-- Menu -->
@@ -16,7 +16,7 @@
     <string name="menu_other">Plus</string>
     <string name="menu_settings">Paramètres</string>
     <string name="team_members">
- Membres de l’équipe :\n
+ Membres de l’équipe:\n
 Sarang Prajapati – N01662036\n
 Krish Patel – N01666556\n
 Kush Patel – N01657387\n
@@ -25,7 +25,7 @@ Section : 3DTues
 </string>
 
     <!-- Home -->
-    <string name="home_title">Smart Assistive System</string>
+    <string name="home_title">Système d’assistance intelligente</string>
     <string name="home_desc">Ceci est l’écran d’accueil</string>
 
     <!-- Alerts -->
@@ -45,11 +45,11 @@ Section : 3DTues
 
     <!-- Sync Preferences -->
     <string name="sync_title">Synchroniser les courriels périodiquement</string>
-    <string name="attachment_title">Télécharger les pièces jointes entrantes</string>
+    <string name="attachment_title">Télécharger les pièces jointes reçues</string>
     <string name="attachment_summary_on">Télécharger automatiquement les pièces jointes des courriels entrants</string>
     <string name="attachment_summary_off">Télécharger les pièces jointes seulement sur demande</string>
 
-    <string name="hello_from_android">Bonjour depuis Android !</string>
+    <string name="hello_from_android">Bonjour d’Android !</string>
     <string name="message">message</string>
     <string name="timestamp">horodatage</string>
     <string name="test">test</string>
@@ -65,7 +65,6 @@ Section : 3DTues
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Bonjour fragment vide</string>
-
     <string name="smartassistivesystem">SmartAssistiveSystem</string>
     <string name="login">Connexion</string>
     <string name="email">Courriel</string>
@@ -76,7 +75,7 @@ Section : 3DTues
     <string name="or_sign_in_with">ou se connecter avec</string>
     <string name="continue_with_google">Continuer avec Google</string>
     <string name="don_t_have_an_account_sign_up">Vous n’avez pas de compte ? Inscrivez-vous</string>
-    <string name="remember_me">Rester connecté</string>
+    <string name="remember_me">Se souvenir de moi</string>
 
     <!-- HomeActivity strings -->
     <string name="exit_app_title">Quitter l’application</string>
@@ -88,7 +87,7 @@ Section : 3DTues
     <string name="cancel">Annuler</string>
 
     <string name="help_title">Aide</string>
-    <string name="help_message">Ceci est la section d’aide pour Smart Assistive System.</string>
+    <string name="help_message">Ceci est la section d’aide de Smart Assistive System.</string>
     <string name="ok">OK</string>
 
     <string name="default_web_client_id">251288488243-iaafukv3ad5ip6c50a63d1d250i8jr8u.apps.googleusercontent.com</string>
@@ -98,6 +97,7 @@ Section : 3DTues
     <string name="color">Couleur : --</string>
     <string name="distance">Distance : --</string>
     <string name="spectrum">Spectre : --</string>
+
     <string name="welcome_to_smart_assistive_system">Bienvenue dans Smart Assistive System</string>
     <string name="smart_assistive_system_in_action">Smart Assistive System en action</string>
     <string name="sensors_active">Capteurs actifs</string>
@@ -109,8 +109,9 @@ Section : 3DTues
     <string name="alerts">Alertes</string>
     <string name="no_new_alerts">Aucune nouvelle alerte.</string>
     <string name="home_slideshow">Diaporama d’accueil</string>
+
     <string name="permission_granted_location_features_enabled">✅ Autorisation accordée — les fonctions de localisation sont activées !</string>
-    <string name="please_enter_your_name_and_email">Veuillez entrer votre nom et votre courriel.</string>
+    <string name="please_enter_your_name_and_email">Veuillez saisir votre nom et votre courriel.</string>
     <string name="name">nom</string>
     <string name="phone">téléphone</string>
     <string name="comment">commentaire</string>
@@ -118,25 +119,31 @@ Section : 3DTues
     <string name="Email">courriel</string>
     <string name="devicemodel">modèleAppareil</string>
     <string name="Timestamp">horodatage</string>
-    <string name="feedback_submitted_successfully"> Commentaire envoyé avec succès !</string>
+    <string name="feedback_submitted_successfully">✅ Commentaire envoyé avec succès !</string>
+
     <string name="smart_assistive_system_helping_visually_impaired_users">Smart Assistive System : aide aux utilisateurs malvoyants</string>
     <string name="voice_assistance_activated">Assistance vocale activée</string>
     <string name="sensor_module_detecting_nearby_obstacles">Module de capteurs détectant les obstacles à proximité</string>
     <string name="system_providing_safe_navigation">Système fournissant une navigation sécuritaire</string>
     <string name="emergency_alert_mode_active">Mode d’alerte d’urgence actif</string>
     <string name="all_systems_operating_normally">Tous les systèmes fonctionnent normalement</string>
-    <string name="location_permission_already"> Autorisation de localisation déjà accordée</string>
-    <string name="failed">" Échec : "</string>
-    <string name="sensors_data_light_color_distance_spectrum">Données des capteurs :\nLumière, Couleur, Distance, Spectre</string>
-    <string name="home_welcome_message">Bienvenue sur le tableau de bord Smart Assistive System</string>
 
-    <string name="camera_permission_denied">Autorisation caméra refusée</string>
+    <string name="location_permission_already">✅ Autorisation de localisation déjà accordée</string>
+    <string name="failed">"❌ Échec : "</string>
+
+    <string name="sensors_data_light_color_distance_spectrum">
+Données des capteurs :\nLumière, Couleur, Distance, Spectre
+</string>
+
+    <string name="home_welcome_message">Bienvenue au tableau de bord de Smart Assistive System</string>
+
+    <string name="camera_permission_denied">Autorisation de la caméra refusée</string>
     <string name="camera_permission_rationale">L’accès à la caméra est requis pour la loupe.</string>
     <string name="camera_start_error">Impossible de démarrer la caméra</string>
     <string name="flash_on">Lampe de poche ACTIVÉE</string>
     <string name="flash_off">Lampe de poche DÉSACTIVÉE</string>
     <string name="flash_not_supported">La lampe de poche n’est pas prise en charge sur cet appareil</string>
-    <string name="cd_camera_preview">Aperçu caméra</string>
+    <string name="cd_camera_preview">Aperçu de la caméra</string>
 
     <string name="ambulance_number">911</string>
     <string name="guardian_number_default">12345678</string>
@@ -144,33 +151,33 @@ Section : 3DTues
 
     <!-- UI text -->
     <string name="calling_ambulance">Appel de l’ambulance…</string>
-    <string name="calling_guardian">Appel du tuteur…</string>
+    <string name="calling_guardian">Appel du proche…</string>
     <string name="call_perm_rationale">L’autorisation d’appel téléphonique est requise pour effectuer les appels SOS.</string>
     <string name="call_perm_granted">Autorisation accordée. Appel en cours…</string>
     <string name="call_perm_denied">Autorisation d’appel téléphonique refusée.</string>
-    <string name="unable_to_call">Impossible d’effectuer l’appel : %1$s</string>
+    <string name="unable_to_call">Impossible de passer l’appel : %1$s</string>
 
     <!-- (If your layout needs contentDescriptions) -->
     <string name="cd_call_ambulance">Appeler l’ambulance</string>
-    <string name="cd_call_guardian">Appeler le tuteur</string>
+    <string name="cd_call_guardian">Appeler le proche</string>
 
     <string name="firebase_db_url">https://smartassistivesystem-39072-default-rtdb.firebaseio.com/</string>
 
     <!-- Login -->
     <string name="err_enter_email_password">Entrez le courriel et le mot de passe</string>
-    <string name="err_login_failed_fmt">Échec de connexion : %1$s</string>
+    <string name="err_login_failed_fmt">Échec de la connexion : %1$s</string>
     <string name="err_unknown">inconnu</string>
-    <string name="err_no_google_account">Aucune donnée de compte Google</string>
-    <string name="err_google_signin_failed">Échec de connexion Google : %1$s</string>
+    <string name="err_no_google_account">Aucun compte Google trouvé</string>
+    <string name="err_google_signin_failed">Échec de la connexion Google : %1$s</string>
     <string name="err_no_google_token">Aucun jeton reçu de Google</string>
     <string name="err_google_auth_failed">Échec de l’authentification Google</string>
 
     <!-- Register -->
-    <string name="user_already_registered">Utilisateur déjà enregistré</string>
+    <string name="user_already_registered">Utilisateur déjà inscrit</string>
     <string name="auth_check_error_fmt">Erreur de vérification d’authentification : %1$s</string>
     <string name="all_fields_required">Tous les champs sont obligatoires</string>
     <string name="invalid_email_format">Format de courriel invalide</string>
-    <string name="password_min_length">Le mot de passe doit contenir ≥ 6 caractères</string>
+    <string name="password_min_length">Le mot de passe doit comporter ≥ 6 caractères</string>
     <string name="passwords_do_not_match">Les mots de passe ne correspondent pas</string>
     <string name="auth_error_fmt">Erreur d’authentification : %1$s</string>
     <string name="no_uid_after_registration">Aucun UID après l’inscription</string>
@@ -183,7 +190,7 @@ Section : 3DTues
 
     <!-- Sensors UI -->
     <string name="light_level_title">Niveau de lumière (depuis le nuage)</string>
-    <string name="cloud_value_fmt">Valeur dans le nuage : %1$s lx</string>
+    <string name="cloud_value_fmt">Valeur du nuage : %1$s lx</string>
     <string name="updated_fmt">Mis à jour : %1$s</string>
     <string name="no_sensor_data">Aucune donnée de capteur trouvée dans la BD</string>
     <string name="db_read_error_fmt">Erreur de lecture BD : %1$s</string>
@@ -191,45 +198,48 @@ Section : 3DTues
     <!-- Settings / Permissions -->
     <string name="screen_locked_portrait">Écran verrouillé en mode portrait</string>
     <string name="auto_rotation_enabled">Rotation automatique activée</string>
-    <string name="permission_denied_location">Autorisation refusée — certaines fonctions peuvent ne pas fonctionner</string>
+    <string name="permission_denied_location">Autorisation refusée — certaines fonctions pourraient ne pas fonctionner</string>
     <string name="open_settings">Paramètres</string>
 
     <string name="create_account">Créer un compte</string>
     <string name="full_name">Nom complet</string>
     <string name="phone_number">Numéro de téléphone</string>
-    <string name="confirm_password">Confirmez le mot de passe</string>
+    <string name="confirm_password">Confirmer le mot de passe</string>
     <string name="register">S’inscrire</string>
-    <string name="already_have_account_login">Vous avez déjà un compte ? Connexion</string>
+    <string name="already_have_account_login">Vous avez déjà un compte ? Connectez-vous</string>
     <string name="feedback">Commentaires</string>
 
     <!-- Validation / Toast messages -->
     <string name="registered_success">Inscription réussie</string>
-    <string name="db_write_error_fmt">Erreur d’écriture BD : %1$s</string>
+    <string name="db_write_error_fmt">Erreur d’écriture dans la base de données : %1$s</string>
 
     <!-- Slideshow/Alerts -->
-    <string name="alerts_voice_warnings_title">Écran Alertes &amp; avertissements vocaux</string>
+    <string name="alerts_voice_warnings_title">Écran des alertes et avertissements vocaux</string>
 
     <string name="rtdb_node_test">test</string>
     <string name="rtdb_field_message">message</string>
     <string name="log_message_prefix">Message : </string>
     <string name="log_timestamp_prefix">Horodatage : </string>
     <string name="log_error_prefix">Erreur : </string>
+
     <string name="app_logo_description">Logo de Smart Assistive System</string>
     <string name="app_description">Cette application aide les utilisateurs malvoyants en détectant les obstacles à proximité, en fournissant une rétroaction audio et en surveillant les conditions environnementales à l’aide de capteurs avancés et d’algorithmes d’IA.</string>
+
     <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCours : section OCA</string>
+
     <string name="please_enter_your_message">Veuillez entrer votre message de rétroaction.</string>
     <string name="err_first_and_last_name_required">Veuillez entrer votre prénom et votre nom.</string>
-    <string name="err_phone_10_digits">Veuillez entrer un numéro de téléphone valide de 10 chiffres.</string>
+    <string name="err_phone_10_digits">Veuillez entrer un numéro de téléphone valide à 10 chiffres.</string>
     <string name="hint_first_name">Prénom</string>
     <string name="hint_last_name">Nom de famille</string>
     <string name="err_not_logged_in_for_feedback">Vous devez être connecté pour envoyer des commentaires.</string>
-    <string name="err_invalid_name_characters">Le nom peut contenir uniquement des lettres, des espaces, des apostrophes ou des traits d’union.</string>
+    <string name="err_invalid_name_characters">Le nom ne peut contenir que des lettres, espaces, apostrophes ou traits d’union.</string>
 
     <string name="password_too_short">Mot de passe trop court (minimum 8 caractères).</string>
     <string name="password_strength_weak">Mot de passe faible</string>
-    <string name="password_strength_medium">Mot de passe de force moyenne</string>
+    <string name="password_strength_medium">Mot de passe moyen</string>
     <string name="password_strength_strong">Mot de passe fort</string>
-    <string name="err_password_complexity">Le mot de passe doit inclure au moins 1 lettre majuscule, 1 lettre minuscule et 1 caractère spécial.</string>
+    <string name="err_password_complexity">Le mot de passe doit inclure au moins 1 majuscule, 1 minuscule et 1 caractère spécial.</string>
 
     <string name="feedback_subtitle">Vos commentaires nous aident à améliorer Smart Assistive System.</string>
     <string name="rate_our_service">Évaluez notre service</string>
@@ -238,23 +248,23 @@ Section : 3DTues
 
     <!-- 24-hour feedback limit message -->
     <string name="feedback_already_submitted_24h">
-    Vous pouvez soumettre des commentaires une fois toutes les 24 heures.
+Vous pouvez envoyer des commentaires une fois toutes les 24 heures.
 </string>
 
     <!-- %1$d = hours, %2$d = minutes -->
     <string name="feedback_cooldown_format">
-    Vous pourrez soumettre à nouveau des commentaires dans %1$d h %2$d min.
+Vous pourrez envoyer des commentaires à nouveau dans %1$d h %2$d min.
 </string>
 
     <string name="no_user_id">Aucun ID utilisateur.</string>
     <string name="system_check_complete">Vérification du système terminée</string>
     <string name="all_modules_are_running_normally">Tous les modules fonctionnent normalement.</string>
     <string name="low_light_detected">Faible luminosité détectée</string>
-    <string name="ambient_light_is_low_consider_enabling_the_magnifier">La lumière ambiante est faible. Envisagez d’activer la loupe.</string>
+    <string name="ambient_light_is_low_consider_enabling_the_magnifier">La lumière ambiante est faible. Pensez à activer la loupe.</string>
     <string name="new_feedback_received">Nouveaux commentaires reçus</string>
-    <string name="you_have_new_feedback_from_a_user">Vous avez de nouveaux commentaires d’un utilisateur.</string>
+    <string name="you_have_new_feedback_from_a_user">Vous avez reçu de nouveaux commentaires d’un utilisateur.</string>
     <string name="please_enter_a_valid_email_address">Veuillez entrer une adresse courriel valide.</string>
-    <string name="no_guardian_user_id">Aucun ID de tuteur/utilisateur.</string>
+    <string name="no_guardian_user_id">Aucun ID d’utilisateur/proche.</string>
     <string name="please_enter_password">Veuillez entrer un mot de passe.</string>
     <string name="please_confirm_password">Veuillez confirmer le mot de passe.</string>
     <string name="passwords_do_not_match_">Les mots de passe ne correspondent pas.</string>
@@ -263,11 +273,11 @@ Section : 3DTues
     <string name="version_1_0">Version 1.0</string>
     <string name="developed_by">Développé par :</string>
     <string name="sign_in_to_see_alerts">Connectez-vous pour voir les alertes.</string>
-    <string name="no_alerts_yet">Aucune alerte pour le moment.</string>
+    <string name="no_alerts_yet">Aucune alerte pour l’instant.</string>
     <string name="failed_to_load_alerts">"Échec du chargement des alertes : "</string>
     <string name="no_signed_in_user_for_alerts">Aucun utilisateur connecté pour les alertes.</string>
     <string name="recent_alerts">Alertes récentes</string>
-    <string name="no_alerts_yet_">Aucune alerte pour le moment.</string>
+    <string name="no_alerts_yet_">Aucune alerte pour l’instant.</string>
     <string name="comment_">Commentaire</string>
     <string name="active">Actif</string>
     <string name="idle">Inactif</string>
@@ -280,21 +290,22 @@ Section : 3DTues
 
     <!-- Voice assistant -->
     <string name="voice_hint">
-        Dites : Ouvrir accueil, Ouvrir capteurs, Ouvrir commentaires, Ouvrir paramètres ou Ouvrir patients.
+Dites : Ouvrir accueil, Ouvrir capteurs, Ouvrir commentaires, Ouvrir paramètres ou Ouvrir patients.
     </string>
     <string name="voice_not_understood">
-        Désolé, je n’ai pas compris. Essayez de dire Ouvrir capteurs ou Aller aux commentaires.
+Désolé, je n’ai pas compris. Essayez de dire Ouvrir capteurs ou Aller aux commentaires.
     </string>
     <string name="voice_permission_denied">
-        Autorisation du microphone refusée. Les commandes vocales sont désactivées.
+Autorisation du microphone refusée. Les commandes vocales sont désactivées.
     </string>
     <string name="voice_listening_toast">Écoute en cours…</string>
     <string name="voice_not_supported">
-        La reconnaissance vocale n’est pas disponible sur cet appareil.
+La reconnaissance vocale n’est pas disponible sur cet appareil.
     </string>
     <string name="voice_result_pattern">Vous avez dit : %1$s</string>
-    <string name="emergency_alert"> Alerte d’urgence</string>
-    <string name="possible_fall_detected_time">"Possibilité de chute détectée !\nHeure : "</string>
+
+    <string name="emergency_alert">⚠️ Alerte d’urgence</string>
+    <string name="possible_fall_detected_time">"Possible chute détectée !\nHeure : "</string>
     <string name="fall_detected_at">"Chute détectée à : "</string>
     <string name="no_fall_detected">Aucune chute détectée</string>
     <string name="yyyy_mm_dd_hh_mm_ss">yyyy-MM-dd HH:mm:ss</string>
@@ -305,7 +316,7 @@ Section : 3DTues
     <string name="color_s">Couleur : %s</string>
     <string name="color_unknown">Couleur : inconnue</string>
     <string name="exit_app1">Quitter l’application</string>
-    <string name="are_you_sure_you_want_to_exit1">Êtes-vous sûr de vouloir quitter ?</string>
+    <string name="are_you_sure_you_want_to_exit1">Voulez-vous vraiment quitter ?</string>
     <string name="yes1">Oui</string>
     <string name="no_phone_number_for_this_patient">Aucun numéro de téléphone pour ce patient.</string>
     <string name="cancel1">Annuler</string>
@@ -316,15 +327,66 @@ Section : 3DTues
     <string name="name1">nom</string>
     <string name="email1">courriel</string>
     <string name="phone1">téléphone</string>
-    <string name="no_db_profile_found_loaded_from_firebase_authentication">Aucun profil BD trouvé — chargé à partir de Firebase Authentication</string>
+    <string name="no_db_profile_found_loaded_from_firebase_authentication">Aucun profil BD trouvé — profil chargé depuis Firebase Authentication</string>
+
     <string name="notifications_enabled">Notifications activées</string>
     <string name="notifications_disabled">Notifications désactivées</string>
-    <string name="fab_help">Aide et conseils</string>
+    <string name="fab_help">Aide et astuces</string>
     <string name="test_notification">Envoyer une notification de test</string>
     <string name="notifications_permission_denied">
-    L’autorisation de notifications a été refusée. Vous pouvez l’activer plus tard dans les paramètres.
+L’autorisation de notification a été refusée. Vous pouvez l’activer plus tard dans les paramètres.
 </string>
     <string name="delete_alert">Supprimer l’alerte</string>
 
+    <!-- Sensors – per-patient cards (ENGLISH) -->
+    <string name="sensor_patient_subtitle">
+Dernier instantané des capteurs pour ce patient
+</string>
+
+    <string name="sensor_initializing_as726x">
+Initialisation des données du capteur spectral…
+</string>
+    <string name="sensor_initializing_tsl2591">
+Initialisation des données du capteur de lumière…
+</string>
+    <string name="sensor_initializing_tcs34725">
+Initialisation des données du capteur de couleur…
+</string>
+    <string name="sensor_initializing_vl53l1x">
+Initialisation des données du capteur de distance…
+</string>
+
+    <!-- %1$.1f = lux value -->
+    <string name="sensor_light_label">
+Lumière : %1$.1f lux
+</string>
+
+    <!-- %1$s = color name, %2$d = R, %3$d = G, %4$d = B -->
+    <string name="sensor_color_label">
+Couleur : %1$s (R=%2$d, V=%3$d, B=%4$d)
+</string>
+
+    <!-- %1$d = distance in mm -->
+    <string name="sensor_distance_label">
+Distance : %1$d mm
+</string>
+
+    <!-- %1$d = temperature in °C -->
+    <string name="sensor_temp_suffix">
+Temp. : %1$d °C
+</string>
+
+    <!-- %1$s = timestamp -->
+    <string name="sensor_last_updated">
+Dernière mise à jour : %1$s
+</string>
+    <string name="sensor_last_updated_unknown">
+Dernière mise à jour : --
+</string>
+
+    <string name="sensor_title_as726x">AS726x – Capteur spectral</string>
+    <string name="sensor_title_tsl2591">TSL2591 – Capteur de lumière</string>
+    <string name="sensor_title_tcs34725">TCS34725 – Capteur de couleur</string>
+    <string name="sensor_title_vl53l1x">VL53L1X – Capteur de distance</string>
 
 </resources>
