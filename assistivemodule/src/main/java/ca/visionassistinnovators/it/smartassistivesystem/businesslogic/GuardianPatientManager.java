@@ -1,6 +1,7 @@
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Patterns;
 
@@ -163,14 +164,16 @@ public class GuardianPatientManager {
         }
 
         // Validate patient email
-        if (TextUtils.isEmpty(email) ||
-                !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            if (callback != null) {
-                callback.onValidationError(
-                        ctx.getString(R.string.please_enter_a_valid_email_address)
-                );
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
+            if (TextUtils.isEmpty(email) ||
+                    !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                if (callback != null) {
+                    callback.onValidationError(
+                            ctx.getString(R.string.please_enter_a_valid_email_address)
+                    );
+                }
+                return;
             }
-            return;
         }
 
         // Validate phone (10 digits, same as registration)
