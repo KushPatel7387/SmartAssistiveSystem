@@ -25,7 +25,9 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientViewHolder> {
 
+    // 🔥 NEW: Click callback for opening patient live location
     public interface OnPatientActionListener {
+        void onPatientClicked(PatientModel patient);   // <── NEW
         void onCallClicked(PatientModel patient);
         void onDeleteClicked(PatientModel patient);
     }
@@ -61,22 +63,24 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         holder.tvName.setText(model.fullName != null ? model.fullName : "Unknown");
         holder.tvPhone.setText(model.phone != null ? model.phone : "");
 
-        // Sensor placeholders
-        holder.tvSensor1.setText("S1: " + (null != model.sensor1 ? model.sensor1 : "--"));
+        holder.tvSensor1.setText("S1: " + (model.sensor1 != null ? model.sensor1 : "--"));
         holder.tvSensor2.setText("S2: " + (model.sensor2 != null ? model.sensor2 : "--"));
         holder.tvSensor3.setText("S3: " + (model.sensor3 != null ? model.sensor3 : "--"));
         holder.tvSensor4.setText("S4: " + (model.sensor4 != null ? model.sensor4 : "--"));
 
-        holder.btnCall.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onCallClicked(model);
-            }
+        // 🔥 FULL CARD CLICK → Location screen
+        holder.itemView.setOnClickListener(v -> {
+            if (listener != null) listener.onPatientClicked(model);
         });
 
+        // CALL
+        holder.btnCall.setOnClickListener(v -> {
+            if (listener != null) listener.onCallClicked(model);
+        });
+
+        // DELETE
         holder.btnDelete.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onDeleteClicked(model);
-            }
+            if (listener != null) listener.onDeleteClicked(model);
         });
     }
 

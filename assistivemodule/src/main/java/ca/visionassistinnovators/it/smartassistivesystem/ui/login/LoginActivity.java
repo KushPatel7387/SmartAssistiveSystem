@@ -8,7 +8,9 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.login;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -20,6 +22,8 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -37,8 +41,9 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.EmailLogi
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.GoogleLoginManager;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginBusinessLogic;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.LoginValidator;
-import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.LoginPrefsFacade;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.location.PatientLocationService;
+import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -47,15 +52,17 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox cbRemember;
 
     private GoogleSignInClient googleClient;
-
     private FirebaseAuth firebaseAuth;
+
     private LoginBusinessLogic loginBusinessLogic;
 
     private final LoginValidator loginValidator = new LoginValidator();
     private final EmailLoginManager emailLoginManager = new EmailLoginManager();
     private final GoogleLoginManager googleLoginManager = new GoogleLoginManager();
+
     private com.google.android.material.textfield.TextInputLayout tilEmail, tilPassword;
 
+    // Google Launcher
     private final ActivityResultLauncher<Intent> googleLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getData() == null) return;
@@ -71,25 +78,18 @@ public class LoginActivity extends AppCompatActivity {
                                 new GoogleLoginManager.GoogleCallback() {
                                     @Override
                                     public void onSuccess(String emailFromCallback) {
+
                                         if (emailFromCallback != null) {
-                                            // Business logic: remember-me handling
-                                            if (loginBusinessLogic != null) {
-                                                loginBusinessLogic.handleRememberMe(
-                                                        cbRemember.isChecked(),
-                                                        emailFromCallback
-                                                );
-                                            } else {
-                                                // Fallback: direct facade if somehow null
-                                                LoginPrefsFacade.saveRememberEmail(
-                                                        LoginActivity.this,
-                                                        cbRemember.isChecked(),
-                                                        emailFromCallback
-                                                );
-                                            }
+                                            loginBusinessLogic.handleRememberMe(
+                                                    cbRemember.isChecked(),
+                                                    emailFromCallback
+                                            );
                                         }
 
-                                        // Load phone from Firebase "users" node → SharedPreferences
                                         syncUserProfileToPrefs();
+
+                                        // ⭐ Start Patient Location Service
+                                        startPatientLocationService();
 
                                         goHome();
                                     }
@@ -100,7 +100,6 @@ public class LoginActivity extends AppCompatActivity {
                                     }
                                 }
                         );
-
                     } else {
                         Toast.makeText(this, R.string.err_no_google_account, Toast.LENGTH_SHORT).show();
                     }
@@ -122,14 +121,12 @@ public class LoginActivity extends AppCompatActivity {
         loginBtn   = findViewById(R.id.btnLogin);
         cbRemember = findViewById(R.id.cb_remember);
         btnGoogle  = findViewById(R.id.btnGoogle);
-        tilEmail    = findViewById(R.id.til_email);
-        tilPassword = findViewById(R.id.til_password);
+        tilEmail   = findViewById(R.id.til_email);
+        tilPassword= findViewById(R.id.til_password);
 
-        // Firebase + business logic
         firebaseAuth = FirebaseAuth.getInstance();
         loginBusinessLogic = new LoginBusinessLogic(this, firebaseAuth);
 
-        // Clear error when user starts typing
         email.addTextChangedListener(new SimpleTextWatcher() {
             @Override public void onTextChanged(CharSequence s, int start, int before, int count) {
                 tilEmail.setError(null);
@@ -142,30 +139,21 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        // ─────────────────────────────────────────────
-        // Auto-login / remember-me logic (business)
-        // ─────────────────────────────────────────────
-
         if (loginBusinessLogic.shouldAutoLogin()) {
             goHome();
             finish();
             return;
         }
 
-        // If remember-me is OFF but Firebase still has a user, sign out:
         loginBusinessLogic.ensureSessionMatchesRememberPreference();
 
-        // Restore remembered email + checkbox state
         String rememberedEmail = loginBusinessLogic.getRememberedEmail();
         if (!rememberedEmail.isEmpty()) {
             email.setText(rememberedEmail);
             cbRemember.setChecked(true);
         }
 
-        // ─────────────────────────────────────────────
-        // Google Sign-In setup
-        // ─────────────────────────────────────────────
-
+        // Google Sign-In Setup
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -175,11 +163,9 @@ public class LoginActivity extends AppCompatActivity {
 
         btnGoogle.setOnClickListener(v -> googleLauncher.launch(googleClient.getSignInIntent()));
 
-        // Go to Register screen
         findViewById(R.id.tv_sign_up).setOnClickListener(v ->
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
 
-        // Email/password login
         loginBtn.setOnClickListener(v -> doPasswordLogin());
     }
 
@@ -187,7 +173,6 @@ public class LoginActivity extends AppCompatActivity {
         String uEmail = email.getText().toString().trim();
         String uPass  = password.getText().toString().trim();
 
-        // Empty check (business rule already extracted to validator)
         if (loginValidator.isEmailOrPasswordEmpty(uEmail, uPass)) {
             Toast.makeText(this, R.string.err_enter_email_password, Toast.LENGTH_SHORT).show();
             return;
@@ -209,24 +194,19 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // All good → clear errors
         tilEmail.setError(null);
         tilPassword.setError(null);
 
-        // Proceed with Firebase (wrapped in EmailLoginManager)
         emailLoginManager.login(uEmail, uPass, new EmailLoginManager.LoginCallback() {
             @Override
             public void onSuccess(String emailFromCallback) {
-                // Business logic: remember-me
-                if (loginBusinessLogic != null) {
-                    loginBusinessLogic.handleRememberMe(cbRemember.isChecked(), emailFromCallback);
-                } else {
-                    // Fallback to previous behavior if something goes wrong
-                    LoginPrefsFacade.saveRememberEmail(LoginActivity.this, cbRemember.isChecked(), emailFromCallback);
-                }
 
-                // Load phone from Firebase "users" node → SharedPreferences
+                loginBusinessLogic.handleRememberMe(cbRemember.isChecked(), emailFromCallback);
+
                 syncUserProfileToPrefs();
+
+                // ⭐ Start live location upload
+                startPatientLocationService();
 
                 goHome();
             }
@@ -245,12 +225,6 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * After a successful login (email or Google), fetch the user profile from
-     * Realtime Database: /users/{uid} and save "phone" into SharedPreferences.
-     *
-     * Handles both String and numeric (Long) phone types in Firebase.
-     */
     private void syncUserProfileToPrefs() {
         if (firebaseAuth == null) return;
 
@@ -267,19 +241,33 @@ public class LoginActivity extends AppCompatActivity {
         userRef.get().addOnSuccessListener(snapshot -> {
             if (!snapshot.exists()) return;
 
-            // phone can be stored as String OR Long in Firebase, so read as Object
             Object phoneObj = snapshot.child(getString(R.string.phone_)).getValue();
             if (phoneObj != null) {
-                String phoneStr = String.valueOf(phoneObj);  // works for Long & String
-                // save to SharedPreferences via facade
+                String phoneStr = String.valueOf(phoneObj);
                 LoginPrefsFacade.saveUserPhone(LoginActivity.this, phoneStr);
             }
-        }).addOnFailureListener(e -> {
-            // silently ignore; app still works without phone cached
         });
     }
 
-    // TEXT WATCHER TO CLEAR ERRORS
+    // ⭐ NEW — Start Background Live Location Service
+    private void startPatientLocationService() {
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION },
+                    3000
+            );
+            return;
+        }
+
+        Intent svc = new Intent(this, PatientLocationService.class);
+        startService(svc);
+    }
+
+    // Clear errors when typing
     private abstract static class SimpleTextWatcher implements TextWatcher {
         @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
         @Override public void afterTextChanged(Editable s) {}

@@ -306,7 +306,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/assist_walker/baseline_assist_walker_24.xml" />
+                                      <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/location_pin/baseline_location_pin_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -316,7 +316,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="ic_walk_assist" />
+                            <entry key="outputName" value="ic_location_pin" />
                             <entry key="sourceFile" value="C:\Users\Kush1\AndroidStudioProjects\SmartAssistiveSystem" />
                           </map>
                         </option>

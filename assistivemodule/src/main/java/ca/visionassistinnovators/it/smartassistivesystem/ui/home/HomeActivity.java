@@ -77,7 +77,7 @@ public class HomeActivity extends AppCompatActivity {
         // Top-level destinations (including help)
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home,
-                R.id.nav_magnifier,
+                R.id.navigation_location,
                 R.id.nav_sos,
                 R.id.nav_alerts,
                 R.id.nav_sensors,
