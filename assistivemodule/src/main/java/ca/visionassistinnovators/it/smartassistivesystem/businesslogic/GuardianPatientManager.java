@@ -36,6 +36,8 @@ public class GuardianPatientManager {
     private static final String USERS_NODE     = "users";
     private static final String PATIENTS_CHILD = "patients";
     private static final String SENSORS_NODE   = "sensors";
+    // 🔔 alerts child – same path as AlertsManager
+    private static final String ALERTS_CHILD   = "alerts";
 
     private final NameValidator nameValidator = new NameValidator();
 
@@ -67,6 +69,16 @@ public class GuardianPatientManager {
         return db.getReference(USERS_NODE)
                 .child(guardianUid)
                 .child(PATIENTS_CHILD);
+    }
+
+    /** Path for alerts: /users/{uid}/alerts */
+    private DatabaseReference getGuardianAlertsRef(Context ctx, String guardianUid) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance(
+                ctx.getString(R.string.firebase_db_url)
+        );
+        return db.getReference(USERS_NODE)
+                .child(guardianUid)
+                .child(ALERTS_CHILD);
     }
 
     private DatabaseReference getSensorsRootRef(Context ctx) {
@@ -204,6 +216,9 @@ public class GuardianPatientManager {
 
         ref.setValue(model)
                 .addOnSuccessListener(unused -> {
+                    // 🔔 NEW: create alert for this new patient (fire-and-forget)
+                    createNewPatientAlert(ctx, guardianUid, model);
+
                     if (callback != null) {
                         callback.onSuccess();
                     }
@@ -287,5 +302,29 @@ public class GuardianPatientManager {
             return null;
         }
         return digits;
+    }
+
+    // -------------------------------------------------
+    // 🔔 New helper: push alert when patient is added
+    // -------------------------------------------------
+    private void createNewPatientAlert(Context ctx,
+                                       String guardianUid,
+                                       PatientModel patient) {
+
+        if (TextUtils.isEmpty(guardianUid) || patient == null) return;
+
+        DatabaseReference alertsRef = getGuardianAlertsRef(ctx, guardianUid);
+        String key = alertsRef.push().getKey();
+        if (key == null) return;
+
+        String title = ctx.getString(R.string.new_patient_added_title);
+        // Patient name maate placeholder
+        String message = ctx.getString(R.string.new_patient_added_message);
+
+        long now = System.currentTimeMillis();
+        AlertModel alert = new AlertModel(key, title, message, now);
+
+        // Fire-and-forget (we don't change UI on failure here)
+        alertsRef.child(key).setValue(alert);
     }
 }

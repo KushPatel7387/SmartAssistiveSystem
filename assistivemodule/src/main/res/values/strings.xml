@@ -381,6 +381,11 @@ Last updated: --
     <string name="sensor_title_tsl2591">TSL2591 – Light Sensor</string>
     <string name="sensor_title_tcs34725">TCS34725 – Color Sensor</string>
     <string name="sensor_title_vl53l1x">VL53L1X – Distance Sensor</string>
+    <string name="new_patient_added_title">New Patient Added</string>
+    <string name="new_patient_added_message">
+    A new patient has been added to your SOS list.
+</string>
+
 
 
 
