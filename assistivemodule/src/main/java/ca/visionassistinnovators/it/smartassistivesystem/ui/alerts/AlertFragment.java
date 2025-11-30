@@ -8,20 +8,15 @@
  */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.alerts;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,14 +31,8 @@ import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertMode
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsAdapter;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.AlertsManager;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
-import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
-
-import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
-
 
 public class AlertFragment extends Fragment implements AlertsManager.AlertsListener {
-
-    private static final int REQ_POST_NOTIFICATIONS = 2001;
 
     private TextView tvEmpty;
     private AlertsAdapter adapter;
@@ -70,17 +59,11 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         RecyclerView rvAlerts = root.findViewById(R.id.rv_alerts);
         tvEmpty  = root.findViewById(R.id.tv_alerts_empty);
 
-        // 🔔 Test Notification button (for API 33 permission demo)
-        Button btnTestNotification = root.findViewById(R.id.btn_test_notification);
-        btnTestNotification.setOnClickListener(v -> handleTestNotificationClick());
-
         rvAlerts.setLayoutManager(new LinearLayoutManager(requireContext()));
-
-        adapter = new AlertsAdapter();
-        rvAlerts.setAdapter(adapter);
 
         alertsManager = new AlertsManager();
 
+        // 🔐 Get current signed-in user
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Toast.makeText(requireContext(),
@@ -89,14 +72,18 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
             tvEmpty.setText(R.string.sign_in_to_see_alerts);
             tvEmpty.setVisibility(View.VISIBLE);
 
-            // 🔍 Analytics: alert screen opened without sign-in
+            // Analytics: alert screen opened without sign-in
             EventLogger.logScreenView(requireContext(), "AlertFragment_no_user");
             return;
         }
 
         currentUid = user.getUid();
 
-        // 🔍 Analytics: screen view
+        // ✅ Adapter create karo have, UID mali gayu
+        adapter = new AlertsAdapter(requireContext(), currentUid);
+        rvAlerts.setAdapter(adapter);
+
+        // Analytics: screen view
         EventLogger.logScreenView(requireContext(), "AlertFragment");
 
         // This will also auto-seed sample alerts if none exist
@@ -108,97 +95,6 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         super.onDestroyView();
         if (alertsManager != null && currentUid != null) {
             alertsManager.stopListening(requireContext(), currentUid);
-        }
-    }
-
-    // -----------------------------------
-    // 🔔 Test Notification (API 33 logic)
-    // -----------------------------------
-    private void handleTestNotificationClick() {
-        if (!isAdded()) return;
-
-        // 🔍 Analytics: button tap
-        EventLogger.logEvent(
-                requireContext(),
-                "alerts_test_notification_click",
-                "User tapped Send Test Notification button."
-        );
-
-        // API 33+ → must have POST_NOTIFICATIONS runtime permission
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            int granted = ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.POST_NOTIFICATIONS
-            );
-
-            if (granted != PackageManager.PERMISSION_GRANTED) {
-
-                // 🔍 Analytics: permission flow started
-                EventLogger.logEvent(
-                        requireContext(),
-                        "alerts_request_notification_permission",
-                        "POST_NOTIFICATIONS requested from AlertsFragment."
-                );
-
-                // Ask user for permission
-                requestPermissions(
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        REQ_POST_NOTIFICATIONS
-                );
-                return;
-            }
-        }
-
-        // Permission already granted OR not required (<33)
-        NotificationHelper.showTestAlertNotification(requireContext());
-
-        // 🔍 Analytics: test notification actually sent
-        EventLogger.logEvent(
-                requireContext(),
-                "alerts_test_notification_sent",
-                "NotificationHelper.showTestAlertNotification() called."
-        );
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == REQ_POST_NOTIFICATIONS) {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
-                // User accepted → fire test notification now
-                if (isAdded()) {
-                    NotificationHelper.showTestAlertNotification(requireContext());
-
-                    // 🔍 Analytics: permission granted
-                    EventLogger.logEvent(
-                            requireContext(),
-                            "alerts_notification_permission_granted",
-                            "POST_NOTIFICATIONS granted; test notification sent."
-                    );
-                }
-
-            } else {
-                // User denied → show short message
-                if (isAdded()) {
-                    Toast.makeText(
-                            requireContext(),
-                            getString(R.string.notifications_permission_denied),
-                            Toast.LENGTH_SHORT
-                    ).show();
-
-                    // 🔍 Analytics: permission denied
-                    EventLogger.logEvent(
-                            requireContext(),
-                            "alerts_notification_permission_denied",
-                            "User denied POST_NOTIFICATIONS."
-                    );
-                }
-            }
         }
     }
 
@@ -215,7 +111,6 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
             tvEmpty.setText(R.string.no_alerts_yet);
             tvEmpty.setVisibility(View.VISIBLE);
 
-            // 🔍 Analytics: no alerts for user
             EventLogger.logEvent(
                     requireContext(),
                     "alerts_empty",
@@ -224,7 +119,6 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         } else {
             tvEmpty.setVisibility(View.GONE);
 
-            // 🔍 Analytics: alerts loaded
             EventLogger.logEvent(
                     requireContext(),
                     "alerts_loaded",
@@ -240,17 +134,16 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
                 getString(R.string.failed_to_load_alerts) + error,
                 Toast.LENGTH_SHORT).show();
 
-        // 🔍 Analytics: error while loading alerts
         EventLogger.logEvent(
                 requireContext(),
                 "alerts_load_error",
                 error
         );
     }
+
     @Override
     public void onResume() {
         super.onResume();
         EventLogger.logScreenView(requireContext(), "Alerts");
     }
-
 }

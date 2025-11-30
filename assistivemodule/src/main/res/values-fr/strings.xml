@@ -324,5 +324,7 @@ Section : 3DTues
     <string name="notifications_permission_denied">
     L’autorisation de notifications a été refusée. Vous pouvez l’activer plus tard dans les paramètres.
 </string>
+    <string name="delete_alert">Supprimer l’alerte</string>
+
 
 </resources>

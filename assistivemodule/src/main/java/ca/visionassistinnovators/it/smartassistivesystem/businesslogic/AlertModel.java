@@ -29,6 +29,8 @@ public class AlertModel {
 
     // Helper (useful for adapters)
     public String getFormattedTimestamp() {
-        return android.text.format.DateFormat.format("dd MMM, hh:mm a", timestamp).toString();
+        return android.text.format.DateFormat
+                .format("dd MMM, hh:mm a", timestamp)
+                .toString();
     }
 }

@@ -26,15 +26,6 @@
             android:textStyle="bold"
             android:textColor="#222222"
             android:layout_marginBottom="8dp" />
-
-        <!-- 🔔 Test Notification Button -->
-        <Button
-            android:id="@+id/btn_test_notification"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/test_notification"
-            android:textAllCaps="false"
-            android:layout_marginTop="6dp" />
     </LinearLayout>
 
     <!-- ===== EMPTY STATE CARD ===== -->

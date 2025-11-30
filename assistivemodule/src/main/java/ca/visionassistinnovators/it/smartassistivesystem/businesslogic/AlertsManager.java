@@ -134,8 +134,7 @@ public class AlertsManager {
                 pushAlert(ref, ctx.getString(R.string.ambient_light_is_low_consider_enabling_the_magnifier),
                         ctx.getString(R.string.low_light_detected), now - 1_800_000L);
 
-                pushAlert(ref, ctx.getString(R.string.you_have_new_feedback_from_a_user)
-                        ,
+                pushAlert(ref, ctx.getString(R.string.you_have_new_feedback_from_a_user),
                         ctx.getString(R.string.new_feedback_received), now - 600_000L);
             }
 

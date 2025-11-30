@@ -328,6 +328,8 @@ Section: 3DTues
     <string name="notifications_permission_denied">
     Notifications permission was denied. You can enable it later from Settings.
 </string>
+    <string name="delete_alert">Delete alert</string>
+
 
     <!-- Sensors – per-patient cards (ENGLISH) -->
     <string name="sensor_patient_subtitle">
