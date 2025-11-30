@@ -2,93 +2,124 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="20dp">
+    android:background="#F2F4F7"
+    android:padding="16dp">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-        <!-- DISTANCE SENSOR SECTION -->
-        <TextView
-            android:text="Distance Sensor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <!-- ================= DISTANCE SENSOR ================= -->
 
-        <TextView
-            android:id="@+id/textDistance"
-            android:text="Distance: 0 cm"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <View
-            android:id="@+id/viewIndicator"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_marginTop="10dp"
-            android:background="#4CAF50" />
-
-        <Button
-            android:id="@+id/buttonVibrate"
-            android:text="Trigger Vibration"
-            android:layout_marginTop="15dp"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="18dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:elevation="6dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance Sensor"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="#222222"/>
 
-        <!-- SEPARATOR LINE -->
-        <View
+            <TextView
+                android:id="@+id/textDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Distance: 0 cm"
+                android:textSize="18sp"
+                android:layout_marginTop="6dp"
+                android:textColor="#444444"/>
+
+            <View
+                android:id="@+id/viewIndicator"
+                android:layout_width="140dp"
+                android:layout_height="140dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:background="#4CAF50"/>
+
+            <Button
+                android:id="@+id/buttonVibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Trigger Vibration"
+                android:layout_marginTop="14dp"/>
+        </LinearLayout>
+
+        <!-- ================= LIGHT SENSOR ================= -->
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="#CCCCCC"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="18dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"
+            android:elevation="6dp">
 
-        <!-- LIGHT SENSOR SECTION -->
-        <TextView
-            android:text="Light Sensor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Light Sensor"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="#222222"/>
 
-        <TextView
-            android:id="@+id/textLight"
-            android:text="Light: 0 lux"
-            android:textSize="20sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/textLight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Light: 0 lux"
+                android:textSize="18sp"
+                android:textColor="#444444"
+                android:layout_marginTop="6dp"/>
+        </LinearLayout>
 
+        <!-- ================= COLOR SENSOR ================= -->
 
-        <!-- COLOR SENSOR SECTION -->
-        <TextView
-            android:text="Color Sensor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:padding="18dp"
+            android:orientation="vertical"
+            android:elevation="6dp">
 
-        <View
-            android:id="@+id/viewColorBox"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:background="#000000"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color Sensor"
+                android:textSize="21sp"
+                android:textStyle="bold"
+                android:textColor="#222222"/>
 
-        <TextView
-            android:id="@+id/textColorName"
-            android:text="Color: Unknown"
-            android:textSize="18sp"
-            android:layout_marginTop="10dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            <View
+                android:id="@+id/viewColorBox"
+                android:layout_width="180dp"
+                android:layout_height="180dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp"
+                android:background="#000000"/>
+
+            <TextView
+                android:id="@+id/textColorName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Color: Unknown"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="#444444"
+                android:layout_marginTop="10dp"
+                android:layout_gravity="center"/>
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
