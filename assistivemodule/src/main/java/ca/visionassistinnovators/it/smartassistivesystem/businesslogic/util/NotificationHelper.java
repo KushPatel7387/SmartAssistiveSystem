@@ -97,4 +97,42 @@ public class NotificationHelper {
         NotificationManagerCompat manager = NotificationManagerCompat.from(context);
         manager.notify(1001, builder.build());
     }
+
+    /**
+     * 🔔 New patient added notification
+     * Called from GuardianPatientManager after a patient is saved to DB.
+     */
+    public static void showNewPatientNotification(Context context) {
+
+        // Ensure channel exists
+        createChannel(context.getApplicationContext());
+
+        // Tap → open HomeActivity (same as test)
+        Intent intent = new Intent(context, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                2002,
+                intent,
+                flags
+        );
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(context, CHANNEL_ID_ALERTS)
+                        .setSmallIcon(R.drawable.ic_notification)  // reuse same icon
+                        .setContentTitle(context.getString(R.string.new_patient_added_title))
+                        .setContentText(context.getString(R.string.new_patient_added_message))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
+        manager.notify(2002, builder.build());
+    }
 }

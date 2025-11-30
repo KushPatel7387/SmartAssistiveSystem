@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.NotificationHelper;
 
 /**
  * Course Section: OCA
@@ -216,7 +217,7 @@ public class GuardianPatientManager {
 
         ref.setValue(model)
                 .addOnSuccessListener(unused -> {
-                    // 🔔 NEW: create alert for this new patient (fire-and-forget)
+                    // 🔔 NEW: create alert + local notification for this new patient
                     createNewPatientAlert(ctx, guardianUid, model);
 
                     if (callback != null) {
@@ -317,14 +318,16 @@ public class GuardianPatientManager {
         String key = alertsRef.push().getKey();
         if (key == null) return;
 
-        String title = ctx.getString(R.string.new_patient_added_title);
-        // Patient name maate placeholder
+        String title   = ctx.getString(R.string.new_patient_added_title);
         String message = ctx.getString(R.string.new_patient_added_message);
 
         long now = System.currentTimeMillis();
         AlertModel alert = new AlertModel(key, title, message, now);
 
-        // Fire-and-forget (we don't change UI on failure here)
+        // Fire-and-forget DB write
         alertsRef.child(key).setValue(alert);
+
+        // 🔔 Local notification (device popup)
+        NotificationHelper.showNewPatientNotification(ctx.getApplicationContext());
     }
 }
