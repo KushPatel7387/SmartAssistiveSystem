@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_patient_sensors"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="12dp"
+    android:layout_marginBottom="4dp"
+    app:cardCornerRadius="16dp"
+    app:cardUseCompatPadding="true"
+    app:strokeWidth="1dp"
+    app:strokeColor="@color/teal_700"
+    android:foreground="?attr/selectableItemBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- HEADER: Patient info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_patient_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Patient Name"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/tv_patient_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_patient_subtitle"
+                android:textSize="13sp"
+                android:textColor="@color/teal_700"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:background="@color/teal_700" />
+
+        <!-- SENSOR ROWS -->
+
+        <!-- AS726x -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_as726x_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sensor_title_as726x"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/iv_as726x_status"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/presence_busy"
+                    android:contentDescription="@string/app_description" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_as726x_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_initializing_as726x"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+
+        <!-- TSL2591 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_tsl_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sensor_title_tsl2591"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/iv_tsl_status"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/presence_busy"
+                    android:contentDescription="@string/app_description" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_tsl_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_initializing_tsl2591"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+
+        <!-- TCS34725 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_tcs_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sensor_title_tcs34725"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/iv_tcs_status"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/presence_busy"
+                    android:contentDescription="@string/app_description" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_tcs_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_initializing_tcs34725"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+
+        <!-- VL53L1X -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_vl53_title"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/sensor_title_vl53l1x"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+                <ImageView
+                    android:id="@+id/iv_vl53_status"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@android:drawable/presence_busy"
+                    android:contentDescription="@string/app_description" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_vl53_value"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/sensor_initializing_vl53l1x"
+                android:textSize="13sp"
+                android:textColor="@color/black"
+                android:paddingTop="2dp" />
+        </LinearLayout>
+
+        <!-- LAST UPDATED -->
+        <TextView
+            android:id="@+id/tv_last_updated"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/sensor_last_updated_unknown"
+            android:textSize="11sp"
+            android:textColor="@color/teal_700"
+            android:paddingTop="4dp" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

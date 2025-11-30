@@ -329,6 +329,57 @@ Section: 3DTues
     Notifications permission was denied. You can enable it later from Settings.
 </string>
 
+    <!-- Sensors – per-patient cards (ENGLISH) -->
+    <string name="sensor_patient_subtitle">
+Latest sensor snapshot for this patient
+</string>
+
+    <string name="sensor_initializing_as726x">
+Initializing spectral sensor data…
+</string>
+    <string name="sensor_initializing_tsl2591">
+Initializing light sensor data…
+</string>
+    <string name="sensor_initializing_tcs34725">
+Initializing color sensor data…
+</string>
+    <string name="sensor_initializing_vl53l1x">
+Initializing distance sensor data…
+</string>
+
+    <!-- %1$.1f = lux value -->
+    <string name="sensor_light_label">
+Light: %1$.1f lux
+</string>
+
+    <!-- %1$s = color name, %2$d = R, %3$d = G, %4$d = B -->
+    <string name="sensor_color_label">
+Color: %1$s (R=%2$d, G=%3$d, B=%4$d)
+</string>
+
+    <!-- %1$d = distance in mm -->
+    <string name="sensor_distance_label">
+Distance: %1$d mm
+</string>
+
+    <!-- %1$d = temperature in °C -->
+    <string name="sensor_temp_suffix">
+Temp: %1$d°C
+</string>
+
+    <!-- %1$s = timestamp -->
+    <string name="sensor_last_updated">
+Last updated: %1$s
+</string>
+    <string name="sensor_last_updated_unknown">
+Last updated: --
+</string>
+
+    <string name="sensor_title_as726x">AS726x – Spectral Sensor</string>
+    <string name="sensor_title_tsl2591">TSL2591 – Light Sensor</string>
+    <string name="sensor_title_tcs34725">TCS34725 – Color Sensor</string>
+    <string name="sensor_title_vl53l1x">VL53L1X – Distance Sensor</string>
+
 
 
 </resources>

@@ -17,6 +17,13 @@ import java.util.List;
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 /**
+ * Course Section: OCA
+ * Team Members:
+ * Sarang Prajapati – N01662036
+ * Krish Patel – N01666556
+ * Kush Patel – N01657387
+ * Daksh Rana – N01664095
+ *
  * Business logic for guardian → patients relationship.
  * Patients are stored under the SAME tree as registration:
  *   /users/{uid}/patients/{patientId}
@@ -27,9 +34,11 @@ public class GuardianPatientManager {
 
     private static final String USERS_NODE     = "users";
     private static final String PATIENTS_CHILD = "patients";
+    private static final String SENSORS_NODE   = "sensors";
 
     private final NameValidator nameValidator = new NameValidator();
 
+    // -------------------- Callbacks --------------------
     public interface PatientListListener {
         void onPatientsChanged(List<PatientModel> patients);
         void onError(String error);
@@ -46,6 +55,8 @@ public class GuardianPatientManager {
         void onFailure(String error);
     }
 
+    // -------------------- Helpers --------------------
+
     /** Reuse SAME DB URL + "users" root as RegisterActivity */
     private DatabaseReference getGuardianPatientsRef(Context ctx, String guardianUid) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(
@@ -57,6 +68,16 @@ public class GuardianPatientManager {
                 .child(PATIENTS_CHILD);
     }
 
+    private DatabaseReference getSensorsRootRef(Context ctx) {
+        FirebaseDatabase db = FirebaseDatabase.getInstance(
+                ctx.getString(R.string.firebase_db_url)
+        );
+        return db.getReference(SENSORS_NODE);
+    }
+
+    // -------------------------------------------------
+    // Listen for patients
+    // -------------------------------------------------
     /**
      * Listen for all patients under /users/{uid}/patients
      */
@@ -99,6 +120,9 @@ public class GuardianPatientManager {
                 });
     }
 
+    // -------------------------------------------------
+    // Add patient
+    // -------------------------------------------------
     /**
      * Add a new patient under /users/{uid}/patients.
      */
@@ -127,6 +151,8 @@ public class GuardianPatientManager {
             return;
         }
 
+        // NOTE: This keeps your existing logic exactly as-is,
+        // even though the validator is a bit counter-intuitive.
         if (nameValidator.isValidName(firstName) || nameValidator.isValidName(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -140,7 +166,9 @@ public class GuardianPatientManager {
         if (TextUtils.isEmpty(email) ||
                 !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             if (callback != null) {
-                callback.onValidationError(ctx.getString(R.string.please_enter_a_valid_email_address));
+                callback.onValidationError(
+                        ctx.getString(R.string.please_enter_a_valid_email_address)
+                );
             }
             return;
         }
@@ -187,8 +215,13 @@ public class GuardianPatientManager {
                 });
     }
 
+    // -------------------------------------------------
+    // Delete patient + sensors/{patientId}
+    // -------------------------------------------------
     /**
-     * Delete a patient: /users/{uid}/patients/{patientId}
+     * Delete a patient:
+     *   /users/{uid}/patients/{patientId}
+     *   /sensors/{patientId}
      */
     public void deletePatient(Context ctx,
                               String guardianUid,
@@ -202,13 +235,34 @@ public class GuardianPatientManager {
             return;
         }
 
-        getGuardianPatientsRef(ctx, guardianUid)
-                .child(patientId)
-                .removeValue()
+        // 1) Reference to guardian's patient node
+        DatabaseReference patientRef =
+                getGuardianPatientsRef(ctx, guardianUid)
+                        .child(patientId);
+
+        // 2) Reference to sensor data for that patient
+        DatabaseReference sensorRef =
+                getSensorsRootRef(ctx)
+                        .child(patientId);
+
+        // First delete the patient entry
+        patientRef.removeValue()
                 .addOnSuccessListener(unused -> {
-                    if (callback != null) {
-                        callback.onSuccess();
-                    }
+                    // After patient is deleted, delete sensors for that patient
+                    sensorRef.removeValue()
+                            .addOnSuccessListener(unused2 -> {
+                                if (callback != null) {
+                                    callback.onSuccess();
+                                }
+                            })
+                            .addOnFailureListener(e -> {
+                                if (callback != null) {
+                                    String msg = (e.getMessage() != null)
+                                            ? e.getMessage()
+                                            : "Failed to delete sensor data.";
+                                    callback.onFailure(msg);
+                                }
+                            });
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) {
@@ -220,9 +274,9 @@ public class GuardianPatientManager {
                 });
     }
 
-    /**
-     * Same phone rule as registration: 10 digits only.
-     */
+    // -------------------------------------------------
+    // Same phone rule as registration: 10 digits only.
+    // -------------------------------------------------
     private String normalizePhone(String phone) {
         if (phone == null) return null;
         String digits = phone.replaceAll("\\D", "");

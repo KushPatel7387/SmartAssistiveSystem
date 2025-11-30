@@ -54,4 +54,13 @@ public class PatientModel {
     public boolean hasAnySensorData() {
         return sensor1 != null || sensor2 != null || sensor3 != null || sensor4 != null;
     }
+
+    // ---- NEW GETTERS FOR UI / BUSINESS LOGIC ----
+    public String getId() {
+        return id;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
 }

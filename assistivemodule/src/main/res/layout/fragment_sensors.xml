@@ -1,125 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F2F4F7"
-    android:padding="16dp">
+    android:background="@color/teal_50"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <!-- ================= DISTANCE SENSOR ================= -->
-
-        <LinearLayout
+        <!-- Shown when no patients / no data -->
+        <TextView
+            android:id="@+id/tv_sensors_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:padding="18dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp"
-            android:elevation="6dp">
+            android:text="@string/no_sensor_data"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:padding="16dp"
+            android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Distance Sensor"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:textColor="#222222"/>
-
-            <TextView
-                android:id="@+id/textDistance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Distance: 0 cm"
-                android:textSize="18sp"
-                android:layout_marginTop="6dp"
-                android:textColor="#444444"/>
-
-            <View
-                android:id="@+id/viewIndicator"
-                android:layout_width="140dp"
-                android:layout_height="140dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="12dp"
-                android:background="#4CAF50"/>
-
-            <Button
-                android:id="@+id/buttonVibrate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Trigger Vibration"
-                android:layout_marginTop="14dp"/>
-        </LinearLayout>
-
-        <!-- ================= LIGHT SENSOR ================= -->
-
+        <!-- Dynamic list of patient cards -->
         <LinearLayout
+            android:id="@+id/layout_patient_sensor_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:padding="18dp"
-            android:orientation="vertical"
-            android:layout_marginBottom="16dp"
-            android:elevation="6dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Light Sensor"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:textColor="#222222"/>
-
-            <TextView
-                android:id="@+id/textLight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Light: 0 lux"
-                android:textSize="18sp"
-                android:textColor="#444444"
-                android:layout_marginTop="6dp"/>
-        </LinearLayout>
-
-        <!-- ================= COLOR SENSOR ================= -->
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:padding="18dp"
-            android:orientation="vertical"
-            android:elevation="6dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Color Sensor"
-                android:textSize="21sp"
-                android:textStyle="bold"
-                android:textColor="#222222"/>
-
-            <View
-                android:id="@+id/viewColorBox"
-                android:layout_width="180dp"
-                android:layout_height="180dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="12dp"
-                android:background="#000000"/>
-
-            <TextView
-                android:id="@+id/textColorName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Color: Unknown"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="#444444"
-                android:layout_marginTop="10dp"
-                android:layout_gravity="center"/>
-        </LinearLayout>
+            android:orientation="vertical" />
 
     </LinearLayout>
 </ScrollView>
