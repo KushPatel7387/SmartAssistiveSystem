@@ -40,9 +40,8 @@ public class AlertsManager {
     private static final String USERS_NODE   = "users";
     private static final String ALERTS_CHILD = "alerts";
 
-    // prefs so dummy alerts are only seeded once per user (per device)
-    private static final String PREFS_NAME           = "alerts_prefs";
-    private static final String KEY_PREFIX_SEEDED    = "dummy_seeded_";
+    private static final String PREFS_NAME        = "alerts_prefs";
+    private static final String KEY_PREFIX_SEEDED = "dummy_seeded_";
 
     private final Map<String, ValueEventListener> activeListeners = new HashMap<>();
 
@@ -69,14 +68,13 @@ public class AlertsManager {
 
         if (TextUtils.isEmpty(userId)) {
             if (listener != null) {
-                listener.onError("No user id for alerts.");
+                listener.onError(ctx.getString(R.string.err_no_user_id_for_alerts));
             }
             return;
         }
 
         DatabaseReference alertsRef = getAlertsRef(ctx, userId);
 
-        // Prevent multiple listeners for same user
         ValueEventListener old = activeListeners.remove(userId);
         if (old != null) {
             alertsRef.removeEventListener(old);
@@ -85,11 +83,9 @@ public class AlertsManager {
         ValueEventListener valueListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                // If no alerts in DB yet, seed dummy ONCE (per device & user)
                 if (!hasSeededDummy(ctx, userId) && !snapshot.hasChildren()) {
                     seedDummyAlerts(ctx, userId, alertsRef);
                     markDummySeeded(ctx, userId);
-                    // Firebase will call onDataChange() again after seed
                     return;
                 }
 
@@ -97,7 +93,7 @@ public class AlertsManager {
                 for (DataSnapshot child : snapshot.getChildren()) {
                     AlertModel model = child.getValue(AlertModel.class);
                     if (model != null) {
-                        model.id = child.getKey();   // Firebase key
+                        model.id = child.getKey();
                         list.add(model);
                     }
                 }
@@ -147,12 +143,6 @@ public class AlertsManager {
                 .apply();
     }
 
-    /**
-     * Insert a couple of dummy alerts to show the feature on first run.
-     * Called ONLY when:
-     *  - alerts list is empty AND
-     *  - hasSeededDummy(...) == false
-     */
     private void seedDummyAlerts(Context ctx,
                                  String userId,
                                  DatabaseReference alertsRef) {
@@ -161,16 +151,16 @@ public class AlertsManager {
 
         AlertModel a1 = new AlertModel(
                 null,
-                "Welcome to Smart Assistive System",
-                "This is a sample alert. Real alerts will appear here when events happen.",
+                ctx.getString(R.string.sample_alert_title_welcome),
+                ctx.getString(R.string.sample_alert_message_welcome),
                 now
         );
 
         AlertModel a2 = new AlertModel(
                 null,
-                "Patient Linked Successfully",
-                "You can now monitor your patient’s sensors and alerts from the app.",
-                now - 5 * 60_000L  // 5 minutes earlier
+                ctx.getString(R.string.sample_alert_title_patient_linked),
+                ctx.getString(R.string.sample_alert_message_patient_linked),
+                now - 5 * 60_000L
         );
 
         DatabaseReference r1 = alertsRef.push();

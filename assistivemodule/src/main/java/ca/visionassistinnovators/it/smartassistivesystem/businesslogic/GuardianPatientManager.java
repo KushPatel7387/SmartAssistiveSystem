@@ -7,10 +7,10 @@
  * Daksh Rana – N01664095
  *
  * Business logic for guardian → patients relationship.
- * Patients are stored under the SAME tree as registration:
+ * Patients are stored under:
  *   /users/{uid}/patients/{patientId}
- * This reuses the existing "users" node like RegisterActivity
- * and does NOT overwrite user profiles.
+ * Alerts under:
+ *   /users/{uid}/alerts/{alertId}
  */
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
@@ -38,7 +38,6 @@ public class GuardianPatientManager {
     private static final String USERS_NODE     = "users";
     private static final String PATIENTS_CHILD = "patients";
     private static final String SENSORS_NODE   = "sensors";
-    // 🔔 alerts child – same path as AlertsManager
     private static final String ALERTS_CHILD   = "alerts";
 
     private final NameValidator nameValidator = new NameValidator();
@@ -62,18 +61,15 @@ public class GuardianPatientManager {
 
     // -------------------- Helpers --------------------
 
-    /** Reuse SAME DB URL + "users" root as RegisterActivity */
     private DatabaseReference getGuardianPatientsRef(Context ctx, String guardianUid) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(
                 ctx.getString(R.string.firebase_db_url)
         );
-        // Path: /users/{uid}/patients
         return db.getReference(USERS_NODE)
                 .child(guardianUid)
                 .child(PATIENTS_CHILD);
     }
 
-    /** Path for alerts: /users/{uid}/alerts */
     private DatabaseReference getGuardianAlertsRef(Context ctx, String guardianUid) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(
                 ctx.getString(R.string.firebase_db_url)
@@ -91,25 +87,20 @@ public class GuardianPatientManager {
     }
 
     // -------------------------------------------------
-    // Listen for patients (offline-aware via keepSynced)
+    // Listen for patients
     // -------------------------------------------------
-    /**
-     * Listen for all patients under /users/{uid}/patients
-     */
     public void listenForPatients(Context ctx,
                                   String guardianUid,
                                   PatientListListener listener) {
 
         if (TextUtils.isEmpty(guardianUid)) {
             if (listener != null) {
-                listener.onError("No guardian/user ID.");
+                listener.onError(ctx.getString(R.string.err_no_guardian_user_id));
             }
             return;
         }
 
         DatabaseReference patientsRef = getGuardianPatientsRef(ctx, guardianUid);
-
-        // ⭐ Offline support: keep this node synced to disk
         patientsRef.keepSynced(true);
 
         patientsRef.addValueEventListener(new ValueEventListener() {
@@ -120,7 +111,6 @@ public class GuardianPatientManager {
                     PatientModel model = child.getValue(PatientModel.class);
                     if (model != null) {
                         model.id = child.getKey();
-                        // if you don't want to use guardianId, just ignore it in UI
                         model.guardianId = guardianUid;
                         result.add(model);
                     }
@@ -142,9 +132,6 @@ public class GuardianPatientManager {
     // -------------------------------------------------
     // Add patient
     // -------------------------------------------------
-    /**
-     * Add a new patient under /users/{uid}/patients.
-     */
     public void addPatient(Context ctx,
                            String guardianUid,
                            String firstName,
@@ -155,12 +142,11 @@ public class GuardianPatientManager {
 
         if (TextUtils.isEmpty(guardianUid)) {
             if (callback != null) {
-                callback.onFailure(ctx.getString(R.string.no_guardian_user_id));
+                callback.onFailure(ctx.getString(R.string.err_no_guardian_user_id));
             }
             return;
         }
 
-        // Validate names (not empty)
         if (TextUtils.isEmpty(firstName) || TextUtils.isEmpty(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -170,7 +156,6 @@ public class GuardianPatientManager {
             return;
         }
 
-        // Validate characters: only letters, spaces, apostrophes, hyphens
         if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
             if (callback != null) {
                 callback.onValidationError(
@@ -180,7 +165,6 @@ public class GuardianPatientManager {
             return;
         }
 
-        // Validate patient email
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO) {
             if (TextUtils.isEmpty(email) ||
                     !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
@@ -193,7 +177,6 @@ public class GuardianPatientManager {
             }
         }
 
-        // Validate phone (10 digits, same as registration)
         String normalizedPhone = normalizePhone(phone);
         if (normalizedPhone == null) {
             if (callback != null) {
@@ -206,7 +189,6 @@ public class GuardianPatientManager {
 
         String fullName = nameValidator.buildFullName(firstName, lastName);
 
-        // Sensor readings start as null (to be filled later)
         PatientModel model = new PatientModel(
                 null,
                 guardianUid,
@@ -221,7 +203,7 @@ public class GuardianPatientManager {
 
         ref.setValue(model)
                 .addOnSuccessListener(unused -> {
-                    // 🔔 NEW: create alert + local notification for this new patient
+                    // DB alert + local notification as business logic
                     createNewPatientAlert(ctx, guardianUid, model);
 
                     if (callback != null) {
@@ -232,7 +214,7 @@ public class GuardianPatientManager {
                     if (callback != null) {
                         String msg = (e != null && e.getMessage() != null)
                                 ? e.getMessage()
-                                : "Unknown error";
+                                : ctx.getString(R.string.err_unknown);
                         callback.onFailure(msg);
                     }
                 });
@@ -241,11 +223,6 @@ public class GuardianPatientManager {
     // -------------------------------------------------
     // Delete patient + sensors/{patientId}
     // -------------------------------------------------
-    /**
-     * Delete a patient:
-     *   /users/{uid}/patients/{patientId}
-     *   /sensors/{patientId}
-     */
     public void deletePatient(Context ctx,
                               String guardianUid,
                               String patientId,
@@ -253,25 +230,18 @@ public class GuardianPatientManager {
 
         if (TextUtils.isEmpty(guardianUid) || TextUtils.isEmpty(patientId)) {
             if (callback != null) {
-                callback.onFailure("Missing IDs.");
+                callback.onFailure(ctx.getString(R.string.err_missing_ids_for_delete));
             }
             return;
         }
 
-        // 1) Reference to guardian's patient node
         DatabaseReference patientRef =
-                getGuardianPatientsRef(ctx, guardianUid)
-                        .child(patientId);
-
-        // 2) Reference to sensor data for that patient
+                getGuardianPatientsRef(ctx, guardianUid).child(patientId);
         DatabaseReference sensorRef =
-                getSensorsRootRef(ctx)
-                        .child(patientId);
+                getSensorsRootRef(ctx).child(patientId);
 
-        // First delete the patient entry
         patientRef.removeValue()
                 .addOnSuccessListener(unused -> {
-                    // After patient is deleted, delete sensors for that patient
                     sensorRef.removeValue()
                             .addOnSuccessListener(unused2 -> {
                                 if (callback != null) {
@@ -282,7 +252,7 @@ public class GuardianPatientManager {
                                 if (callback != null) {
                                     String msg = (e != null && e.getMessage() != null)
                                             ? e.getMessage()
-                                            : "Failed to delete sensor data.";
+                                            : ctx.getString(R.string.err_failed_delete_sensor_data);
                                     callback.onFailure(msg);
                                 }
                             });
@@ -291,14 +261,14 @@ public class GuardianPatientManager {
                     if (callback != null) {
                         String msg = (e != null && e.getMessage() != null)
                                 ? e.getMessage()
-                                : "Unknown error";
+                                : ctx.getString(R.string.err_unknown);
                         callback.onFailure(msg);
                     }
                 });
     }
 
     // -------------------------------------------------
-    // Same phone rule as registration: 10 digits only.
+    // Phone normalization
     // -------------------------------------------------
     private String normalizePhone(String phone) {
         if (phone == null) return null;
@@ -310,7 +280,7 @@ public class GuardianPatientManager {
     }
 
     // -------------------------------------------------
-    // 🔔 New helper: push alert when patient is added
+    // DB alert + local notification for new patient
     // -------------------------------------------------
     private void createNewPatientAlert(Context ctx,
                                        String guardianUid,
@@ -322,16 +292,21 @@ public class GuardianPatientManager {
         String key = alertsRef.push().getKey();
         if (key == null) return;
 
-        String title   = ctx.getString(R.string.new_patient_added_title);
-        String message = ctx.getString(R.string.new_patient_added_message);
+        String title = ctx.getString(R.string.new_patient_added_title);
+        String message = ctx.getString(
+                R.string.new_patient_added_message_with_name,
+                patient.fullName   // ✅ use fullName field from PatientModel
+        );
 
         long now = System.currentTimeMillis();
         AlertModel alert = new AlertModel(key, title, message, now);
 
-        // Fire-and-forget DB write
         alertsRef.child(key).setValue(alert);
 
-        // 🔔 Local notification (device popup)
-        NotificationHelper.showNewPatientNotification(ctx.getApplicationContext());
+        // Local notification (checks permission inside helper)
+        NotificationHelper.showNewPatientNotification(
+                ctx.getApplicationContext(),
+                patient.fullName   // ✅ pass fullName to NotificationHelper
+        );
     }
 }

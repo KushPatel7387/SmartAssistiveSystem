@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingStart="12dp"
-                    android:text="Walking Assistance"
+                    android:text="@string/walking_assistance"
                     android:textColor="@color/purple_700"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -89,11 +89,7 @@
                     android:id="@+id/switchWalkingAssist"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
-
-
             </LinearLayout>
-
 
             <!-- PATIENT CARD -->
             <com.google.android.material.card.MaterialCardView
@@ -111,8 +107,6 @@
                     android:padding="12dp"
                     android:gravity="center_vertical">
 
-
-
                     <ImageView
                         android:layout_width="40dp"
                         android:layout_height="40dp"
@@ -129,7 +123,7 @@
                             android:id="@+id/tv_home_patient_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Patients linked to your account"
+                            android:text="@string/patients_linked_to_account"
                             android:textColor="@color/purple_700"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -149,7 +143,7 @@
                         android:id="@+id/btn_home_manage_patients"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View Patients"
+                        android:text="@string/view_patients"
                         android:textAllCaps="false" />
 
                 </LinearLayout>
@@ -205,7 +199,7 @@
                         android:id="@+id/btn_home_view_sensors"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View"
+                        android:text="@string/view"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -215,7 +209,7 @@
                 android:id="@+id/card_home_alerts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp">
 
@@ -260,24 +254,10 @@
                         android:id="@+id/btn_home_view_alerts"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="View"
+                        android:text="@string/view"
                         android:textAllCaps="false" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
-
-            <!-- PIE CHART -->
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChartPatients"
-                android:layout_width="match_parent"
-                android:layout_height="260dp" />
-
-            <!-- BAR CHART -->
-            <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/barChartSensors"
-                android:layout_width="match_parent"
-                android:layout_height="260dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="24dp" />
 
         </LinearLayout>
     </ScrollView>

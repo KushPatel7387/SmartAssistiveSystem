@@ -12,15 +12,19 @@
 
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.ui.home.HomeActivity;
@@ -33,13 +37,16 @@ public class NotificationHelper {
     private static final String CHANNEL_DESCRIPTION =
             "Notifications for SOS triggers and patient alerts.";
 
+    // ==== NOTIFICATION IDS ====
+    private static final int NOTIF_ID_TEST        = 1001;
+    private static final int NOTIF_ID_NEW_PATIENT = 2002;
+
     /**
      * Ensures notification channel exists.
      * Safe to call multiple times.
      */
     private static void createChannel(Context context) {
 
-        // Channels are only for Android O (API 26+) and above
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
             NotificationChannel channel = new NotificationChannel(
@@ -59,56 +66,35 @@ public class NotificationHelper {
     }
 
     /**
-     * Sends a simple TEST notification
-     * Used when user clicks "Send Test Notification" in AlertsFragment
+     * Check POST_NOTIFICATIONS permission on Android 13+.
      */
-    public static void showTestAlertNotification(Context context) {
-
-        // Always create channel before sending notification
-        createChannel(context.getApplicationContext());
-
-        // Tap on notification → open HomeActivity
-        Intent intent = new Intent(context, HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-
-        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            flags |= PendingIntent.FLAG_IMMUTABLE;
+    private static boolean hasNotificationPermission(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return true; // no runtime permission before API 33
         }
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
+        return ContextCompat.checkSelfPermission(
                 context,
-                1001,
-                intent,
-                flags
-        );
-
-        // Build notification
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, CHANNEL_ID_ALERTS)
-                        .setSmallIcon(R.drawable.ic_notification)  // 🔔 ensure vector exists
-                        .setContentTitle("Smart Assistive System")
-                        .setContentText("You have a new alert (test notification).")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setAutoCancel(true)
-                        .setContentIntent(pendingIntent);
-
-        // Send notification
-        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
-        manager.notify(1001, builder.build());
+                Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED;
     }
 
     /**
-     * 🔔 New patient added notification
-     * Called from GuardianPatientManager after a patient is saved to DB.
+     * Sends a simple TEST notification
+     * Used when user clicks "Send Test Notification" in AlertsFragment
      */
-    public static void showNewPatientNotification(Context context) {
+    @SuppressLint("MissingPermission")
+    public static void showTestAlertNotification(Context context) {
 
-        // Ensure channel exists
-        createChannel(context.getApplicationContext());
+        if (!hasNotificationPermission(context)) {
+            // Permission not granted – do nothing.
+            return;
+        }
 
-        // Tap → open HomeActivity (same as test)
-        Intent intent = new Intent(context, HomeActivity.class);
+        Context appCtx = context.getApplicationContext();
+        createChannel(appCtx);
+
+        Intent intent = new Intent(appCtx, HomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
@@ -117,22 +103,85 @@ public class NotificationHelper {
         }
 
         PendingIntent pendingIntent = PendingIntent.getActivity(
-                context,
-                2002,
+                appCtx,
+                NOTIF_ID_TEST,
                 intent,
                 flags
         );
 
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(context, CHANNEL_ID_ALERTS)
-                        .setSmallIcon(R.drawable.ic_notification)  // reuse same icon
-                        .setContentTitle(context.getString(R.string.new_patient_added_title))
-                        .setContentText(context.getString(R.string.new_patient_added_message))
+                new NotificationCompat.Builder(appCtx, CHANNEL_ID_ALERTS)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setContentTitle(appCtx.getString(R.string.app_name))
+                        .setContentText(appCtx.getString(R.string.test_notification_message))
                         .setPriority(NotificationCompat.PRIORITY_HIGH)
                         .setAutoCancel(true)
                         .setContentIntent(pendingIntent);
 
-        NotificationManagerCompat manager = NotificationManagerCompat.from(context);
-        manager.notify(2002, builder.build());
+        NotificationManagerCompat manager = NotificationManagerCompat.from(appCtx);
+        try {
+            manager.notify(NOTIF_ID_TEST, builder.build());
+        } catch (SecurityException ignored) {
+            // Permission might have been revoked between check and notify.
+        }
+    }
+
+    /**
+     * Old API kept for compatibility – generic message.
+     */
+    public static void showNewPatientNotification(Context context) {
+        showNewPatientNotification(context, null);
+    }
+
+    /**
+     * 🔔 New patient added notification, with optional patient name
+     * Called from GuardianPatientManager after patient is saved to DB.
+     */
+    @SuppressLint("MissingPermission")
+    public static void showNewPatientNotification(Context context, String patientName) {
+
+        if (!hasNotificationPermission(context)) {
+            return;
+        }
+
+        Context appCtx = context.getApplicationContext();
+        createChannel(appCtx);
+
+        Intent intent = new Intent(appCtx, HomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            flags |= PendingIntent.FLAG_IMMUTABLE;
+        }
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                appCtx,
+                NOTIF_ID_NEW_PATIENT,
+                intent,
+                flags
+        );
+
+        String title = appCtx.getString(R.string.new_patient_added_title);
+        String message = (patientName != null && !patientName.isEmpty())
+                ? appCtx.getString(R.string.new_patient_added_message_with_name, patientName)
+                : appCtx.getString(R.string.new_patient_added_message);
+
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(appCtx, CHANNEL_ID_ALERTS)
+                        .setSmallIcon(R.drawable.ic_notification)
+                        .setContentTitle(title)
+                        .setContentText(message)
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                        .setPriority(NotificationCompat.PRIORITY_HIGH)
+                        .setAutoCancel(true)
+                        .setContentIntent(pendingIntent);
+
+        NotificationManagerCompat manager = NotificationManagerCompat.from(appCtx);
+        try {
+            manager.notify(NOTIF_ID_NEW_PATIENT, builder.build());
+        } catch (SecurityException ignored) {
+            // Permission might have been revoked between check and notify.
+        }
     }
 }

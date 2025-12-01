@@ -10,10 +10,10 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.patients;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +56,9 @@ public class SosFragment extends Fragment {
     private ActivityResultLauncher<String> callPermissionLauncher;
     private String pendingPhoneToCall;
 
+    // Notification permission launcher
+    private ActivityResultLauncher<String> notificationPermissionLauncher;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -75,8 +78,12 @@ public class SosFragment extends Fragment {
         adapter = new PatientAdapter(new PatientAdapter.OnPatientActionListener() {
             @Override
             public void onPatientClicked(PatientModel patient) {
+                if (!isAdded()) return;
+
                 if (patient == null || patient.id == null) {
-                    Toast.makeText(requireContext(), "Invalid patient", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(),
+                            getString(R.string.err_invalid_patient),
+                            Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -84,7 +91,8 @@ public class SosFragment extends Fragment {
                 bundle.putString("patientId", patient.id);
 
                 NavController navController =
-                        Navigation.findNavController(requireActivity(), R.id.nav_host_fragment_content_main);
+                        Navigation.findNavController(requireActivity(),
+                                R.id.nav_host_fragment_content_main);
 
                 navController.navigate(R.id.navigation_location, bundle);
             }
@@ -107,8 +115,13 @@ public class SosFragment extends Fragment {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         guardianUid = (user != null) ? user.getUid() : null;
 
-        if (guardianUid != null) listenForPatients();
-        else Toast.makeText(getContext(), "Login again.", Toast.LENGTH_SHORT).show();
+        if (guardianUid != null) {
+            listenForPatients();
+        } else if (isAdded()) {
+            Toast.makeText(getContext(),
+                    getString(R.string.err_login_again),
+                    Toast.LENGTH_SHORT).show();
+        }
 
         // PHONE PERMISSION HANDLER
         callPermissionLauncher = registerForActivityResult(
@@ -119,40 +132,60 @@ public class SosFragment extends Fragment {
                         actuallyCallPhone(pendingPhoneToCall);
                     } else {
                         Toast.makeText(requireContext(),
-                                "Call permission denied.", Toast.LENGTH_SHORT).show();
+                                getString(R.string.err_call_permission_denied),
+                                Toast.LENGTH_SHORT).show();
                     }
                     pendingPhoneToCall = null;
                 });
 
+        // Notification permission handler
+        setupNotificationPermissionLauncher();
+
         fabAdd.setOnClickListener(v -> showAddPatientDialog());
+
+        // Ask notification permission when SOS screen opens (if needed)
+        requestNotificationPermissionIfNeeded();
 
         return root;
     }
 
     private void listenForPatients() {
+        // requireContext() is safe here because we call from onCreateView/onViewCreated
         patientManager.listenForPatients(requireContext(), guardianUid,
                 new GuardianPatientManager.PatientListListener() {
                     @Override
                     public void onPatientsChanged(List<PatientModel> patients) {
+                        // 🔒 Guard: fragment might be detached when Firebase callback fires
+                        if (!isAdded()) return;
+
                         adapter.setPatients(patients);
                         updatePatientCount(patients == null ? 0 : patients.size());
                     }
 
                     @Override
                     public void onError(String error) {
+                        if (!isAdded()) return;
+
                         Toast.makeText(requireContext(),
-                                "Error: " + error, Toast.LENGTH_SHORT).show();
+                                getString(R.string.err_generic_with_reason, error),
+                                Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
     @SuppressLint("SetTextI18n")
     private void updatePatientCount(int count) {
+        if (!isAdded()) return;
+
+        // You can switch this to a string resource if you want:
+        // tvPatientCount.setText(getString(R.string.patients_count_label, count));
         tvPatientCount.setText("Patients: " + count);
         tvEmptyState.setVisibility(count == 0 ? View.VISIBLE : View.GONE);
     }
 
     private void showAddPatientDialog() {
+        if (!isAdded()) return;
+
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View dialogView = inflater.inflate(R.layout.dialog_add_patient, null, false);
 
@@ -162,9 +195,9 @@ public class SosFragment extends Fragment {
         TextInputEditText etPhone = dialogView.findViewById(R.id.et_patient_phone);
 
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Add Patient")
+                .setTitle(R.string.add_patient_title)
                 .setView(dialogView)
-                .setPositiveButton("Save", (dialog, which) -> {
+                .setPositiveButton(R.string.action_save, (dialog, which) -> {
 
                     String fName = etFirstName.getText() != null ? etFirstName.getText().toString().trim() : "";
                     String lName = etLastName.getText() != null ? etLastName.getText().toString().trim() : "";
@@ -176,59 +209,74 @@ public class SosFragment extends Fragment {
                             new GuardianPatientManager.AddPatientCallback() {
                                 @Override
                                 public void onSuccess() {
-                                    Toast.makeText(requireContext(), "Patient added.",
+                                    if (!isAdded()) return;
+
+                                    Toast.makeText(requireContext(),
+                                            getString(R.string.patient_added),
                                             Toast.LENGTH_SHORT).show();
+
+                                    // Ask for notification permission right after adding a patient
+                                    requestNotificationPermissionIfNeeded();
                                 }
 
                                 @Override
                                 public void onValidationError(String message) {
+                                    if (!isAdded()) return;
                                     Toast.makeText(requireContext(), message,
                                             Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(String error) {
+                                    if (!isAdded()) return;
                                     Toast.makeText(requireContext(),
-                                            "Failed: " + error,
+                                            getString(R.string.err_generic_with_reason, error),
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.action_cancel, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     private void confirmDeletePatient(PatientModel patient) {
-        if (patient == null || patient.id == null) return;
+        if (patient == null || patient.id == null || !isAdded()) return;
 
         new MaterialAlertDialogBuilder(requireContext())
-                .setTitle("Delete Patient")
-                .setMessage("Are you sure?")
-                .setPositiveButton("Delete", (dialog, which) -> {
+                .setTitle(R.string.delete_patient_title)
+                .setMessage(R.string.delete_patient_confirm)
+                .setPositiveButton(R.string.action_delete, (dialog, which) -> {
 
                     patientManager.deletePatient(requireContext(), guardianUid, patient.id,
                             new GuardianPatientManager.DeletePatientCallback() {
                                 @Override
                                 public void onSuccess() {
+                                    if (!isAdded()) return;
                                     Toast.makeText(requireContext(),
-                                            "Deleted.", Toast.LENGTH_SHORT).show();
+                                            getString(R.string.patient_deleted),
+                                            Toast.LENGTH_SHORT).show();
                                 }
 
                                 @Override
                                 public void onFailure(String error) {
+                                    if (!isAdded()) return;
                                     Toast.makeText(requireContext(),
-                                            "Failed: " + error,
+                                            getString(R.string.err_generic_with_reason, error),
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .setNegativeButton(R.string.action_cancel, (dialog, which) -> dialog.dismiss())
                 .show();
     }
 
     private void callPatient(PatientModel patient) {
+        if (!isAdded()) return;
+
         if (patient.phone == null || patient.phone.isEmpty()) {
-            Toast.makeText(requireContext(), "No phone number.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(),
+                    getString(R.string.err_no_phone_number),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -242,7 +290,48 @@ public class SosFragment extends Fragment {
     }
 
     private void actuallyCallPhone(String phone) {
+        if (!isAdded()) return;
         Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + phone));
         startActivity(intent);
+    }
+
+    // ---------------- Notification permission helpers ----------------
+
+    private void setupNotificationPermissionLauncher() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            return; // No runtime notification permission before Android 13
+        }
+
+        notificationPermissionLauncher =
+                registerForActivityResult(
+                        new ActivityResultContracts.RequestPermission(),
+                        isGranted -> {
+                            if (!isAdded()) return;
+                            if (!isGranted) {
+                                Toast.makeText(
+                                        requireContext(),
+                                        getString(R.string.notification_permission_denied),
+                                        Toast.LENGTH_SHORT
+                                ).show();
+                            }
+                        }
+                );
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (!isAdded()) return;
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return;
+
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED) {
+
+            if (notificationPermissionLauncher != null) {
+                notificationPermissionLauncher.launch(
+                        Manifest.permission.POST_NOTIFICATIONS
+                );
+            }
+        }
     }
 }

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmartAssistiveSystem</string>
     <string name="sos_icon">SOS Icon</string>
     <string name="sos_alert">SOS Alert</string>
     <string name="sos_choose_option">Choose an emergency option</string>
@@ -159,7 +158,6 @@ Section: 3DTues
     <!-- Login -->
     <string name="err_enter_email_password">Enter email and password</string>
     <string name="err_login_failed_fmt">Login failed: %1$s</string>
-    <string name="err_unknown">unknown</string>
     <string name="err_no_google_account">No Google account data</string>
     <string name="err_google_signin_failed">Google sign-in failed: %1$s</string>
     <string name="err_no_google_token">No token from Google</string>
@@ -220,12 +218,9 @@ Section: 3DTues
     <string name="app_description">This application assists visually impaired users by detecting nearby obstacles, providing audio feedback, and monitoring environmental conditions using advanced sensors and AI algorithms.</string>
     <string name="developers_list">• Sarang Prajapati – N01662036\n• Krish Patel – N01666556\n• Kush Patel – N01657387\n• Daksh Rana – N01664095\n\nCourse: OCA Section</string>
     <string name="please_enter_your_message">Please enter your feedback message.</string>
-    <string name="err_first_and_last_name_required">Please enter your first and last name.</string>
-    <string name="err_phone_10_digits">Please enter a valid 10-digit phone number.</string>
     <string name="hint_first_name">First name</string>
     <string name="hint_last_name">Last name</string>
     <string name="err_not_logged_in_for_feedback">You must be signed in to send feedback.</string>
-    <string name="err_invalid_name_characters">Name can contain only letters, spaces, apostrophes, or hyphens.</string>
 
     <string name="password_too_short">Password too short (minimum 8 characters).</string>
     <string name="password_strength_weak">Weak password</string>
@@ -254,7 +249,6 @@ Section: 3DTues
     <string name="ambient_light_is_low_consider_enabling_the_magnifier">Ambient light is low. Consider enabling the magnifier.</string>
     <string name="new_feedback_received">New Feedback Received</string>
     <string name="you_have_new_feedback_from_a_user">You have new feedback from a user.</string>
-    <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
     <string name="no_guardian_user_id">No guardian/user ID.</string>
     <string name="please_enter_password">Please enter password.</string>
     <string name="please_confirm_password">Please confirm password.</string>
@@ -381,10 +375,7 @@ Last updated: --
     <string name="sensor_title_tsl2591">TSL2591 – Light Sensor</string>
     <string name="sensor_title_tcs34725">TCS34725 – Color Sensor</string>
     <string name="sensor_title_vl53l1x">VL53L1X – Distance Sensor</string>
-    <string name="new_patient_added_title">New Patient Added</string>
-    <string name="new_patient_added_message">
-    A new patient has been added to your SOS list.
-</string>
+
     <string name="https_www_privacypolicies_com_live_9cf3e76f_3d24_46e0_af25_6b8f5aaf1f40">https://www.privacypolicies.com/live/9cf3e76f-3d24-46e0-af25-6b8f5aaf1f40</string>
     <string name="https_www_termsfeed_com_blog_sample_terms_of_use_template">https://www.termsfeed.com/blog/sample-terms-of-use-template/</string>
     <string name="mailto_support_smartassistive_gmail_com">mailto:support.smartassistive@gmail.com</string>
@@ -399,6 +390,110 @@ Last updated: --
     <string name="alertfragment">AlertFragment</string>
     <string name="alertfragment_no_user">AlertFragment_no_user</string>
     <string name="alert__">Alerts</string>
+
+    <string name="walking_assistance">Walking Assistance</string>
+    <string name="patients_linked_to_account">Patients linked to your account</string>
+    <string name="view_patients">View Patients</string>
+    <string name="view">View</string>
+    <string name="add_patient">Add Patient</string>
+
+    <string name="tip_check_sensors_alerts">
+    Tip: Check Sensors or Alerts for real-time assistance.
+</string>
+    <string name="open_sensors">Open Sensors</string>
+
+    <string name="foreground_service_location_required">
+    Foreground service location permission is required
+</string>
+    <string name="permissions_required_for_walking_assistance">
+    Permissions required for Walking Assistance
+</string>
+    <string name="gps_required_for_walking_assistance">
+    GPS is required to enable Walking Assistance.
+</string>
+    <string name="enable">Enable</string>
+    <string name="walking_assistance_enabled">Walking Assistance Enabled</string>
+    <string name="walking_assistance_disabled">Walking Assistance Disabled</string>
+
+    <string name="sign_in_to_manage_patients">Sign in to manage patients</string>
+    <string name="no_patients_added_yet">No patients added yet</string>
+    <string name="unable_to_load_patients">Unable to load patients</string>
+
+
+    <!-- SOS / Patients UI -->
+    <string name="err_invalid_patient">Invalid patient</string>
+    <string name="err_login_again">Please log in again.</string>
+    <string name="err_call_permission_denied">Call permission denied.</string>
+    <string name="err_no_phone_number">No phone number.</string>
+
+    <string name="patients_count_label">Patients: %1$d</string>
+
+    <string name="add_patient_title">Add Patient</string>
+    <string name="delete_patient_title">Delete Patient</string>
+    <string name="delete_patient_confirm">Are you sure you want to delete this patient?</string>
+
+    <string name="patient_added">Patient added.</string>
+    <string name="patient_deleted">Patient deleted.</string>
+
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
+
+    <string name="notification_permission_denied">
+    Notification permission denied. You may miss alerts.
+</string>
+
+    <string name="err_generic_with_reason">Error: %1$s</string>
+
+    <!-- GuardianPatientManager / business logic -->
+    <string name="err_no_guardian_user_id">No guardian/user ID.</string>
+    <string name="err_first_and_last_name_required">First and last name are required.</string>
+    <string name="err_invalid_name_characters">
+    Names may only contain letters, spaces, apostrophes, and hyphens.
+</string>
+    <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
+    <string name="err_phone_10_digits">Phone number must contain exactly 10 digits.</string>
+    <string name="err_missing_ids_for_delete">Missing IDs for delete operation.</string>
+    <string name="err_failed_delete_sensor_data">Failed to delete sensor data.</string>
+    <string name="err_unknown">Unknown error.</string>
+
+    <!-- AlertsManager dummy alerts -->
+    <string name="err_no_user_id_for_alerts">No user ID for alerts.</string>
+    <string name="sample_alert_title_welcome">Welcome to Smart Assistive System</string>
+    <string name="sample_alert_message_welcome">
+    This is a sample alert. Real alerts will appear here when events happen.
+</string>
+    <string name="sample_alert_title_patient_linked">Patient Linked Successfully</string>
+    <string name="sample_alert_message_patient_linked">
+    You can now monitor your patient’s sensors and alerts from the app.
+</string>
+
+    <!-- New patient alert + notification -->
+    <string name="new_patient_added_title">New patient added</string>
+    <string name="new_patient_added_message">
+    New patient %1$s has been added successfully.
+</string>
+
+    <!-- Notification channel -->
+    <string name="channel_name_new_patient">New Patient Alerts</string>
+    <string name="channel_desc_new_patient">
+    Notifications when a new patient is added to your account.
+</string>
+    <!-- App / generic -->
+    <string name="app_name">Smart Assistive System</string>
+
+    <!-- Test notification -->
+    <string name="test_notification_message">
+    You have a new alert (test notification).
+</string>
+
+    <!-- New patient notifications -->
+
+    <string name="new_patient_added_message_with_name">
+    New patient %1$s has been added successfully.
+</string>
+
+    <string name="home_patient_count_placeholder">--</string>
 
 
 </resources>
