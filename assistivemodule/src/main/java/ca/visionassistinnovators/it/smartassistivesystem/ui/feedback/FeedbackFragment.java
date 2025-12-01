@@ -36,8 +36,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.FeedbackManager;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.Prefs;
 import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.EventLogger;
-import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.util.AnalyticsAggregator;
-
 
 public class FeedbackFragment extends Fragment {
 
@@ -56,6 +54,12 @@ public class FeedbackFragment extends Fragment {
 
     // current user email (unique ID)
     private String currentEmail = "";
+
+    // track whether a submission finished (success/fail/validation) to avoid infinite spinner
+    private boolean submissionCompleted = false;
+
+    // fallback delay after calling submitFeedback (longer than 5s wait)
+    private static final long OFFLINE_FALLBACK_DELAY_MS = 20_000L;
 
     @Nullable
     @Override
@@ -136,6 +140,7 @@ public class FeedbackFragment extends Fragment {
         // Show centered progress bar & dim background, disable button
         showProgressDialog();
         setSubmitButtonEnabled(false);
+        submissionCompleted = false;
 
         // Wait 5 seconds before actually sending to DB (assignment requirement)
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
@@ -151,6 +156,9 @@ public class FeedbackFragment extends Fragment {
                     new FeedbackManager.FeedbackCallback() {
                         @Override
                         public void onSuccess() {
+                            if (submissionCompleted) return;
+                            submissionCompleted = true;
+
                             hideProgressDialog();
 
                             Toast.makeText(ctx,
@@ -171,6 +179,9 @@ public class FeedbackFragment extends Fragment {
 
                         @Override
                         public void onFailure(String error) {
+                            if (submissionCompleted) return;
+                            submissionCompleted = true;
+
                             hideProgressDialog();
                             // Re-enable button if not in cooldown
                             setSubmitButtonEnabled(true);
@@ -181,8 +192,9 @@ public class FeedbackFragment extends Fragment {
 
                         @Override
                         public void onValidationError(String message) {
-                            // This should rarely happen now (we already validated),
-                            // but we still handle it.
+                            if (submissionCompleted) return;
+                            submissionCompleted = true;
+
                             hideProgressDialog();
                             setSubmitButtonEnabled(true);
                             Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
@@ -191,6 +203,38 @@ public class FeedbackFragment extends Fragment {
             );
 
         }, 5000); // 5 seconds
+
+        // 🔁 OFFLINE FALLBACK:
+        // If Firebase never calls the callback (e.g., no network),
+        // close the spinner and treat it as queued/accepted after a grace period.
+        scheduleOfflineFallback();
+    }
+
+    // ===== Offline fallback =====
+
+    private void scheduleOfflineFallback() {
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            if (!isAdded()) return;
+            if (submissionCompleted) return; // callback already handled it
+
+            submissionCompleted = true; // prevent double handling
+
+            hideProgressDialog();
+
+            // Treat like a successful submission that will sync later
+            Toast.makeText(requireContext(),
+                    R.string.feedback_submitted_successfully,
+                    Toast.LENGTH_SHORT).show();
+            clearFields();
+            startCooldown(FeedbackManager.FEEDBACK_COOLDOWN_MS);
+
+            new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.customer_feedback)
+                    .setMessage(R.string.feedback_submitted_successfully)
+                    .setPositiveButton(android.R.string.ok, null)
+                    .show();
+
+        }, OFFLINE_FALLBACK_DELAY_MS);
     }
 
     // ===== Progress dialog helpers =====
@@ -257,6 +301,7 @@ public class FeedbackFragment extends Fragment {
         etComment.setText("");
         ratingBar.setRating(0f);
     }
+
     @Override
     public void onResume() {
         super.onResume();

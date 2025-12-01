@@ -63,11 +63,10 @@ public class FeedbackManager {
             return context.getString(R.string.err_first_and_last_name_required);
         }
 
-        // Same rules as registration
+        // Same rules as registration: if NOT valid → error
         if (!nameValidator.isValidName(firstName) || !nameValidator.isValidName(lastName)) {
             return context.getString(R.string.err_invalid_name_characters);
         }
-
 
         // Phone rule same style (10 digits)
         String normalizedPhone = normalizePhone(phone);
@@ -93,7 +92,7 @@ public class FeedbackManager {
                                float rating,
                                FeedbackCallback callback) {
 
-        // Reuse same validation logic inside manager
+        // Reuse same validation logic inside manager (so it is safe to call directly)
         String validationError = validateFeedback(context, firstName, lastName, phone, email, comment, rating);
         if (validationError != null) {
             if (callback != null) {

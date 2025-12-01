@@ -39,6 +39,7 @@ public class PatientAdapter extends RecyclerView.Adapter<PatientAdapter.PatientV
         this.listener = listener;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public void setPatients(List<PatientModel> newPatients) {
         patients.clear();
         if (newPatients != null) {
