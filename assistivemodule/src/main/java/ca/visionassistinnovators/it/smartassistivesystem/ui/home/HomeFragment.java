@@ -12,7 +12,6 @@ package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -38,7 +37,6 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.*;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;

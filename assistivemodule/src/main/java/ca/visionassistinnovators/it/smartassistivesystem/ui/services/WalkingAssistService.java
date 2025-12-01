@@ -20,11 +20,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import android.content.pm.ServiceInfo;
 
 import java.util.Locale;
+
+import ca.visionassistinnovators.it.smartassistivesystem.businesslogic.WalkingAssistLogic;
 
 public class WalkingAssistService extends Service implements LocationListener {
 
@@ -32,13 +32,14 @@ public class WalkingAssistService extends Service implements LocationListener {
     private TextToSpeech tts;
     private Vibrator vibrator;
 
-    // Demo locations
-    LatLng CROSSWALK = new LatLng(43.7325, -79.6086);
-    LatLng BUS_STOP  = new LatLng(43.7330, -79.6075);
+    // ✅ Business logic moved to businesslogic package
+    private WalkingAssistLogic logic;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
+        logic = new WalkingAssistLogic(); // ✅ Inject logic
 
         vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
@@ -50,14 +51,13 @@ public class WalkingAssistService extends Service implements LocationListener {
 
         createNotificationChannel();
 
-        // ✔ NEW — Required for Android 12–16
         Notification notification = buildNotification();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             startForeground(
                     1,
                     notification,
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION   // <-- FIXED ERROR
+                    ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
             );
         } else {
             startForeground(1, notification);
@@ -68,7 +68,9 @@ public class WalkingAssistService extends Service implements LocationListener {
 
     @Nullable
     @Override
-    public IBinder onBind(Intent intent) { return null; }
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
 
     // -------------------------------------------------------------------------
     // NOTIFICATION
@@ -90,7 +92,8 @@ public class WalkingAssistService extends Service implements LocationListener {
                             "Walking Assistance",
                             NotificationManager.IMPORTANCE_LOW
                     );
-            getSystemService(NotificationManager.class).createNotificationChannel(channel);
+            getSystemService(NotificationManager.class)
+                    .createNotificationChannel(channel);
         }
     }
 
@@ -98,51 +101,48 @@ public class WalkingAssistService extends Service implements LocationListener {
     // LOCATION UPDATES
     // -------------------------------------------------------------------------
     private void requestLocationUpdates() {
+
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED) {
             stopSelf();
             return;
         }
 
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
-                1500,   // every 1.5 sec
-                1,      // min 1 meter
+                1500,
+                1,
                 this
         );
     }
 
     // -------------------------------------------------------------------------
-    // LOCATION RECEIVED
+    // LOCATION RECEIVED → DELEGATE TO BUSINESS LOGIC ✅
     // -------------------------------------------------------------------------
     @Override
     public void onLocationChanged(Location location) {
 
-        LatLng current = new LatLng(location.getLatitude(), location.getLongitude());
+        WalkingAssistLogic.AssistEvent event =
+                logic.processLocation(location);
 
-        double dCrosswalk = distance(current, CROSSWALK);
-        double dBusStop   = distance(current, BUS_STOP);
+        switch (event) {
 
-        if (dCrosswalk < 20) {
-            speak("Crosswalk ahead");
+            case CROSSWALK_AHEAD:
+                speak("Crosswalk ahead");
+                break;
+
+            case BUS_STOP_REACHED:
+                speak("Your bus stop is here");
+                break;
+
+            case NO_LANDMARK:
+                vibrate();
+                break;
         }
-
-        if (dBusStop < 20) {
-            speak("Your bus stop is here");
-        }
-
-        // No known landmark → alert via vibration
-        if (dCrosswalk > 25 && dBusStop > 25) {
-            vibrate();
-        }
-    }
-
-    private double distance(LatLng a, LatLng b) {
-        float[] result = new float[1];
-        Location.distanceBetween(a.latitude, a.longitude, b.latitude, b.longitude, result);
-        return result[0];
     }
 
     // -------------------------------------------------------------------------
@@ -158,7 +158,12 @@ public class WalkingAssistService extends Service implements LocationListener {
 
     private void vibrate() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(250, VibrationEffect.DEFAULT_AMPLITUDE));
+            vibrator.vibrate(
+                    VibrationEffect.createOneShot(
+                            250,
+                            VibrationEffect.DEFAULT_AMPLITUDE
+                    )
+            );
         } else {
             vibrator.vibrate(250);
         }
@@ -167,7 +172,13 @@ public class WalkingAssistService extends Service implements LocationListener {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (tts != null) tts.shutdown();
-        if (locationManager != null) locationManager.removeUpdates(this);
+
+        if (tts != null) {
+            tts.shutdown();
+        }
+
+        if (locationManager != null) {
+            locationManager.removeUpdates(this);
+        }
     }
 }
