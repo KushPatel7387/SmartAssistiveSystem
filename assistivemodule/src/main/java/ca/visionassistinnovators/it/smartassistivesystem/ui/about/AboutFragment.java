@@ -54,19 +54,19 @@ public class AboutFragment extends Fragment {
 
         // Click listeners to open URLs
         layoutPrivacy.setOnClickListener(v ->
-                openLink("https://www.privacypolicies.com/live/9cf3e76f-3d24-46e0-af25-6b8f5aaf1f40")
+                openLink(getString(R.string.https_www_privacypolicies_com_live_9cf3e76f_3d24_46e0_af25_6b8f5aaf1f40))
         );
 
         layoutTerms.setOnClickListener(v ->
-                openLink("https://www.termsfeed.com/blog/sample-terms-of-use-template/")
+                openLink(getString(R.string.https_www_termsfeed_com_blog_sample_terms_of_use_template))
         );
 
         layoutSupport.setOnClickListener(v ->
-                openLink("mailto:support.smartassistive@gmail.com")
+                openLink(getString(R.string.mailto_support_smartassistive_gmail_com))
         );
 
         layoutLicenses.setOnClickListener(v ->
-                openLink("https://opensource.google/documentation/reference/terms/")
+                openLink(getString(R.string.https_opensource_google_documentation_reference_terms))
         );
 
         return view;
@@ -78,7 +78,7 @@ public class AboutFragment extends Fragment {
             PackageInfo pi = pm.getPackageInfo(requireActivity().getPackageName(), 0);
             txtVersion.setText(pi.versionName);
         } catch (Exception e) {
-            txtVersion.setText("1.0.0");
+            txtVersion.setText(R.string._1_0_0);
         }
     }
 

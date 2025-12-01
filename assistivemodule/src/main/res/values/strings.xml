@@ -385,8 +385,11 @@ Last updated: --
     <string name="new_patient_added_message">
     A new patient has been added to your SOS list.
 </string>
-
-
+    <string name="https_www_privacypolicies_com_live_9cf3e76f_3d24_46e0_af25_6b8f5aaf1f40">https://www.privacypolicies.com/live/9cf3e76f-3d24-46e0-af25-6b8f5aaf1f40</string>
+    <string name="https_www_termsfeed_com_blog_sample_terms_of_use_template">https://www.termsfeed.com/blog/sample-terms-of-use-template/</string>
+    <string name="mailto_support_smartassistive_gmail_com">mailto:support.smartassistive@gmail.com</string>
+    <string name="https_opensource_google_documentation_reference_terms">https://opensource.google/documentation/reference/terms/</string>
+    <string name="_1_0_0">1.0.0</string>
 
 
 </resources>
