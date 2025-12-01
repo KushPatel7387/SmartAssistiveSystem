@@ -123,7 +123,7 @@ public class PatientSensorsManager {
             }
         });
 
-        // TSL2591 (light)
+
         baseRef.child(NODE_TSL2591).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
