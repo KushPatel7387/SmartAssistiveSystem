@@ -1,14 +1,10 @@
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
-import static org.junit.Assert.*;
-
 import org.junit.Before;
 import org.junit.Test;
 
-/**
- * Unit tests for NameValidator (pure business logic).
- * Uses: assertTrue, assertFalse, assertEquals, assertNotEquals, assertNotNull.
- */
+import static org.junit.Assert.*;
+
 public class NameValidatorTest {
 
     private NameValidator validator;
@@ -20,17 +16,22 @@ public class NameValidatorTest {
 
     @Test
     public void validSimpleName_returnsTrue() {
-        assertTrue(validator.isValidName("Sarang"));
+        assertTrue(validator.isValidName("John"));
     }
 
     @Test
     public void validNameWithSpace_returnsTrue() {
-        assertTrue(validator.isValidName("Krish Patel"));
+        assertTrue(validator.isValidName("John Doe"));
     }
 
     @Test
-    public void emptyName_returnsFalse() {
-        assertFalse(validator.isValidName(""));
+    public void validNameWithHyphen_returnsTrue() {
+        assertTrue(validator.isValidName("Mary-Anne"));
+    }
+
+    @Test
+    public void validNameWithApostrophe_returnsTrue() {
+        assertTrue(validator.isValidName("O'Connor"));
     }
 
     @Test
@@ -39,36 +40,29 @@ public class NameValidatorTest {
     }
 
     @Test
+    public void emptyName_returnsFalse() {
+        assertFalse(validator.isValidName(""));
+    }
+
+    @Test
+    public void spacesOnly_returnsFalse() {
+        assertFalse(validator.isValidName("    "));
+    }
+
+    @Test
     public void nameWithDigits_returnsFalse() {
-        assertFalse(validator.isValidName("Daksh123"));
+        assertFalse(validator.isValidName("John123"));
     }
 
     @Test
     public void nameWithSymbols_returnsFalse() {
-        assertFalse(validator.isValidName("Kush@Patel"));
+        assertFalse(validator.isValidName("John@Doe"));
     }
 
     @Test
-    public void buildFullName_basic() {
-        String full = validator.buildFullName("Sarang", "Prajapati");
-        assertEquals("Sarang Prajapati", full);
-        assertNotNull(full);
-    }
-
-    @Test
-    public void buildFullName_trimsExtraSpaces() {
-        String full = validator.buildFullName("  Krish  ", "  Patel ");
-        assertEquals("Krish Patel", full);
-    }
-
-    @Test
-    public void buildFullName_notEqualsDifferentOrder() {
-        String full = validator.buildFullName("Daksh", "Rana");
-        assertNotEquals("Rana Daksh", full);
-    }
-
-    @Test
-    public void longButValidName_returnsTrue() {
-        assertTrue(validator.isValidName("Very Long Name With Spaces"));
+    public void formatSingleName_capitalizesCorrectly() {
+        String formatted = validator.formatSingleName("  sarang  ");
+        assertEquals("Sarang", formatted);
+        assertNotEquals("sarang", formatted);
     }
 }
