@@ -25,6 +25,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,7 +91,7 @@ public class GuardianPatientManager {
     }
 
     // -------------------------------------------------
-    // Listen for patients
+    // Listen for patients (offline-aware via keepSynced)
     // -------------------------------------------------
     /**
      * Listen for all patients under /users/{uid}/patients
@@ -106,32 +107,36 @@ public class GuardianPatientManager {
             return;
         }
 
-        getGuardianPatientsRef(ctx, guardianUid)
-                .addValueEventListener(new com.google.firebase.database.ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        List<PatientModel> result = new ArrayList<>();
-                        for (DataSnapshot child : snapshot.getChildren()) {
-                            PatientModel model = child.getValue(PatientModel.class);
-                            if (model != null) {
-                                model.id = child.getKey();
-                                // if you don't want to use guardianId, just ignore it in UI
-                                model.guardianId = guardianUid;
-                                result.add(model);
-                            }
-                        }
-                        if (listener != null) {
-                            listener.onPatientsChanged(result);
-                        }
-                    }
+        DatabaseReference patientsRef = getGuardianPatientsRef(ctx, guardianUid);
 
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        if (listener != null) {
-                            listener.onError(error.getMessage());
-                        }
+        // ⭐ Offline support: keep this node synced to disk
+        patientsRef.keepSynced(true);
+
+        patientsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                List<PatientModel> result = new ArrayList<>();
+                for (DataSnapshot child : snapshot.getChildren()) {
+                    PatientModel model = child.getValue(PatientModel.class);
+                    if (model != null) {
+                        model.id = child.getKey();
+                        // if you don't want to use guardianId, just ignore it in UI
+                        model.guardianId = guardianUid;
+                        result.add(model);
                     }
-                });
+                }
+                if (listener != null) {
+                    listener.onPatientsChanged(result);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                if (listener != null) {
+                    listener.onError(error.getMessage());
+                }
+            }
+        });
     }
 
     // -------------------------------------------------
@@ -225,7 +230,7 @@ public class GuardianPatientManager {
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) {
-                        String msg = e.getMessage() != null
+                        String msg = (e != null && e.getMessage() != null)
                                 ? e.getMessage()
                                 : "Unknown error";
                         callback.onFailure(msg);
@@ -275,7 +280,7 @@ public class GuardianPatientManager {
                             })
                             .addOnFailureListener(e -> {
                                 if (callback != null) {
-                                    String msg = (e.getMessage() != null)
+                                    String msg = (e != null && e.getMessage() != null)
                                             ? e.getMessage()
                                             : "Failed to delete sensor data.";
                                     callback.onFailure(msg);
@@ -284,7 +289,7 @@ public class GuardianPatientManager {
                 })
                 .addOnFailureListener(e -> {
                     if (callback != null) {
-                        String msg = e.getMessage() != null
+                        String msg = (e != null && e.getMessage() != null)
                                 ? e.getMessage()
                                 : "Unknown error";
                         callback.onFailure(msg);

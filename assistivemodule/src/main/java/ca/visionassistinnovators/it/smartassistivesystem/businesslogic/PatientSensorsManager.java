@@ -92,6 +92,8 @@ public class PatientSensorsManager {
             @NonNull PatientSensorsListener listener
     ) {
         DatabaseReference baseRef = sensorsRootRef.child(patientId);
+        baseRef.keepSynced(true);
+
         PatientSensorsSnapshot holder = new PatientSensorsSnapshot();
 
         // AS726x

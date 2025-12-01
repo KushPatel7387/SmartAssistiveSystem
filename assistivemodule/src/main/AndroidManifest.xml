@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.visionassistinnovators.it.smartassistivesystem">
 
-
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,7 +16,6 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
 
-
     <!-- 📞 Calls + Microphone -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -28,13 +26,18 @@
     <!-- =========================================================
          📱 OPTIONAL HARDWARE
          ========================================================= -->
-    <uses-feature android:name="android.hardware.camera" android:required="false" />
-    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.telephony"
+        android:required="false" />
 
     <!-- =========================================================
          🧩 APPLICATION CONFIG
          ========================================================= -->
     <application
+        android:name=".businesslogic.SmartAssistiveApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -51,7 +54,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAbn4_L7CANhIJvcLazR3pkErxoeahqTWk" />
-
 
         <!-- =========================================================
              🚀 LAUNCHER (Splash / MainActivity)
@@ -93,10 +95,10 @@
             android:enabled="true"
             android:exported="false"
             android:foregroundServiceType="location" />
+
         <service
             android:name=".ui.location.PatientLocationService"
             android:exported="false" />
-
 
     </application>
 
