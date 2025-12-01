@@ -1,14 +1,7 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- */
 package ca.visionassistinnovators.it.smartassistivesystem.ui.sensors;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +40,9 @@ public class SensorFragment extends Fragment {
     private GuardianPatientManager patientManager;
     private PatientSensorsManager sensorsManager;
 
+    // -------- OFFLINE SENSOR CACHE --------
+    private static final String PREF_SENSOR_CACHE = "sas_sensor_cache";
+
     public SensorFragment() { }
 
     @Nullable
@@ -64,39 +60,25 @@ public class SensorFragment extends Fragment {
         patientManager = new GuardianPatientManager();
         sensorsManager = new PatientSensorsManager();
 
-        // Analytics – screen view (safe here, fragment is attached)
         EventLogger.logScreenView(requireContext(), "Sensors");
 
         loadPatientsAndBindSensors();
         return view;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        // Analytics again on resume
-        if (isAdded()) {
-            EventLogger.logScreenView(requireContext(), "Sensors");
-        }
-    }
-
     // -------------------------------------------------------
     // Load patients and create one card per patient
     // -------------------------------------------------------
     private void loadPatientsAndBindSensors() {
+
         FirebaseUser current = FirebaseAuth.getInstance().getCurrentUser();
         if (current == null) {
-            if (isAdded()) {
-                showEmpty(getString(R.string.not_logged_in));
-            }
+            showEmpty("Not Logged In");
             return;
         }
 
         Context ctx = getContext();
-        if (ctx == null) {
-            // Fragment not attached yet / already detached
-            return;
-        }
+        if (ctx == null) return;
 
         patientManager.listenForPatients(
                 ctx,
@@ -104,38 +86,31 @@ public class SensorFragment extends Fragment {
                 new GuardianPatientManager.PatientListListener() {
                     @Override
                     public void onPatientsChanged(List<PatientModel> patients) {
-                        // 🔒 Guard: fragment must still be attached
-                        if (!isAdded()) {
-                            return;
-                        }
+
+                        if (!isAdded()) return;
 
                         if (patients == null || patients.isEmpty()) {
-                            showEmpty(getString(R.string.no_sensor_data));
+                            showEmpty("No Patients Found");
                             return;
                         }
 
                         emptyText.setVisibility(View.GONE);
                         patientListLayout.removeAllViews();
 
-                        Context context = getContext();
-                        if (context == null) return;
-
                         for (PatientModel patient : patients) {
-                            addPatientCard(context, patient);
+                            addPatientCard(ctx, patient);
                         }
                     }
 
                     @Override
                     public void onError(String error) {
-                        if (!isAdded()) return;
-                        showEmpty(getString(R.string.db_read_error_fmt, error));
+                        showEmpty("DB Error: " + error);
                     }
                 }
         );
     }
 
     private void showEmpty(String message) {
-        if (!isAdded()) return;
         patientListLayout.removeAllViews();
         emptyText.setText(message);
         emptyText.setVisibility(View.VISIBLE);
@@ -146,10 +121,6 @@ public class SensorFragment extends Fragment {
     // -------------------------------------------------------
     private void addPatientCard(@NonNull Context context,
                                 @NonNull PatientModel patient) {
-        if (!isAdded()) {
-            // Safety: fragment already detached
-            return;
-        }
 
         LayoutInflater inflater = LayoutInflater.from(context);
         View cardView = inflater.inflate(
@@ -159,7 +130,6 @@ public class SensorFragment extends Fragment {
         );
 
         TextView tvPatientName     = cardView.findViewById(R.id.tv_patient_name);
-        TextView tvPatientSubtitle = cardView.findViewById(R.id.tv_patient_subtitle);
         TextView tvAs726x          = cardView.findViewById(R.id.tv_as726x_value);
         TextView tvTsl             = cardView.findViewById(R.id.tv_tsl_value);
         TextView tvTcs             = cardView.findViewById(R.id.tv_tcs_value);
@@ -171,182 +141,125 @@ public class SensorFragment extends Fragment {
         ImageView ivTcsStatus      = cardView.findViewById(R.id.iv_tcs_status);
         ImageView ivVl53Status     = cardView.findViewById(R.id.iv_vl53_status);
 
-        final String patientName = (patient.fullName != null) ? patient.fullName : "";
-        final String patientId   = patient.id; // set in GuardianPatientManager
+        final String patientName = patient.fullName != null ? patient.fullName : "Patient";
+        final String patientId   = patient.id;
 
         tvPatientName.setText(patientName);
-        tvPatientSubtitle.setText(
-                getString(R.string.sensor_patient_subtitle)
+
+        // ✅ LOAD LAST SAVED SENSOR VALUES FIRST (OFFLINE SUPPORT)
+        loadLastSensorValues(context, patientId,
+                tvAs726x, tvTsl, tvTcs, tvVl53, tvLastUpdated,
+                ivAs726xStatus, ivTslStatus, ivTcsStatus, ivVl53Status
         );
-
-        // default: all sensors "no data yet"
-        setSensorStatus(ivAs726xStatus, false);
-        setSensorStatus(ivTslStatus, false);
-        setSensorStatus(ivTcsStatus, false);
-        setSensorStatus(ivVl53Status, false);
-
-        tvAs726x.setText(getString(R.string.sensor_initializing_as726x));
-        tvTsl.setText(getString(R.string.sensor_initializing_tsl2591));
-        tvTcs.setText(getString(R.string.sensor_initializing_tcs34725));
-        tvVl53.setText(getString(R.string.sensor_initializing_vl53l1x));
-        tvLastUpdated.setText(getString(R.string.sensor_last_updated_unknown));
 
         patientListLayout.addView(cardView);
 
-        if (patientId == null || patientId.isEmpty()) {
-            // No sensors without an ID
-            return;
-        }
+        if (patientId == null || patientId.isEmpty()) return;
 
         sensorsManager.listenForPatientSensors(patientId, new PatientSensorsListener() {
             @Override
             public void onSensorsUpdated(@NonNull PatientSensorsSnapshot snapshot) {
-                if (!isAdded()) return;
 
-                tvAs726x.setText(formatAs726x(snapshot.as726x));
-                tvTsl.setText(formatLight(snapshot.tsl2591));
-                tvTcs.setText(formatColor(snapshot.tcs34725));
-                tvVl53.setText(formatDistance(snapshot.vl53l1x));
+                String as726x = formatAs726x(snapshot.as726x);
+                String tsl    = formatLight(snapshot.tsl2591);
+                String tcs    = formatColor(snapshot.tcs34725);
+                String vl53   = formatDistance(snapshot.vl53l1x);
 
-                // Status icons: tick if we have meaningful data
-                setSensorStatus(
-                        ivAs726xStatus,
-                        snapshot.as726x != null && snapshot.as726x.red != null
-                );
-                setSensorStatus(
-                        ivTslStatus,
-                        snapshot.tsl2591 != null && snapshot.tsl2591.lux != null
-                );
-                setSensorStatus(
-                        ivTcsStatus,
-                        snapshot.tcs34725 != null
-                                && snapshot.tcs34725.r != null
-                                && snapshot.tcs34725.g != null
-                                && snapshot.tcs34725.b != null
-                );
-                setSensorStatus(
-                        ivVl53Status,
-                        snapshot.vl53l1x != null && snapshot.vl53l1x.distanceMm != null
-                );
+                tvAs726x.setText(as726x);
+                tvTsl.setText(tsl);
+                tvTcs.setText(tcs);
+                tvVl53.setText(vl53);
 
-                // Last updated (pick first non-null timestamp)
-                String ts = null;
-                if (snapshot.as726x != null && snapshot.as726x.timestamp != null) {
-                    ts = snapshot.as726x.timestamp;
-                } else if (snapshot.tsl2591 != null && snapshot.tsl2591.timestamp != null) {
-                    ts = snapshot.tsl2591.timestamp;
-                } else if (snapshot.tcs34725 != null && snapshot.tcs34725.timestamp != null) {
-                    ts = snapshot.tcs34725.timestamp;
-                } else if (snapshot.vl53l1x != null && snapshot.vl53l1x.timestamp != null) {
-                    ts = snapshot.vl53l1x.timestamp;
-                }
+                setSensorStatus(ivAs726xStatus, snapshot.as726x != null);
+                setSensorStatus(ivTslStatus, snapshot.tsl2591 != null);
+                setSensorStatus(ivTcsStatus, snapshot.tcs34725 != null);
+                setSensorStatus(ivVl53Status, snapshot.vl53l1x != null);
 
-                if (ts != null && !ts.isEmpty()) {
-                    tvLastUpdated.setText(
-                            getString(R.string.sensor_last_updated, ts)
-                    );
-                } else {
-                    tvLastUpdated.setText(
-                            getString(R.string.sensor_last_updated_unknown)
-                    );
-                }
+                String ts = String.valueOf(System.currentTimeMillis());
+                tvLastUpdated.setText("Last Updated: " + ts);
+
+                // ✅ SAVE LAST KNOWN VALUES
+                saveLastSensorValues(context, patientId,
+                        as726x, tsl, tcs, vl53, ts);
             }
 
             @Override
-            public void onError(@NonNull String error) {
-                if (!isAdded()) return;
-                tvAs726x.setText(
-                        getString(R.string.db_read_error_fmt, error)
-                );
-            }
+            public void onError(@NonNull String error) { }
         });
     }
 
     // -------------------------------------------------------
-    // Formatting helpers – all UI text via resources
+    // ✅ OFFLINE SAVE + LOAD (PER PATIENT)
+    // -------------------------------------------------------
+
+    private void saveLastSensorValues(Context ctx, String patientId,
+                                      String as726x, String tsl,
+                                      String tcs, String vl53, String ts) {
+
+        SharedPreferences prefs =
+                ctx.getSharedPreferences(PREF_SENSOR_CACHE, Context.MODE_PRIVATE);
+
+        prefs.edit()
+                .putString(patientId + "_as726x", as726x)
+                .putString(patientId + "_tsl", tsl)
+                .putString(patientId + "_tcs", tcs)
+                .putString(patientId + "_vl53", vl53)
+                .putString(patientId + "_ts", ts)
+                .apply();
+    }
+
+    private void loadLastSensorValues(Context ctx, String patientId,
+                                      TextView as726x, TextView tsl,
+                                      TextView tcs, TextView vl53,
+                                      TextView ts,
+                                      ImageView i1, ImageView i2,
+                                      ImageView i3, ImageView i4) {
+
+        SharedPreferences prefs =
+                ctx.getSharedPreferences(PREF_SENSOR_CACHE, Context.MODE_PRIVATE);
+
+        as726x.setText(prefs.getString(patientId + "_as726x", "No Data"));
+        tsl.setText(prefs.getString(patientId + "_tsl", "No Data"));
+        tcs.setText(prefs.getString(patientId + "_tcs", "No Data"));
+        vl53.setText(prefs.getString(patientId + "_vl53", "No Data"));
+
+        String lastTs = prefs.getString(patientId + "_ts", null);
+        if (lastTs != null) ts.setText("Last Updated: " + lastTs);
+
+        setSensorStatus(i1, true);
+        setSensorStatus(i2, true);
+        setSensorStatus(i3, true);
+        setSensorStatus(i4, true);
+    }
+
+    // -------------------------------------------------------
+    // Formatting helpers
     // -------------------------------------------------------
 
     private String formatAs726x(@Nullable As726xReading r) {
-        if (r == null) {
-            return getString(R.string.sensor_initializing_as726x);
-        }
-
-        StringBuilder sb = new StringBuilder();
-        if (r.red != null) {
-            sb.append("R: ")
-                    .append(formatDouble(r.red))
-                    .append("  ");
-        }
-        if (r.green != null) {
-            sb.append("G: ")
-                    .append(formatDouble(r.green))
-                    .append("  ");
-        }
-        if (r.blue != null) {
-            sb.append("B: ")
-                    .append(formatDouble(r.blue))
-                    .append("  ");
-        }
-        if (r.temperature != null) {
-            sb.append(
-                    getString(R.string.sensor_temp_suffix, r.temperature.intValue())
-            );
-        }
-
-        if (sb.length() == 0) {
-            return getString(R.string.sensor_initializing_as726x);
-        }
-        return sb.toString();
+        if (r == null || r.red == null) return "No Data";
+        return "R:" + r.red + " G:" + r.green + " B:" + r.blue;
     }
 
     private String formatLight(@Nullable LightReading r) {
-        if (r == null || r.lux == null) {
-            return getString(R.string.sensor_initializing_tsl2591);
-        }
-        return getString(
-                R.string.sensor_light_label,
-                r.lux
-        );
+        if (r == null || r.lux == null) return "No Data";
+        return "Lux: " + r.lux;
     }
 
     private String formatColor(@Nullable ColorReading r) {
-        if (r == null || r.r == null || r.g == null || r.b == null) {
-            return getString(R.string.sensor_initializing_tcs34725);
-        }
-
-        String label = (r.name != null && !r.name.isEmpty())
-                ? r.name
-                : getString(R.string.color_unknown);
-
-        return getString(
-                R.string.sensor_color_label,
-                label,
-                r.r, r.g, r.b
-        );
+        if (r == null || r.r == null) return "No Data";
+        return r.name + " (" + r.r + "," + r.g + "," + r.b + ")";
     }
 
     private String formatDistance(@Nullable DistanceReading r) {
-        if (r == null || r.distanceMm == null) {
-            return getString(R.string.sensor_initializing_vl53l1x);
-        }
-        return getString(
-                R.string.sensor_distance_label,
-                r.distanceMm
-        );
+        if (r == null || r.distanceMm == null) return "No Data";
+        return "Distance: " + r.distanceMm + " mm";
     }
 
-    private String formatDouble(@NonNull Double value) {
-        return String.format(Locale.US, "%.1f", value);
-    }
-
-    // -------------------------------------------------------
-    // Status icon helper
-    // -------------------------------------------------------
     private void setSensorStatus(@NonNull ImageView icon, boolean ok) {
         icon.setImageResource(
-                ok
-                        ? android.R.drawable.presence_online   // green dot
-                        : android.R.drawable.presence_busy     // red dot
+                ok ? android.R.drawable.presence_online
+                        : android.R.drawable.presence_busy
         );
     }
 }

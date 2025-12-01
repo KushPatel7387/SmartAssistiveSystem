@@ -15,6 +15,8 @@ preference = "1.2.0"
 googleGmsGoogleServices = "4.4.3"
 firebaseDatabase = "22.0.1"
 firebaseAuth = "24.0.1"
+espressoCoreVersion = "3.7.0"
+androidxJunit = "1.3.0"
 
 [libraries]
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -31,6 +33,8 @@ core-splashscreen = { group = "androidx.core", name = "core-splashscreen", versi
 preference = { group = "androidx.preference", name = "preference", version.ref = "preference" }
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCoreVersion" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidxJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
