@@ -390,6 +390,15 @@ Last updated: --
     <string name="mailto_support_smartassistive_gmail_com">mailto:support.smartassistive@gmail.com</string>
     <string name="https_opensource_google_documentation_reference_terms">https://opensource.google/documentation/reference/terms/</string>
     <string name="_1_0_0">1.0.0</string>
+    <string name="alerts_load_error">alerts_load_error</string>
+    <string name="loaded">"Loaded "</string>
+    <string name="alert">" alerts."</string>
+    <string name="alerts_loaded">alerts_loaded</string>
+    <string name="no_alerts_found_for_this_guardian">No alerts found for this guardian.</string>
+    <string name="alerts_empty">alerts_empty</string>
+    <string name="alertfragment">AlertFragment</string>
+    <string name="alertfragment_no_user">AlertFragment_no_user</string>
+    <string name="alert__">Alerts</string>
 
 
 </resources>

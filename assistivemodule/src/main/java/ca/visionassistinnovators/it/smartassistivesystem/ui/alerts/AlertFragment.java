@@ -73,7 +73,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
             tvEmpty.setVisibility(View.VISIBLE);
 
             // Analytics: alert screen opened without sign-in
-            EventLogger.logScreenView(requireContext(), "AlertFragment_no_user");
+            EventLogger.logScreenView(requireContext(), getString(R.string.alertfragment_no_user));
             return;
         }
 
@@ -84,7 +84,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
         rvAlerts.setAdapter(adapter);
 
         // Analytics: screen view
-        EventLogger.logScreenView(requireContext(), "AlertFragment");
+        EventLogger.logScreenView(requireContext(), getString(R.string.alertfragment));
 
         // This will also auto-seed sample alerts if none exist
         alertsManager.listenForAlerts(requireContext(), currentUid, this);
@@ -113,16 +113,16 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
 
             EventLogger.logEvent(
                     requireContext(),
-                    "alerts_empty",
-                    "No alerts found for this guardian."
+                    getString(R.string.alerts_empty),
+                    getString(R.string.no_alerts_found_for_this_guardian)
             );
         } else {
             tvEmpty.setVisibility(View.GONE);
 
             EventLogger.logEvent(
                     requireContext(),
-                    "alerts_loaded",
-                    "Loaded " + alerts.size() + " alerts."
+                    getString(R.string.alerts_loaded),
+                    getString(R.string.loaded) + alerts.size() + getString(R.string.alert)
             );
         }
     }
@@ -136,7 +136,7 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
 
         EventLogger.logEvent(
                 requireContext(),
-                "alerts_load_error",
+                getString(R.string.alerts_load_error),
                 error
         );
     }
@@ -144,6 +144,6 @@ public class AlertFragment extends Fragment implements AlertsManager.AlertsListe
     @Override
     public void onResume() {
         super.onResume();
-        EventLogger.logScreenView(requireContext(), "Alerts");
+        EventLogger.logScreenView(requireContext(), getString(R.string.alert__));
     }
 }
