@@ -97,9 +97,6 @@ public class PatientLocationFragment extends Fragment implements LocationListene
         listenForLiveLocation();
     };
 
-    // ----------------------------------
-    // 🔵 PATIENT → SEND LOCATION TO FIREBASE
-    // ----------------------------------
     @SuppressLint("MissingPermission")
     private void startSendingLocation() {
 
