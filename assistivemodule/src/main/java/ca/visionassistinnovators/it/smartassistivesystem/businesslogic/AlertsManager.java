@@ -5,10 +5,14 @@
  * Krish Patel – N01666556
  * Kush Patel – N01657387
  * Daksh Rana – N01664095
+ *
+ * Business logic for loading alerts from Firebase and (optionally)
+ * seeding sample alerts ONLY ONCE per user & device.
  */
 package ca.visionassistinnovators.it.smartassistivesystem.businesslogic;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -17,80 +21,89 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ca.visionassistinnovators.it.smartassistivesystem.R;
 
 public class AlertsManager {
-
-    private static final String USERS_NODE   = "users";
-    private static final String ALERTS_CHILD = "alerts";
 
     public interface AlertsListener {
         void onAlertsChanged(List<AlertModel> alerts);
         void onError(String error);
     }
 
-    private com.google.firebase.database.ValueEventListener alertsListener;
+    private static final String USERS_NODE   = "users";
+    private static final String ALERTS_CHILD = "alerts";
 
-    /**
-     * Path: /users/{uid}/alerts
-     * Uses SAME DB URL string as other managers.
-     */
-    private DatabaseReference getUserAlertsRef(Context ctx, String userUid) {
-        FirebaseDatabase db = FirebaseDatabase.getInstance(
+    // prefs so dummy alerts are only seeded once per user (per device)
+    private static final String PREFS_NAME           = "alerts_prefs";
+    private static final String KEY_PREFIX_SEEDED    = "dummy_seeded_";
+
+    private final Map<String, ValueEventListener> activeListeners = new HashMap<>();
+
+    private FirebaseDatabase getDb(Context ctx) {
+        return FirebaseDatabase.getInstance(
                 ctx.getString(R.string.firebase_db_url)
         );
-        return db.getReference(USERS_NODE)
-                .child(userUid)
+    }
+
+    private DatabaseReference getAlertsRef(Context ctx, String userId) {
+        return getDb(ctx)
+                .getReference(USERS_NODE)
+                .child(userId)
                 .child(ALERTS_CHILD);
     }
 
+    // ─────────────────────────────────────────────
+    // Public API
+    // ─────────────────────────────────────────────
+
     public void listenForAlerts(Context ctx,
-                                String userUid,
+                                String userId,
                                 AlertsListener listener) {
 
-        if (TextUtils.isEmpty(userUid)) {
+        if (TextUtils.isEmpty(userId)) {
             if (listener != null) {
-                listener.onError(ctx.getString(R.string.no_user_id));
+                listener.onError("No user id for alerts.");
             }
             return;
         }
 
-        if (alertsListener != null) {
-            // already listening
-            return;
+        DatabaseReference alertsRef = getAlertsRef(ctx, userId);
+
+        // Prevent multiple listeners for same user
+        ValueEventListener old = activeListeners.remove(userId);
+        if (old != null) {
+            alertsRef.removeEventListener(old);
         }
 
-        // Seed sample alerts ONCE if this user has none
-        seedSampleAlertsIfEmpty(ctx, userUid);
-
-        alertsListener = new com.google.firebase.database.ValueEventListener() {
+        ValueEventListener valueListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                List<AlertModel> result = new ArrayList<>();
+                // If no alerts in DB yet, seed dummy ONCE (per device & user)
+                if (!hasSeededDummy(ctx, userId) && !snapshot.hasChildren()) {
+                    seedDummyAlerts(ctx, userId, alertsRef);
+                    markDummySeeded(ctx, userId);
+                    // Firebase will call onDataChange() again after seed
+                    return;
+                }
+
+                List<AlertModel> list = new ArrayList<>();
                 for (DataSnapshot child : snapshot.getChildren()) {
                     AlertModel model = child.getValue(AlertModel.class);
                     if (model != null) {
-                        model.id = child.getKey();
-                        result.add(model);
+                        model.id = child.getKey();   // Firebase key
+                        list.add(model);
                     }
                 }
 
-                // Latest first
-                Collections.sort(result, new Comparator<AlertModel>() {
-                    @Override
-                    public int compare(AlertModel a, AlertModel b) {
-                        return Long.compare(b.timestamp, a.timestamp);
-                    }
-                });
-
                 if (listener != null) {
-                    listener.onAlertsChanged(result);
+                    listener.onAlertsChanged(list);
                 }
             }
 
@@ -102,58 +115,70 @@ public class AlertsManager {
             }
         };
 
-        getUserAlertsRef(ctx, userUid).addValueEventListener(alertsListener);
+        alertsRef.addValueEventListener(valueListener);
+        activeListeners.put(userId, valueListener);
     }
 
-    public void stopListening(Context ctx, String userUid) {
-        if (alertsListener == null || TextUtils.isEmpty(userUid)) return;
-        getUserAlertsRef(ctx, userUid).removeEventListener(alertsListener);
-        alertsListener = null;
+    public void stopListening(Context ctx, String userId) {
+        if (TextUtils.isEmpty(userId)) return;
+
+        ValueEventListener listener = activeListeners.remove(userId);
+        if (listener == null) return;
+
+        getAlertsRef(ctx, userId).removeEventListener(listener);
+    }
+
+    // ─────────────────────────────────────────────
+    // Dummy alerts seeding (once per user/device)
+    // ─────────────────────────────────────────────
+
+    private SharedPreferences getPrefs(Context ctx) {
+        return ctx.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    private boolean hasSeededDummy(Context ctx, String userId) {
+        return getPrefs(ctx).getBoolean(KEY_PREFIX_SEEDED + userId, false);
+    }
+
+    private void markDummySeeded(Context ctx, String userId) {
+        getPrefs(ctx)
+                .edit()
+                .putBoolean(KEY_PREFIX_SEEDED + userId, true)
+                .apply();
     }
 
     /**
-     * Check /users/{uid}/alerts once.
-     * If empty -> insert a few sample alerts.
+     * Insert a couple of dummy alerts to show the feature on first run.
+     * Called ONLY when:
+     *  - alerts list is empty AND
+     *  - hasSeededDummy(...) == false
      */
-    private void seedSampleAlertsIfEmpty(Context ctx, String userUid) {
-        DatabaseReference ref = getUserAlertsRef(ctx, userUid);
+    private void seedDummyAlerts(Context ctx,
+                                 String userId,
+                                 DatabaseReference alertsRef) {
 
-        ref.addListenerForSingleValueEvent(new com.google.firebase.database.ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    // Already has alerts, do nothing.
-                    return;
-                }
+        long now = System.currentTimeMillis();
 
-                long now = System.currentTimeMillis();
+        AlertModel a1 = new AlertModel(
+                null,
+                "Welcome to Smart Assistive System",
+                "This is a sample alert. Real alerts will appear here when events happen.",
+                now
+        );
 
-                pushAlert(ref, ctx.getString(R.string.system_check_complete),
-                        ctx.getString(R.string.all_modules_are_running_normally), now - 3_600_000L);
+        AlertModel a2 = new AlertModel(
+                null,
+                "Patient Linked Successfully",
+                "You can now monitor your patient’s sensors and alerts from the app.",
+                now - 5 * 60_000L  // 5 minutes earlier
+        );
 
-                pushAlert(ref, ctx.getString(R.string.ambient_light_is_low_consider_enabling_the_magnifier),
-                        ctx.getString(R.string.low_light_detected), now - 1_800_000L);
+        DatabaseReference r1 = alertsRef.push();
+        a1.id = r1.getKey();
+        r1.setValue(a1);
 
-                pushAlert(ref, ctx.getString(R.string.you_have_new_feedback_from_a_user),
-                        ctx.getString(R.string.new_feedback_received), now - 600_000L);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // ignore for seeding
-            }
-        });
-    }
-
-    private void pushAlert(DatabaseReference alertsRef,
-                           String title,
-                           String message,
-                           long timestamp) {
-
-        String key = alertsRef.push().getKey();
-        if (key == null) return;
-
-        AlertModel model = new AlertModel(key, title, message, timestamp);
-        alertsRef.child(key).setValue(model);
+        DatabaseReference r2 = alertsRef.push();
+        a2.id = r2.getKey();
+        r2.setValue(a2);
     }
 }

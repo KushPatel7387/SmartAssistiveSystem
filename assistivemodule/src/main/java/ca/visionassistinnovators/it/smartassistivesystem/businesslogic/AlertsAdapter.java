@@ -39,7 +39,7 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.AlertViewH
             DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT);
 
     private final Context context;
-    private final String userId;   // current guardian/patient UID
+    private final String userId;   // current guardian UID
 
     // Adapter needs context + userId (for Firebase path)
     public AlertsAdapter(@NonNull Context context, @NonNull String userId) {
@@ -72,7 +72,7 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.AlertViewH
                     .setTitle("Delete alert?")
                     .setMessage("This alert will be removed permanently.")
                     .setPositiveButton("Delete", (dialog, which) ->
-                            deleteAlertFromFirebase(item, currentPos))
+                            deleteAlertFromFirebase(item))
                     .setNegativeButton("Cancel", null)
                     .show();
         });
@@ -107,14 +107,13 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.AlertViewH
         }
     }
 
-    // 🔥 Firebase + local list delete — MATCHES AlertsManager + rules
-    private void deleteAlertFromFirebase(AlertModel alert, int position) {
-        // SAME DB instance as AlertsManager (uses firebase_db_url string)
+    // 🔥 Firebase delete — list will be refreshed from AlertsManager listener
+    private void deleteAlertFromFirebase(AlertModel alert) {
         FirebaseDatabase db = FirebaseDatabase.getInstance(
                 context.getString(R.string.firebase_db_url)
         );
 
-        // SAME path: /users/{userId}/alerts/{alertId}
+        // Path: /users/{userId}/alerts/{alertId}
         DatabaseReference ref = db.getReference("users")
                 .child(userId)
                 .child("alerts")
@@ -122,9 +121,8 @@ public class AlertsAdapter extends RecyclerView.Adapter<AlertsAdapter.AlertViewH
 
         ref.removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                items.remove(position);
-                notifyItemRemoved(position);
                 Toast.makeText(context, "Alert deleted", Toast.LENGTH_SHORT).show();
+                // Do NOT manually remove from items here – AlertsManager will push updated list
             } else {
                 String msg = "Delete failed";
                 if (task.getException() != null) {
