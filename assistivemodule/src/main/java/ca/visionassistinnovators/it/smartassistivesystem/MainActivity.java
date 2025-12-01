@@ -1,18 +1,14 @@
 package ca.visionassistinnovators.it.smartassistivesystem;
 
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
-import androidx.core.splashscreen.SplashScreenViewProvider;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,35 +23,45 @@ import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = "MainActivity";
     private static final long MAX_SPLASH_TIME = 4000L;
 
     private volatile boolean isWriteDone = false;
-    private volatile boolean isReadDone = false;
-    private volatile boolean isTimeout = false;
-
-    private boolean animationRunning = false;
+    private volatile boolean isReadDone  = false;
+    private volatile boolean isTimeout   = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
+        // ✅ INSTALL SPLASH SAFELY
         SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
         splashScreen.setOnExitAnimationListener(splashScreenView -> {
 
+            // ✅ FULLY TEST-SAFE + EMULATOR-SAFE NULL PROTECTION
+            if (splashScreenView == null) {
+                return;
+            }
+
             View icon = splashScreenView.getIconView();
-            if (icon == null) {
+
+            if (icon == null || icon.getWindowToken() == null) {
+                // ✅ Happens during instrumented tests → safely remove
                 splashScreenView.remove();
                 return;
             }
 
-            // 360-degree rotation
+            // ✅ Safe rotation + fade animation
             icon.animate()
                     .rotationBy(360f)
                     .setDuration(800)
                     .withEndAction(() -> {
+
+                        if (icon.getWindowToken() == null) {
+                            splashScreenView.remove();
+                            return;
+                        }
+
                         icon.animate()
                                 .alpha(0f)
                                 .setDuration(300)
@@ -65,55 +71,22 @@ public class MainActivity extends AppCompatActivity {
                     .start();
         });
 
-
-        // Firebase logic
+        // ✅ FIREBASE TEST LOGIC
         doFirebaseTestWrite();
         doFirebaseTestRead();
 
+        // ✅ SPLASH TIMEOUT SAFETY (4s MAX)
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
             isTimeout = true;
             checkAndProceed();
         }, MAX_SPLASH_TIME);
     }
 
-
-    private void startSplashIconAnimationLoop(SplashScreen splash) {
-
-        // START animation only when splash becomes visible
-        splash.setOnExitAnimationListener(provider -> {}); // needed hack
-
-        View decor = getWindow().getDecorView();
-        decor.post(() -> {
-            try {
-                View icon = decor.findViewById(android.R.id.icon);
-
-                // If icon can't be found, safely skip animation
-                if (icon == null) return;
-
-                animationRunning = true;
-                icon.setTranslationX(-300f);
-
-                Runnable loop = new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!animationRunning) return;
-
-                        // Move center → right → left → repeat
-                        icon.animate().translationX(0f).setDuration(500).withEndAction(() ->
-                                icon.animate().translationX(300f).setDuration(500).withEndAction(() ->
-                                        icon.animate().translationX(-300f).setDuration(500).withEndAction(this)
-                                ).start()
-                        ).start();
-                    }
-                };
-
-                icon.post(loop);
-
-            } catch (Exception ignored) {}
-        });
-    }
-
+    // ---------------------------------------------------------
+    // ✅ FIREBASE WRITE TEST
+    // ---------------------------------------------------------
     private void doFirebaseTestWrite() {
+
         DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
         Map<String, Object> testData = new HashMap<>();
@@ -131,35 +104,51 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    // ---------------------------------------------------------
+    // ✅ FIREBASE READ TEST
+    // ---------------------------------------------------------
     private void doFirebaseTestRead() {
+
         DatabaseReference node = FirebaseDatabase.getInstance()
                 .getReference()
                 .child("test_splash");
 
         node.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
                 isReadDone = true;
                 checkAndProceed();
             }
 
-            @Override public void onCancelled(@NonNull DatabaseError error) {
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
                 isReadDone = true;
                 checkAndProceed();
             }
         });
     }
 
+    // ---------------------------------------------------------
+    // ✅ PROCEED WHEN BOTH DONE OR TIMEOUT
+    // ---------------------------------------------------------
     private void checkAndProceed() {
+
         if ((isWriteDone && isReadDone) || isTimeout) {
             goLogin();
         }
     }
 
+    // ---------------------------------------------------------
+    // ✅ MOVE TO LOGIN
+    // ---------------------------------------------------------
     private void goLogin() {
+
         if (isFinishing()) return;
 
         startActivity(new Intent(this, LoginActivity.class));
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        overridePendingTransition(android.R.anim.fade_in,
+                android.R.anim.fade_out);
         finish();
     }
 }

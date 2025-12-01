@@ -17,12 +17,16 @@ public class MainActivityTest {
 
     @Test
     public void test01_MainActivity_StartsSuccessfully() {
-        ActivityScenario<MainActivity> scenario = ActivityScenario.launch(MainActivity.class);
+        ActivityScenario<MainActivity> scenario =
+                ActivityScenario.launch(MainActivity.class);
+
         scenario.onActivity(activity -> {
-            assertNotNull("Activity must exist at launch", activity);
+            if (activity == null) {
+                throw new AssertionError("Activity is null at launch");
+            }
         });
-        // PASS: Activity starts → test green
     }
+
 
     @Test
     public void test02_SplashScreen_Shows_Then_Disappears() throws InterruptedException {
