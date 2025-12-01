@@ -326,6 +326,50 @@ La reconnaissance vocale n’est pas disponible sur cet appareil.
     <string name="users1">utilisateurs</string>
     <string name="name1">nom</string>
     <string name="email1">courriel</string>
+    <string name="new_patient_added_title">Nouveau patient ajouté</string>
+
+    <string name="new_patient_added_message">
+    Un nouveau patient a été ajouté à votre liste SOS.
+</string>
+
+    <string name="https_www_privacypolicies_com_live_9cf3e76f_3d24_46e0_af25_6b8f5aaf1f40">
+    https://www.privacypolicies.com/live/9cf3e76f-3d24-46e0-af25-6b8f5aaf1f40
+</string>
+
+    <string name="https_www_termsfeed_com_blog_sample_terms_of_use_template">
+    https://www.termsfeed.com/blog/sample-terms-of-use-template/
+</string>
+
+    <string name="mailto_support_smartassistive_gmail_com">
+    mailto:support.smartassistive@gmail.com
+</string>
+
+    <string name="https_opensource_google_documentation_reference_terms">
+    https://opensource.google/documentation/reference/terms/
+</string>
+
+    <string name="_1_0_0">1.0.0</string>
+
+    <string name="alerts_load_error">erreur_de_chargement_des_alertes</string>
+
+    <string name="loaded">"Chargé "</string>
+
+    <string name="alert">" alertes."</string>
+
+    <string name="alerts_loaded">alertes_chargées</string>
+
+    <string name="no_alerts_found_for_this_guardian">
+    Aucune alerte trouvée pour ce tuteur.
+</string>
+
+    <string name="alerts_empty">alertes_vides</string>
+
+    <string name="alertfragment">FragmentAlertes</string>
+
+    <string name="alertfragment_no_user">FragmentAlertes_aucun_utilisateur</string>
+
+    <string name="alert__">Alertes</string>
+
     <string name="phone1">téléphone</string>
     <string name="no_db_profile_found_loaded_from_firebase_authentication">Aucun profil BD trouvé — profil chargé depuis Firebase Authentication</string>
 
