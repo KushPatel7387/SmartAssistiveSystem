@@ -1,3 +1,11 @@
+/**
+ * Course Section: OCA
+ * Team Members:
+ * Sarang Prajapati – N01662036
+ * Krish Patel – N01666556
+ * Daksh Rana – N01664095
+ * Kush Patel – N01657387
+ */
 package ca.visionassistinnovators.it.smartassistivesystem;
 
 import android.content.Intent;
