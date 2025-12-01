@@ -64,7 +64,7 @@ public class RegisterActivity extends AppCompatActivity {
         Button btnRegister   = findViewById(R.id.btn_register);
         TextView tvGoToLogin = findViewById(R.id.tvGoToLogin);
 
-        // Live password strength display
+
         etPassword.addTextChangedListener(new TextWatcher() {
             @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override public void afterTextChanged(Editable s) {}
