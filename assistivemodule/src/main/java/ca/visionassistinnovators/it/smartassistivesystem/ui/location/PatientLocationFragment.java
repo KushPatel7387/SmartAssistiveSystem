@@ -88,7 +88,7 @@ public class PatientLocationFragment extends Fragment implements LocationListene
         if (FirebaseAuth.getInstance().getUid().equals(patientId)) {
             startSendingLocation();  // patient uploads location
         }
-        // Caretaker will NOT upload
+
     }
 
     private final OnMapReadyCallback callback = googleMap -> {
