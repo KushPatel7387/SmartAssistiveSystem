@@ -33,7 +33,7 @@
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
 
-    <!-- ✅ Custom style for menu text -->
+
     <style name="ActionMenuTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#FFFFFF</item>
