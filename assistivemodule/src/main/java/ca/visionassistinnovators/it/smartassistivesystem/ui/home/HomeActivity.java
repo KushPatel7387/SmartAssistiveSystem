@@ -131,7 +131,7 @@ public class HomeActivity extends AppCompatActivity {
             return NavigationUI.onNavDestinationSelected(item, navController);
         });
 
-        // Back press → confirmation dialog
+
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {

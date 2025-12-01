@@ -79,8 +79,8 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\Kush1\Pictures\Screenshots\ic_splash.png" />
-                                                <entry key="scalingPercent" value="70" />
+                                                <entry key="imagePath" value="C:\Users\Kush1\Pictures\Screenshots\Screenshot 2025-11-30 010145.png" />
+                                                <entry key="scalingPercent" value="27" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -112,7 +112,8 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_splash_night" />
+                                      <entry key="outputName" value="splash" />
+                                      <entry key="showGrid" value="true" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -130,6 +131,19 @@
                                               <map>
                                                 <entry key="color" value="000000" />
                                                 <entry key="imagePath" value="C:\Users\Kush1\AppData\Local\Temp\ic_android_black_24dp.xml" />
+                                              </map>
+                                            </option>
+                                          </PersistentState>
+                                        </value>
+                                      </entry>
+                                      <entry key="image">
+                                        <value>
+                                          <PersistentState>
+                                            <option name="values">
+                                              <map>
+                                                <entry key="color" value="000000" />
+                                                <entry key="imagePath" value="C:\Users\Kush1\Pictures\Screenshots\Screenshot 2025-11-30 195524.png" />
+                                                <entry key="paddingPercent" value="-5" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -157,6 +171,13 @@
                                           </PersistentState>
                                         </value>
                                       </entry>
+                                    </map>
+                                  </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="assetType" value="IMAGE" />
+                                      <entry key="imageAsset" value="C:\Users\Kush1\Pictures\Screenshots\Screenshot 2025-11-30 195524.png" />
+                                      <entry key="outputName" value="splash" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -278,9 +299,19 @@
                                       </entry>
                                     </map>
                                   </option>
+                                  <option name="values">
+                                    <map>
+                                      <entry key="showGrid" value="true" />
+                                    </map>
+                                  </option>
                                 </PersistentState>
                               </value>
                             </entry>
+                          </map>
+                        </option>
+                        <option name="values">
+                          <map>
+                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
                           </map>
                         </option>
                       </PersistentState>

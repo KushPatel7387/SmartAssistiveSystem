@@ -1,11 +1,3 @@
-/**
- * Course Section: OCA
- * Team Members:
- * Sarang Prajapati – N01662036
- * Krish Patel – N01666556
- * Kush Patel – N01657387
- * Daksh Rana – N01664095
- */
 package ca.visionassistinnovators.it.smartassistivesystem;
 
 import android.content.Intent;
@@ -20,6 +12,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.splashscreen.SplashScreen;
+import androidx.core.splashscreen.SplashScreenViewProvider;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,69 +28,45 @@ import ca.visionassistinnovators.it.smartassistivesystem.ui.login.LoginActivity;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    private static final long MAX_SPLASH_TIME = 2000L;
+    private static final long MAX_SPLASH_TIME = 4000L;
 
     private volatile boolean isWriteDone = false;
-    private volatile boolean isReadDone  = false;
-    private volatile boolean isTimeout   = false;
+    private volatile boolean isReadDone = false;
+    private volatile boolean isTimeout = false;
+
+    private boolean animationRunning = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // 🌙 Auto Light/Dark background
-        int nightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
-            getWindow().getDecorView().setBackgroundColor(Color.BLACK);
-        } else {
-            getWindow().getDecorView().setBackgroundColor(Color.WHITE);
-        }
-
         super.onCreate(savedInstanceState);
 
-        // ---------------------------------------------------------------
-        // 🚀 ANDROID 12+ SPLASH SCREEN + ZOOM/FADE ANIMATION
-        // ---------------------------------------------------------------
-        final SplashScreen splash = SplashScreen.installSplashScreen(this);
+        SplashScreen splashScreen = SplashScreen.installSplashScreen(this);
 
-        splash.setOnExitAnimationListener(splashScreenView -> {
+        splashScreen.setOnExitAnimationListener(splashScreenView -> {
 
-            View iconView = splashScreenView.getIconView();
-
-            if (iconView != null) {
-
-                // Start slightly small and transparent
-                iconView.setScaleX(0.75f);
-                iconView.setScaleY(0.75f);
-                iconView.setAlpha(0f);
-
-                // Zoom-in + fade-in animation
-                iconView.animate()
-                        .scaleX(1.15f)       // smooth zoom in
-                        .scaleY(1.15f)
-                        .alpha(1f)           // fade in
-                        .setDuration(500L)
-                        .withEndAction(() -> {
-
-                            // Fade out animation
-                            iconView.animate()
-                                    .alpha(0f)
-                                    .setDuration(350L)
-                                    .withEndAction(splashScreenView::remove)
-                                    .start();
-                        })
-                        .start();
-
-            } else {
+            View icon = splashScreenView.getIconView();
+            if (icon == null) {
                 splashScreenView.remove();
+                return;
             }
+
+            // 360-degree rotation
+            icon.animate()
+                    .rotationBy(360f)
+                    .setDuration(800)
+                    .withEndAction(() -> {
+                        icon.animate()
+                                .alpha(0f)
+                                .setDuration(300)
+                                .withEndAction(splashScreenView::remove)
+                                .start();
+                    })
+                    .start();
         });
 
-        // Keep splash until Firebase done or timeout
-        splash.setKeepOnScreenCondition(() ->
-                !(isWriteDone && isReadDone) && !isTimeout
-        );
 
-        // Firebase logic (unchanged)
+        // Firebase logic
         doFirebaseTestWrite();
         doFirebaseTestRead();
 
@@ -107,50 +76,73 @@ public class MainActivity extends AppCompatActivity {
         }, MAX_SPLASH_TIME);
     }
 
+
+    private void startSplashIconAnimationLoop(SplashScreen splash) {
+
+        // START animation only when splash becomes visible
+        splash.setOnExitAnimationListener(provider -> {}); // needed hack
+
+        View decor = getWindow().getDecorView();
+        decor.post(() -> {
+            try {
+                View icon = decor.findViewById(android.R.id.icon);
+
+                // If icon can't be found, safely skip animation
+                if (icon == null) return;
+
+                animationRunning = true;
+                icon.setTranslationX(-300f);
+
+                Runnable loop = new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!animationRunning) return;
+
+                        // Move center → right → left → repeat
+                        icon.animate().translationX(0f).setDuration(500).withEndAction(() ->
+                                icon.animate().translationX(300f).setDuration(500).withEndAction(() ->
+                                        icon.animate().translationX(-300f).setDuration(500).withEndAction(this)
+                                ).start()
+                        ).start();
+                    }
+                };
+
+                icon.post(loop);
+
+            } catch (Exception ignored) {}
+        });
+    }
+
     private void doFirebaseTestWrite() {
-        DatabaseReference root = FirebaseDatabase
-                .getInstance(getString(R.string.firebase_db_url))
-                .getReference();
+        DatabaseReference root = FirebaseDatabase.getInstance().getReference();
 
         Map<String, Object> testData = new HashMap<>();
-        testData.put(getString(R.string.rtdb_field_message), getString(R.string.hello_from_android));
-        testData.put(getString(R.string.rtdb_field_timestamp), System.currentTimeMillis());
+        testData.put("message", "Hello from SmartAssistive");
+        testData.put("timestamp", System.currentTimeMillis());
 
-        root.child(getString(R.string.rtdb_node_test))
-                .setValue(testData)
+        root.child("test_splash").setValue(testData)
                 .addOnSuccessListener(unused -> {
                     isWriteDone = true;
                     checkAndProceed();
                 })
                 .addOnFailureListener(e -> {
-                    Log.w(TAG, "Write failed: " + e.getMessage());
                     isWriteDone = true;
                     checkAndProceed();
                 });
     }
 
     private void doFirebaseTestRead() {
-        DatabaseReference node = FirebaseDatabase
-                .getInstance(getString(R.string.firebase_db_url))
+        DatabaseReference node = FirebaseDatabase.getInstance()
                 .getReference()
-                .child(getString(R.string.rtdb_node_test));
+                .child("test_splash");
 
         node.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override public void onDataChange(@NonNull DataSnapshot snap) {
-                if (snap.exists()) {
-                    String msg = snap.child(getString(R.string.rtdb_field_message)).getValue(String.class);
-                    Long ts    = snap.child(getString(R.string.rtdb_field_timestamp)).getValue(Long.class);
-                    Log.d(TAG, getString(R.string.log_message_prefix) + msg);
-                    Log.d(TAG, getString(R.string.log_timestamp_prefix) + ts);
-                } else {
-                    Log.d(TAG, "Test node empty");
-                }
+            @Override public void onDataChange(@NonNull DataSnapshot snapshot) {
                 isReadDone = true;
                 checkAndProceed();
             }
 
             @Override public void onCancelled(@NonNull DatabaseError error) {
-                Log.e(TAG, getString(R.string.log_error_prefix) + error.getMessage());
                 isReadDone = true;
                 checkAndProceed();
             }
@@ -159,12 +151,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void checkAndProceed() {
         if ((isWriteDone && isReadDone) || isTimeout) {
-            goToLogin();
+            goLogin();
         }
     }
 
-    private void goToLogin() {
+    private void goLogin() {
         if (isFinishing()) return;
+
         startActivity(new Intent(this, LoginActivity.class));
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
         finish();
