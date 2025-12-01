@@ -26,14 +26,14 @@
     <!-- Explicit NoActionBar variant -->
     <style name="Theme.SmartAssistiveSystem.NoActionBar" parent="Theme.Material3.DayNight.NoActionBar" />
 
-    <!-- Splash Theme (Day) -->
+
     <style name="Theme.SmartAssistiveSystem.Splash" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#F4F4F4</item>
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_splash</item>
         <item name="postSplashScreenTheme">@style/Theme.SmartAssistiveSystem</item>
     </style>
 
-    <!-- ✅ Custom style for menu text -->
+
     <style name="ActionMenuTextStyle" parent="@android:style/TextAppearance.Widget.IconMenu.Item">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">#FFFFFF</item>
