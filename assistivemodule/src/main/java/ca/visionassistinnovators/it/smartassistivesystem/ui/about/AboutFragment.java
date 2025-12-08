@@ -28,7 +28,6 @@ import ca.visionassistinnovators.it.smartassistivesystem.R;
 public class AboutFragment extends Fragment {
 
     private TextView txtVersion;
-    private LinearLayout layoutPrivacy, layoutTerms, layoutSupport, layoutLicenses;
 
     public AboutFragment() {
         // Required empty constructor
@@ -44,10 +43,10 @@ public class AboutFragment extends Fragment {
 
         // Initialize views
         txtVersion = view.findViewById(R.id.txtVersion);
-        layoutPrivacy = view.findViewById(R.id.layoutPrivacy);
-        layoutTerms = view.findViewById(R.id.layoutTerms);
-        layoutSupport = view.findViewById(R.id.layoutSupport);
-        layoutLicenses = view.findViewById(R.id.layoutLicenses);
+        LinearLayout layoutPrivacy = view.findViewById(R.id.layoutPrivacy);
+        LinearLayout layoutTerms = view.findViewById(R.id.layoutTerms);
+        LinearLayout layoutSupport = view.findViewById(R.id.layoutSupport);
+        LinearLayout layoutLicenses = view.findViewById(R.id.layoutLicenses);
 
         // Set version text dynamically
         setAppVersion();
