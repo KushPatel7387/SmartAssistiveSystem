@@ -69,11 +69,8 @@ Optional: acrylic cut-out or window for unobstructed forward-facing distance sen
 
 Required system packages:  
 
-[Link 1](https://link1)  
-
-[Link 2](https://link2)  
-
-...  
+sudo apt update
+sudo apt install python3.9 python3.9-distutils
 
 
 
