@@ -33,9 +33,12 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.google.android.gms.auth.api.identity.Identity;
+import com.google.android.gms.auth.api.identity.SignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -191,20 +194,19 @@ public class HomeActivity extends AppCompatActivity {
                 .setMessage("Do you really want to logout?")
                 .setPositiveButton("Logout", (dialog, which) -> {
 
+                    // 1) Sign out from Firebase (your app session)
                     FirebaseAuth.getInstance().signOut();
 
-                    GoogleSignInClient gsc = GoogleSignIn.getClient(
-                            this,
-                            new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                                    .requestEmail()
-                                    .build()
-                    );
-                    gsc.signOut();
+                    // 2) Sign out from Google using the newer Identity API (non-deprecated)
+                    SignInClient signInClient = Identity.getSignInClient(HomeActivity.this);
+                    Task<Void> voidTask = signInClient.signOut().addOnCompleteListener(task -> {
 
-                    Intent i = new Intent(this, LoginActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(i);
-                    finish();
+                        // 3) Go back to LoginActivity and clear the back stack
+                        Intent i = new Intent(HomeActivity.this, LoginActivity.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(i);
+                        finish();
+                    });
                 })
                 .setNegativeButton("Cancel", null)
                 .show();

@@ -10,6 +10,7 @@
 package ca.visionassistinnovators.it.smartassistivesystem.ui.home;
 
 import android.Manifest;
+import android.Manifest.permission;
 import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
@@ -30,6 +31,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -55,8 +57,7 @@ public class HomeFragment extends Fragment {
 
     private TextView tvCaption, tvPatientCount, tvPatientLabel;
     private ImageView imgSlideshow;
-    private Button btnManagePatients, btnViewSensors, btnViewAlerts;
-    private View cardSensors, cardAlerts;
+    private Button btnManagePatients;
     private SwitchMaterial walkingSwitch;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -87,10 +88,11 @@ public class HomeFragment extends Fragment {
         tvPatientLabel = view.findViewById(R.id.tv_home_patient_label);
         btnManagePatients = view.findViewById(R.id.btn_home_manage_patients);
 
-        btnViewSensors = view.findViewById(R.id.btn_home_view_sensors);
-        btnViewAlerts = view.findViewById(R.id.btn_home_view_alerts);
-        cardSensors = view.findViewById(R.id.card_home_sensors);
-        cardAlerts = view.findViewById(R.id.card_home_alerts);
+
+        Button btnViewSensors = view.findViewById(R.id.btn_home_view_sensors);
+        Button btnViewAlerts = view.findViewById(R.id.btn_home_view_alerts);
+        View cardSensors = view.findViewById(R.id.card_home_sensors);
+        View cardAlerts = view.findViewById(R.id.card_home_alerts);
 
         walkingSwitch = view.findViewById(R.id.switchWalkingAssist);
 
@@ -121,7 +123,9 @@ public class HomeFragment extends Fragment {
         );
 
         // Permissions
-        setupPermissionLauncher();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            setupPermissionLauncher();
+        }
 
         walkingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -138,6 +142,7 @@ public class HomeFragment extends Fragment {
     // ------------------------------------------------------------------------
     // Permission Handling
     // ------------------------------------------------------------------------
+    @RequiresApi(api = Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
     private void setupPermissionLauncher() {
         permissionLauncher = registerForActivityResult(
                 new ActivityResultContracts.RequestMultiplePermissions(),
@@ -145,14 +150,14 @@ public class HomeFragment extends Fragment {
 
                     if (!isAdded()) return;
 
-                    boolean fine = result.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
-                    boolean coarse = result.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+                    boolean fine = Boolean.TRUE.equals(result.getOrDefault(permission.ACCESS_FINE_LOCATION, false));
+                    boolean coarse = Boolean.TRUE.equals(result.getOrDefault(permission.ACCESS_COARSE_LOCATION, false));
 
                     boolean fgServiceLocation =
-                            result.getOrDefault(Manifest.permission.FOREGROUND_SERVICE_LOCATION, false);
+                            Boolean.TRUE.equals(result.getOrDefault(permission.FOREGROUND_SERVICE_LOCATION, false));
 
                     // Android 14+ requires FOREGROUND_SERVICE_LOCATION
-                    if (Build.VERSION.SDK_INT >= 34 && !fgServiceLocation) {
+                    if (!fgServiceLocation) {
                         walkingSwitch.setChecked(false);
                         Toast.makeText(requireContext(),
                                 getString(R.string.foreground_service_location_required),
@@ -175,14 +180,14 @@ public class HomeFragment extends Fragment {
     private void requestWalkingPermissions() {
         List<String> perms = new ArrayList<>();
 
-        perms.add(Manifest.permission.ACCESS_FINE_LOCATION);
-        perms.add(Manifest.permission.ACCESS_COARSE_LOCATION);
+        perms.add(permission.ACCESS_FINE_LOCATION);
+        perms.add(permission.ACCESS_COARSE_LOCATION);
 
         if (Build.VERSION.SDK_INT >= 33) {
-            perms.add(Manifest.permission.POST_NOTIFICATIONS);
+            perms.add(permission.POST_NOTIFICATIONS);
         }
         if (Build.VERSION.SDK_INT >= 34) {
-            perms.add(Manifest.permission.FOREGROUND_SERVICE_LOCATION);
+            perms.add(permission.FOREGROUND_SERVICE_LOCATION);
         }
 
         permissionLauncher.launch(perms.toArray(new String[0]));
