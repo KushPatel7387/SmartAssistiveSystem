@@ -77,7 +77,7 @@ Required system packages:
 
 
 
- [Python code](.py)   
+ [Python code](vl53l1x.py)   
 
 
 
