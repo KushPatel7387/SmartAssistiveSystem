@@ -58,33 +58,33 @@ Student B Name Kush Patel has:
   - Additional device specific connections in addition to or instead of Qwiic cable: None
   - Current hardware operational status: Working 
 
-Student C Name ________ has:
-- [ ] Complete parts kit
+Student C Name Daksh Rana has:
+- [x] Complete parts kit
 - [ ] Multimeter
 - Development platform: Broadcom single board computer
 - Sensor/effector 3:
-  - Device name:
+  - Device name: TCS34725
   - Product page (e.g. Sparkfun, Adafruit, etc.):
   - Purchase page (e.g. DigiKey):
-  - I2C address:
-  - DEV_ID:
-  - Additional device specific components: 
-  - Additional device specific connections in addition to or instead of Qwiic cable: 
-  - Current hardware operational status:
+  - I2C address:0x29
+  - DEV_ID:0x44
+  - Additional device specific components: qwiic adapter
+  - Additional device specific connections in addition to or instead of Qwiic cable:None
+  - Current hardware operational status: Working
 
-Student D Name ________ has:
-- [ ] Complete parts kit
+Student D Name Sarang Prajapati has:
+- [x] Complete parts kit
 - [ ] Multimeter
 - Development platform: Broadcom single board computer
 - Sensor/effector 4:
-  - Device name:
+  - Device name:AS7262
   - Product page (e.g. Sparkfun, Adafruit, etc.):
   - Purchase page (e.g. DigiKey):
-  - I2C address:
-  - DEV_ID:
-  - Additional device specific components: 
-  - Additional device specific connections in addition to or instead of Qwiic cable: 
-  - Current hardware operational status:
+  - I2C address:0x49
+  - DEV_ID:0x3E
+  - Additional device specific components:None
+  - Additional device specific connections in addition to or instead of Qwiic cable: None 
+  - Current hardware operational status:Working
 
 ####  GitHub repository link(s):
 [SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
