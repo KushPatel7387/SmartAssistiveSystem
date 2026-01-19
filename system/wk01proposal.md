@@ -5,16 +5,15 @@
 3. [ ] :movie_camera: Consumer: e.g. Entertainment Protocol DMX/Baby Monitoring Project
 4. [ ] :mortar_board: Education: e.g. Robust Hackable Educational Project
 5. [ ] :robot: Robotics: e.g. Control/Navigation/Dashboard
-6. [ ] :ski: Health and Wellness: e.g. Wearable
+6. [x] :ski: Health and Wellness: e.g. Wearable
 ####  Project Title: 
-Replace this with your title
-
+Smart Assistive System
 ####  Executive Summary/Description of the Project (75 to 100 words): 
-Write here
+The Smart Assistive System is a portable sensor-based device that monitors environmental and user-specific parameters, sending real-time data to an Android app for monitoring and alerts. Using a Raspberry Pi as the main controller and Arduino microcontrollers for sensor interfacing, the system collects data from load cells, motion or proximity sensors, and other effectors. The app displays measurements, triggers notifications, and allows limited remote control of connected actuators. This setup supports both safety and independence for users, while providing caregivers with actionable insights, all within a compact and safe prototype enclosure.
 
 ####  Has this project been approved by all parties for posting (Y/N)?
--  [x] Yes
--  [ ] No
+-  [ ] Yes
+-  [x] No
 <details><summary>Optional Collaborator fields for sponsored projects</summary>
 
 #### Sponsoring Industry and Personnel: 
@@ -25,25 +24,25 @@ Write here
 </details>
 
 ####  List of Names of Students Involved in Project (first and last names and separate members by a comma):
-First Last, One Two
+Krish Patel , Kush Patel , Daksh Rana , Sarang Prajapati
 
 ####  Planned contact email for the [Expo submission form](https://appliedtechnology.humber.ca/shows/past-shows/advanced-manufacturing-projects/advanced-manufacturing-student-submission-form.html)
-example_at_example_dot_com
+sarangprajapati9319@gmail.com
 
 ####  For each individual student state whether they have a complete parts kit, a multimeter, what development platform they have, what sensors/effectors they have along with system Requirements (List what sensors/effectors are to do), functionalty of prototype/describe any unsoldered connections.
-Student A Name ________ has:
-- [ ] Complete parts kit
+Student A Name Krish Patel has:
+- [x] Complete parts kit
 - [ ] Multimeter
 - Development platform: Broadcom single board computer
 - Sensor/effector 1:
-  - Device name:
-  - Product page (e.g. Sparkfun, Adafruit, etc.):
-  - Purchase page (e.g. DigiKey):
-  - I2C address:
-  - DEV_ID:
-  - Additional device specific components: 
-  - Additional device specific connections in addition to or instead of Qwiic cable: 
-  - Current hardware operational status:
+  - Device name: TSL2591
+  - Product page (e.g. Sparkfun, Adafruit, etc.): Amazon.ca
+  - Purchase page (e.g. DigiKey):Amazon.ca
+  - I2C address:0x29
+  - DEV_ID:N/A
+  - Additional device specific components: Qwiic adaptor
+  - Additional device specific connections in addition to or instead of Qwiic cable: None
+  - Current hardware operational status: Working.
 
 Student B Name ________ has:
 - [ ] Complete parts kit
@@ -88,10 +87,10 @@ Student D Name ________ has:
   - Current hardware operational status:
 
 ####  GitHub repository link(s):
-[Example link - ezpark](https://github.com/AkashSingh8137/ezpark)
+[SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
 
 ####  Google Play App download link:
-[Example link - EZPARK](https://play.google.com/store/apps/details?id=ca.ezlock.it.ezpark&pli=1)
+[No deployed](https://play.google.com/)
 
 #### Hours per student:
 $14\*3=42$ in class hours, $14\*3=42+$ outside of class.
