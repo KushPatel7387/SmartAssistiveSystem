@@ -1,7 +1,27 @@
 # CENG 355 Project Name
 Title Page (1st odd page not numbered, X.0 sections begin on odd pages, otherwise double sided and numbered)  
 ## Declaration of Joint Authorship   
-Insert here.[^1]
+We, the undersigned, hereby declare that the work presented in the project “SmartAssistiveSmart: Sensor-Based Assistive Technology” is the result of joint collaboration among all listed authors. Each author has contributed significantly to the conception, design, implementation, and documentation of the project.
+
+
+## Authors and Contributions
+
+| Author Name       | Contribution                                                                   |
+|------------------|---------------------------------------------------------------------------------|
+| Krish Patel       | Hardware integration, App development, Sensor integration, Documentation       |
+| Sarang Prajapati  | Hardware integration, Firebase setup, Sensor integration, Documentation        |
+| Daksh Rana        | App development, Application ideas, Sensor testing, Presentation documentation |
+| Kush Patel        | Research, Lab report, Expenditure tracking, Presentation documentation         |
+
+All authors have read and approved the final version of the project and take full responsibility for the content and results presented. This work represents a collaborative effort, and all authors have contributed equally to its success. As this project is ongoing, the authorship and contributions may be updated in the future.
+
+**Date:** [2026-01-28]  
+**Signatures:**  
+- Krish Patel  
+-
+-
+-
+
 [^1]: Technology Report Guidelines. OACETT, Revised September 2022. Available at: https://www.oacett.org/getmedia/5ad707d7-f472-4b24-a7fe-f34e270b0c41/2022_TR_Guidelines_-_Updated_Version_-_Sept_2022.pdf
 ## Proposal/Project Specifications   
 [Link to proposal](wk01proposal.md).   
