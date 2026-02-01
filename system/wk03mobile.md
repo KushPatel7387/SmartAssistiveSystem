@@ -4,15 +4,15 @@ Group 5 (Krish, Sarang, Daksh, Kush) continued development and verification of t
 
 This week the group verified correct operation of the following mobile features:
 
-Login system supporting email and Google authentication
-Home dashboard navigation
-Alerts module for monitoring system events
-Patient management interface
-Fall detection module
-Location tracking service
-Feedback screen
-Help/About sections
-Voice command routing framework
+Login system supporting email and Google authentication,
+Home dashboard navigation,
+Alerts module for monitoring system events,
+Patient management interface,
+Fall detection module,
+Location tracking service,
+Feedback screen,
+Help/About sections,
+Voice command routing framework.
 Firebase services are connected and functioning correctly. Notification handling and analytics helpers continue to operate as expected. Repeated navigation testing confirmed that fragment transitions do not crash the application.
 The mobile repository structure was reviewed and confirmed to be clean and maintainable. Existing Android test files remain intact. All mobile deliverable links in ceng355report.md were tested and confirmed functional.
 
