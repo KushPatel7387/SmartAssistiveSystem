@@ -84,15 +84,20 @@ Insert from proposal.
 Insert Gantt Chart.     
 ###### Figure 1: Gantt Chart     
 
-## 2.0 Hardware Development Platform Report/Build Instructions   
-### 2.1 Student One/A
-[Hardware report](hardware/1a.md)   
-### 2.2 Student Two/B   
-[Hardware report](hardware/2b.md)   
-### 2.3 Student Three/C   
-[Hardware report](hardware/3c.md)   
-### 2.4 Student Four/D   
-[Hardware report](hardware/4d.md)   
+## 2.0 Hardware Development Platform Report/Build Instructions 
+
+### 2.1 Sarang Prajapati
+[Hardware Report - AS7262](../hardware/AS7262/AS7262.md) 
+
+### 2.2 Krish Patel 
+[Hardware Report - TSL2591](../hardware/TSL2591/tsl2591.md) 
+
+### 2.3 Daksh Rana 
+[Hardware Report - TCS34725](../hardware/tcs34725.md) 
+
+### 2.4 Kush Patel 
+[Hardware Report - VL53L1X](../hardware/vl53l1x.md)
+
 
 ## 3.0 Mobile Application Report
 
