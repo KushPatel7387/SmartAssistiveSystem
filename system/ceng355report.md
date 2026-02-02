@@ -100,7 +100,7 @@ Insert Gantt Chart.
 [Mobile Deliverable 1](../docs/Deliverable_1/Visionassistiveinovators_SmatAssisstiveSystem_05_Deliverable_1.pdf)
 
 ### 3.2 Deliverable 2
-[Mobile Deliverable 2](../docs/Deliverable%202/Deliverable%202%20-%20SmartAssistiveSystem.pdf)
+[Mobile Deliverable 2](../docs/Deliverable%202%20/Deliverable%202%20-%20SmartAssistiveSystem.pdf)
 
 ### 3.3 Deliverable 3
 [Mobile Deliverable 3](../docs/Deliverable%203/VisionAssistInnovators_SmartAssistiveSystem_Group05_Deliverable3.pdf)
