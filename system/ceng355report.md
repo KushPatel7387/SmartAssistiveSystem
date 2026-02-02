@@ -86,17 +86,18 @@ Insert Gantt Chart.
 
 ## 2.0 Hardware Development Platform Report/Build Instructions 
 
-### 2.1 Sarang Prajapati
-[Hardware Report - AS7262](../hardware/AS7262/AS7262.md) 
-
-### 2.2 Krish Patel 
+### 2.1 Krish Patel 
 [Hardware Report - TSL2591](../hardware/TSL2591/tsl2591.md) 
+
+### 2.2 Kush Patel 
+[Hardware Report - VL53L1X](../hardware/vl53l1x.md)
 
 ### 2.3 Daksh Rana 
 [Hardware Report - TCS34725](../hardware/tcs34725.md) 
 
-### 2.4 Kush Patel 
-[Hardware Report - VL53L1X](../hardware/vl53l1x.md)
+### 2.4 Sarang Prajapati
+[Hardware Report - AS7262](../hardware/AS7262/AS7262.md) 
+
 
 
 ## 3.0 Mobile Application Report
