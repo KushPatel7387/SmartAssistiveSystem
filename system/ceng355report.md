@@ -42,10 +42,10 @@ The Smart Assistive System is a portable sensor-based device that monitors envir
 [1.3 Project Schedule](#13-project-schedule)   
 
 [2.0 Hardware Development Platform Report/Build Instructions](#20-hardware-development-platform-reportbuild-instructions)  
-[2.1 Student One/A](#21-student-onea)  
-[2.2 Student Two/B](#22-student-twob)  
-[2.3 Student Three/C](#23-student-threec)  
-[2.4 Student Four/D](#24-student-fourd)  
+[2.1 Krish Patel](#21-krish-patel)  
+[2.2 Kush Patel](#22-kush-patel)  
+[2.3 Daksh Rana](#23-daksh-rana)  
+[2.4 Sarang Prajapati](#24-sarang-prajapati)
 
 [3.0 Mobile Application Report](#30-mobile-application-report)  
 [3.1 Deliverable 1](#31-deliverable-1)  
