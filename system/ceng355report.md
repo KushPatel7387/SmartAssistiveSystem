@@ -51,11 +51,8 @@ Insert from proposal.
 [3.1 Deliverable 1](#31-deliverable-1)  
 [3.2 Deliverable 2](#32-deliverable-2)  
 [3.3 Deliverable 3](#33-deliverable-3) 
-[Mobile Deliverable 3](docs/Deliverable%203/VisionAssistInnovators_SmartAssistiveSystem_Group05_Deliverable3.pdf)
 [3.4 Deliverable 4](#34-deliverable-4)  
-[Mobile Deliverable 4](docs/Deliverable%204/Smart%20Assistive%20System%20-%20Deliverable%204.pdf)
 [3.5 Deliverable 5](#35-deliverable-5)  
-[Mobile Deliverable 5](docs/Deliverable%205/Smart%20Assistive%20System%20-%20Deliverable%205.pdf)
 
 [4.0 Integration](#40-integration)  
 [4.1 Enterprise Wireless Connectivity](#41-enterprise-wireless-connectivity)  
@@ -99,15 +96,15 @@ Insert Gantt Chart.
   
 ## 3.0 Mobile Application Report   
 ### 3.1 Deliverable 1
-[Mobile Deliverable 1](/tree/main/docs/Deliverable%201)   
+[Mobile Deliverable 1](docs/Deliverable_1/Visionassistiveinovators_SmatAssisstiveSystem_05_Deliverable_1.pdf)
 ### 3.2 Deliverable 2      
-[Mobile Deliverable 2](/tree/main/docs/Deliverable%202)   
+[Mobile Deliverable 2](docs/Deliverable%202/Deliverable%202%20-%20SmartAssistiveSystem.pdf)
 ### 3.3 Deliverable 3      
-[Mobile Deliverable 3](/tree/main/docs/Deliverable%203)   
+[Mobile Deliverable 3](docs/Deliverable%203/VisionAssistInnovators_SmartAssistiveSystem_Group05_Deliverable3.pdf)
 ### 3.4 Deliverable 4      
-[Mobile Deliverable 4](/tree/main/docs/Deliverable%204)   
+[Mobile Deliverable 4](docs/Deliverable%204/Smart%20Assistive%20System%20-%20Deliverable%204.pdf)
 ### 3.4 Deliverable 5      
-[Mobile Deliverable 5](/tree/main/docs/Deliverable%205)   
+[Mobile Deliverable 5](docs/Deliverable%205/Smart%20Assistive%20System%20-%20Deliverable%205.pdf)
 
 ## 4.0 Integration   
 ### 4.1 Enterprise Wireless Connectivity   
