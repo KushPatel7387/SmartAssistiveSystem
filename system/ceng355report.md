@@ -93,22 +93,23 @@ Insert Gantt Chart.
 [Hardware report](hardware/3c.md)   
 ### 2.4 Student Four/D   
 [Hardware report](hardware/4d.md)   
-  
-## 3.0 Mobile Application Report    
+
+## 3.0 Mobile Application Report
+
 ### 3.1 Deliverable 1
 [Mobile Deliverable 1](docs/Deliverable_1/Visionassistiveinovators_SmatAssisstiveSystem_05_Deliverable_1.pdf)
 
 ### 3.2 Deliverable 2
-[Mobile Deliverable 2](docs/Deliverable 2 /Deliverable 2 - SmartAssistiveSystem.pdf)
+[Mobile Deliverable 2](docs/Deliverable%202/Deliverable%202%20-%20SmartAssistiveSystem.pdf)
 
-### 3.3 Deliverable 3      
-[Mobile Deliverable 3](docs/Deliverable 3/VisionAssistInnovators_SmartAssistiveSystem_Group05_Deliverable3.pdf)
+### 3.3 Deliverable 3
+[Mobile Deliverable 3](docs/Deliverable%203/VisionAssistInnovators_SmartAssistiveSystem_Group05_Deliverable3.pdf)
 
-### 3.4 Deliverable 4      
-[Mobile Deliverable 4](docs/Deliverable 4/Smart Assistive System - Deliverable 4.pdf)
+### 3.4 Deliverable 4
+[Mobile Deliverable 4](docs/Deliverable%204/Smart%20Assistive%20System%20-%20Deliverable%204.pdf)
 
-### 3.5 Deliverable 5      
-[Mobile Deliverable 5](docs/Deliverable 5/Smart Assistive System - Deliverable 5.pdf)
+### 3.5 Deliverable 5
+[Mobile Deliverable 5](docs/Deliverable%205/Smart%20Assistive%20System%20-%20Deliverable%205.pdf)
 
 ## 4.0 Integration   
 ### 4.1 Enterprise Wireless Connectivity   
