@@ -1,4 +1,4 @@
-# CENG 355 Project Name
+# CENG 355 SmartAssistiveSystem
 
 ## Declaration of Joint Authorship   
 We, the undersigned, hereby declare that the work presented in the project “SmartAssistiveSmart: Sensor-Based Assistive Technology” is the result of joint collaboration among all listed authors. Each author has contributed significantly to the conception, design, implementation, and documentation of the project.
