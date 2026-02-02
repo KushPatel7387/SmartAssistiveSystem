@@ -75,7 +75,7 @@ The Smart Assistive System is a portable sensor-based device that monitors envir
 [8.0 References](#80-references)  
 
 ## List of Figures   
-[Figure 1: Gantt Chart](../docs/image.png)  
+![Gantt Chart](../docs/image.png)
 
 ## 1.0 Introduction   
 ### 1.1 Background   
