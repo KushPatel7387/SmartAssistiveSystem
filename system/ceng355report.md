@@ -1,5 +1,5 @@
 # CENG 355 Project Name
-Title Page (1st odd page not numbered, X.0 sections begin on odd pages, otherwise double sided and numbered)  
+
 ## Declaration of Joint Authorship   
 We, the undersigned, hereby declare that the work presented in the project “SmartAssistiveSmart: Sensor-Based Assistive Technology” is the result of joint collaboration among all listed authors. Each author has contributed significantly to the conception, design, implementation, and documentation of the project.
 
@@ -25,8 +25,8 @@ All authors have read and approved the final version of the project and take ful
 [^1]: Technology Report Guidelines. OACETT, Revised September 2022. Available at: https://www.oacett.org/getmedia/5ad707d7-f472-4b24-a7fe-f34e270b0c41/2022_TR_Guidelines_-_Updated_Version_-_Sept_2022.pdf
 ## Proposal/Project Specifications   
 [Link to proposal](wk01proposal.md).   
-## Executive Summary   
-Insert from proposal.     
+## Executive Summary
+The Smart Assistive System is a portable sensor-based device that monitors environmental and user-specific parameters, sending real-time data to an Android app for monitoring and alerts. Using a Raspberry Pi as the main controller and Arduino microcontrollers for sensor interfacing, the system collects data from load cells, motion or proximity sensors, and other effectors. The app displays measurements, triggers notifications, and allows limited remote control of connected actuators.  
 
 ## Table of Contents
 
@@ -75,7 +75,7 @@ Insert from proposal.
 [8.0 References](#80-references)  
 
 ## List of Figures   
-[Figure 1: Gantt Chart](#figure-1-gantt-chart)  
+[Figure 1: Gantt Chart](../docs/image.png)  
 
 ## 1.0 Introduction   
 ### 1.1 Background   
