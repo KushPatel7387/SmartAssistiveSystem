@@ -15,24 +15,19 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * Business-logic class responsible for reading sensor data
- * for a single patient from Firebase Realtime Database.
+ * Business-logic class responsible for reading sensor data.
  *
- * Firebase structure:
- *  sensors/{patientId}/As726x/...
- *  sensors/{patientId}/TSL2591/...
- *  sensors/{patientId}/TCS34725/...
- *  sensors/{patientId}/VL53L1X/...
- *
- * It will also create a dummy snapshot in the DB if a sensor node
- * does not exist yet (first time a patient is used).
+ * STARK INDUSTRIES OVERRIDE: Paths updated to match the actual
+ * Python hardware uplink.
+ * Pathing is now directly at: /sensors/SensorName/...
  */
 public class PatientSensorsManager {
 
+    // STARK FIX: Matched the exact capitalization from the Python scripts
     private static final String NODE_AS726X   = "As726x";
-    private static final String NODE_TSL2591  = "TSL2591";
-    private static final String NODE_TCS34725 = "TCS34725";
-    private static final String NODE_VL53L1X  = "VL53L1X";
+    private static final String NODE_TSL2591  = "Tsl2591";
+    private static final String NODE_TCS34725 = "Tcs34725";
+    private static final String NODE_VL53L1X  = "Vl53l1x";
 
     private final DatabaseReference sensorsRootRef;
 
@@ -91,7 +86,9 @@ public class PatientSensorsManager {
             @NonNull String patientId,
             @NonNull PatientSensorsListener listener
     ) {
-        DatabaseReference baseRef = sensorsRootRef.child(patientId);
+        // STARK FIX: We are ignoring the patientId because your hardware
+        // doesn't upload to a patientId folder. It uploads straight to /sensors/
+        DatabaseReference baseRef = sensorsRootRef;
         baseRef.keepSynced(true);
 
         PatientSensorsSnapshot holder = new PatientSensorsSnapshot();
@@ -101,7 +98,6 @@ public class PatientSensorsManager {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (!snapshot.exists()) {
-                    // create dummy once
                     initDummyAs726x(baseRef.child(NODE_AS726X));
                     holder.as726x = null;
                 } else {
@@ -126,6 +122,7 @@ public class PatientSensorsManager {
         });
 
 
+        // TSL2591 (Light)
         baseRef.child(NODE_TSL2591).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -134,7 +131,8 @@ public class PatientSensorsManager {
                     holder.tsl2591 = null;
                 } else {
                     LightReading r = new LightReading();
-                    r.lux       = snapshot.child("lux").getValue(Double.class);
+                    // STARK FIX: Changed key to "lux_value" to match Python payload
+                    r.lux       = snapshot.child("lux_value").getValue(Double.class);
                     r.timestamp = snapshot.child("timestamp").getValue(String.class);
                     holder.tsl2591 = r;
                 }
@@ -156,10 +154,11 @@ public class PatientSensorsManager {
                     holder.tcs34725 = null;
                 } else {
                     ColorReading r = new ColorReading();
-                    r.r        = snapshot.child("r").getValue(Integer.class);
-                    r.g        = snapshot.child("g").getValue(Integer.class);
-                    r.b        = snapshot.child("b").getValue(Integer.class);
-                    r.name     = snapshot.child("name").getValue(String.class);
+                    // 2. Map to the correct keys from the screenshot
+                    r.r        = snapshot.child("red").getValue(Integer.class);
+                    r.g        = snapshot.child("green").getValue(Integer.class);
+                    r.b        = snapshot.child("blue").getValue(Integer.class);
+                    r.name     = snapshot.child("detectedColor").getValue(String.class);
                     r.timestamp= snapshot.child("timestamp").getValue(String.class);
                     holder.tcs34725 = r;
                 }
@@ -195,7 +194,7 @@ public class PatientSensorsManager {
         });
     }
 
-    // ------------ Dummy initialisers (numeric only, no UI strings) ------------
+    // ------------ Dummy initialisers ------------
 
     private String nowIsoTimestamp() {
         SimpleDateFormat sdf =
@@ -219,15 +218,15 @@ public class PatientSensorsManager {
 
     private void initDummyTsl(DatabaseReference tslRef) {
         Map<String, Object> map = new HashMap<>();
-        map.put("deviceId", "TSL2591");
-        map.put("lux", 350.0);
+        map.put("deviceId", "Tsl2591");
+        map.put("lux_value", 350.0); // STARK FIX: Matched key name
         map.put("timestamp", nowIsoTimestamp());
         tslRef.setValue(map);
     }
 
     private void initDummyTcs(DatabaseReference tcsRef) {
         Map<String, Object> map = new HashMap<>();
-        map.put("deviceId", "TCS34725");
+        map.put("deviceId", "Tcs34725");
         map.put("r", 255);
         map.put("g", 120);
         map.put("b", 60);
@@ -238,8 +237,8 @@ public class PatientSensorsManager {
 
     private void initDummyVl53(DatabaseReference vlRef) {
         Map<String, Object> map = new HashMap<>();
-        map.put("deviceId", "VL53L1X");
-        map.put("distance_mm", 750); // 0.75m
+        map.put("deviceId", "Vl53l1X");
+        map.put("distance_cm", 750);
         map.put("timestamp", nowIsoTimestamp());
         vlRef.setValue(map);
     }
