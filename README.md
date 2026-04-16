@@ -69,7 +69,7 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 ## Screenshot of the Application
 ![App Home Screen](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Home.png?raw=true)
 ![Settings Fragment](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Settings.jpg?raw=true)
-![Sensor Readings](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Sensors.jpg?raw=true)
+![Sensor Readings](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Sensors.png?raw=true)
 ![Feedback Fragment](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Feedback.jpg?raw=true)
 ![Patient List](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/Patients.jpg?raw=true)
 
