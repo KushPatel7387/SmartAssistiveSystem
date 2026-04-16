@@ -64,8 +64,7 @@ It’s complete when all sensors work accurately, alerts function in real time, 
 ## 🔗 Links
 - **GitHub Repo:** [SmartAssistiveSystem](https://github.com/KushPatel7387/SmartAssistiveSystem)
 - 
-## Currenlty working on Deliverable 5
-
+## Currenlty working on Hardware case 
 
 ## Screenshot of the Application
 ![App Home Screen](https://github.com/KushPatel7387/SmartAssistiveSystem/blob/master/application_photos/HomeScreen.jpg?raw=true)
